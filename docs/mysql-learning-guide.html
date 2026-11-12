@@ -1,0 +1,2378 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark"><meta name="description" content="串起安装、连接、SQL、DBeaver 与 React + Node 的完整实践链路。"><title>MySQL 学习手册：从安装、SQL 到 React + Node 项目实践</title><style>
+:root{color-scheme:light;--bg:#f5f7f9;--paper:#fff;--ink:#213247;--muted:#69768a;--line:#e1e7ee;--accent:#126e63;--soft:#eaf5f1;--code:#182330;--code-ink:#e5edf5;--shadow:0 7px 28px #23374d06}
+:root[data-theme=dark]{color-scheme:dark;--bg:#111820;--paper:#18222d;--ink:#dfE7f0;--muted:#a6b3c3;--line:#304050;--accent:#80d3bd;--soft:#223d3a;--code:#0e151e;--code-ink:#e0e8f1;--shadow:none}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:92px}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.85 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}button,input{font:inherit}button{cursor:pointer;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:7px;padding:5px 10px}button:hover{border-color:var(--accent)}button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}[hidden]{display:none!important}.sidebar{position:fixed;inset:0 auto 0 0;width:280px;background:var(--paper);border-right:1px solid var(--line);overflow-y:auto;padding:28px 18px;z-index:25}.brand{display:flex;align-items:center;gap:12px;padding:0 8px 23px;border-bottom:1px solid var(--line);margin-bottom:20px}.brand b{display:block;font-size:17px}.brand small{display:block;font-size:10px;color:var(--muted);letter-spacing:1.3px}.brand-icon{display:grid;place-items:center;background:var(--soft);border-radius:11px;width:42px;height:42px;color:var(--accent);font:bold 15px ui-monospace,monospace}.nav-link{display:block;padding:8px 10px;border-radius:7px;margin-bottom:2px;font-size:12px;line-height:1.65;color:var(--muted)}.nav-link:hover,.nav-link.active{background:var(--soft);color:var(--accent);text-decoration:none}.sidebar-footer{margin:26px 8px 0;font-size:11px;color:var(--muted)}.sidebar-footer a{display:block;margin-top:8px}.shell{margin-left:280px}.toolbar{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:12px 30px}.crumb{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:230px}.search-box{position:relative;flex:1;max-width:520px;margin-left:auto}.search-box input{width:100%;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);padding:7px 58px 7px 12px;font-size:13px}.search-box span{position:absolute;right:10px;top:8px;font-size:11px;color:var(--muted)}.toolbar button{font-size:12px;white-space:nowrap}.menu{display:none}.progress{position:fixed;top:0;left:280px;right:0;height:3px;z-index:30;pointer-events:none}.progress span{display:block;height:100%;background:var(--accent);width:0}main{max-width:1120px;margin:auto;padding:38px 40px 80px}.hero{padding:6px 6px 28px}.eyebrow{font-size:10px;letter-spacing:2px;color:var(--accent);font-weight:700}.hero h1{font-size:clamp(28px,3vw,40px);line-height:1.4;letter-spacing:-1px;margin:12px 0 16px}.lead{font-size:15px;color:var(--muted);max-width:750px}.meta{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 4px}.meta span{border:1px solid var(--line);background:var(--paper);padding:2px 10px;border-radius:20px;color:var(--muted);font-size:11px}.intro,.chapter,.results{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:30px 34px;margin-bottom:24px;box-shadow:var(--shadow);min-width:0}.intro{border-top:3px solid var(--accent);font-size:14px}.chapter h2{font-size:24px;line-height:1.5;margin:0 0 25px;letter-spacing:-.4px}.chapter h3{font-size:19px;margin:32px 0 14px}.chapter h4{font-size:16px;margin:26px 0 12px}.chapter h5,.chapter h6{font-size:15px;margin:22px 0 10px}p{margin:12px 0}blockquote{margin:18px 0;padding:2px 18px;border-left:3px solid var(--accent);background:var(--soft);color:var(--ink);border-radius:0 6px 6px 0}ul,ol{padding-left:25px}li{margin:5px 0}li>p{margin:5px 0}hr{border:0;border-top:1px solid var(--line);margin:27px 0}code{font: .87em/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--soft);padding:2px 5px;border-radius:4px;overflow-wrap:anywhere}.codebox{border-radius:10px;overflow:hidden;background:var(--code);margin:20px 0;min-width:0}.codebar{display:flex;align-items:center;justify-content:space-between;background:#ffffff07;border-bottom:1px solid #ffffff12;padding:7px 13px;color:#b4c5d5;font:10px/1.6 ui-monospace,monospace;text-transform:uppercase;letter-spacing:1px}.copy{background:transparent;color:#cedce8;border:1px solid #ffffff30;padding:2px 8px;border-radius:5px;font:11px/1.6 inherit;text-transform:none;letter-spacing:0}.copy:hover{border-color:#84cbb5}pre{margin:0;padding:19px;overflow:auto;tab-size:2;max-width:100%;line-height:1.7}pre code{display:block;color:var(--code-ink);background:none;padding:0;border-radius:0;font-size:12px;line-height:1.75;overflow-wrap:normal;white-space:pre}.table-scroll{overflow:auto;margin:20px 0;border:1px solid var(--line);border-radius:9px}table{width:100%;border-collapse:collapse;font-size:12px;line-height:1.8}th,td{padding:11px 13px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);min-width:105px}th{background:var(--soft);font-weight:650;white-space:nowrap}tr:last-child td{border-bottom:none}td code{font-size:11px}tr:nth-child(even) td{background:color-mix(in srgb,var(--soft) 28%,transparent)}.equation{text-align:center;padding:22px;background:var(--soft);border-radius:8px;font:italic 17px/1.8 Georgia,serif;overflow-wrap:anywhere}.diagram{margin:22px 0;padding:22px;background:var(--bg);border:1px solid var(--line);border-radius:10px}.diagram figcaption{font-size:12px;font-weight:650;color:var(--muted);margin-bottom:18px}.flow{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.node{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:58px;flex:1;min-width:120px;padding:12px;background:var(--paper);border:1px solid var(--line);border-radius:8px;font-size:12px;text-align:center}.node strong{font-weight:650}.node small{font-size:10px;color:var(--muted);margin-top:4px}.arrow{display:flex;flex-direction:column;align-items:center;color:var(--accent);font-size:20px;line-height:1.3}.arrow small{font-size:9px;color:var(--muted);max-width:110px;text-align:center;line-height:1.5}.branch{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.branch p{margin:0;padding:12px;background:var(--paper);border:1px solid var(--line);border-radius:8px;font-size:11px}.branch b{display:block;font-size:12px;margin-bottom:3px}.diagram details{margin-top:16px;font-size:11px;color:var(--muted)}.diagram summary{cursor:pointer}.diagram .codebox{margin-bottom:0}.results h2{margin:0;font-size:18px}.results-header{display:flex;justify-content:space-between;align-items:center}.result-item{display:block;padding:15px 0;border-top:1px solid var(--line)}.result-item strong{font-size:14px}.result-item p{font-size:12px;color:var(--muted);margin:5px 0 0}.result-status{font-size:12px;color:var(--muted)}.footer{text-align:center;color:var(--muted);font-size:11px;padding-top:20px}.back-top{position:fixed;bottom:22px;right:23px;box-shadow:var(--shadow);z-index:20;font-size:12px}.backdrop{display:none}.skip{position:fixed;top:-100px;z-index:100;background:var(--paper);padding:12px}.skip:focus{top:10px}input[type=checkbox]{accent-color:var(--accent)}
+@media(min-width:1600px){main{max-width:1180px}.chapter{padding:36px 44px}}
+@media(max-width:1100px){.sidebar{width:240px;padding:24px 13px}.shell{margin-left:240px}.progress{left:240px}.toolbar{padding:12px 20px}.crumb{max-width:120px}main{padding:28px 24px 65px}.chapter,.intro,.results{padding:25px}.chapter h2{font-size:22px}}
+@media(max-width:800px){.sidebar{width:280px;transform:translateX(-105%);visibility:hidden}.sidebar.open{transform:none;visibility:visible}.shell{margin-left:0}.progress{left:0}.menu{display:block}.crumb{display:none}.toolbar{padding:10px 12px;gap:8px}.search-box{max-width:none}.search-box input{padding-right:10px}.search-box span,.print{display:none}main{padding:23px 12px 65px}.hero{padding:0 7px 23px}.hero h1{font-size:29px}.chapter,.intro,.results{padding:22px 18px;border-radius:11px}.chapter h2{font-size:21px}.chapter h3{font-size:18px}.backdrop.open{display:block;position:fixed;inset:0;background:#0007;z-index:24}.branch{grid-template-columns:1fr}.flow{flex-direction:column;align-items:stretch}.node{min-width:0;min-height:55px}.arrow{transform:none;font-size:18px}.arrow .arrow-glyph{display:none}.arrow:after{content:'↕';font-size:22px}.arrow.one:after{content:'↓'}.arrow small{max-width:none}.diagram{padding:15px}.back-top{right:13px;bottom:14px}th,td{min-width:100px;padding:9px 11px}pre{padding:15px}pre code{font-size:11px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{:root,:root[data-theme=dark]{--bg:#fff;--paper:#fff;--ink:#111;--muted:#444;--line:#ccc;--accent:#134a3e;--soft:#f0f4f2;--code:#f5f5f5;--code-ink:#111;--shadow:none;color-scheme:light}.sidebar,.toolbar,.progress,.back-top,.backdrop,.results,.copy,.skip{display:none!important}.shell{margin:0}main{padding:0;max-width:none}.hero{padding:0 0 20px}.hero h1{font-size:26pt}.chapter,.intro{border:0;padding:12px 0;border-radius:0;box-shadow:none}.chapter{break-before:page;font-size:10pt}.chapter h2{font-size:19pt}.chapter h3{font-size:14pt}h2,h3,h4{break-after:avoid}.table-scroll{overflow:visible;border-radius:0}table{font-size:8pt}th,td{min-width:0;padding:6px}tr{break-inside:avoid}pre{white-space:pre-wrap;padding:10px}pre code{white-space:pre-wrap;overflow-wrap:anywhere;font-size:8pt}.codebar{color:#444;background:#eee}.diagram details{display:none}.node,.branch p{break-inside:avoid}.footer{margin-top:20px}}
+</style></head>
+<body><a class="skip" href="#main">跳到正文</a><div class="progress" aria-hidden="true"><span id="progress"></span></div><div class="backdrop" id="backdrop"></div><aside class="sidebar" id="sidebar" aria-label="文档目录"><div class="brand"><span class="brand-icon" aria-hidden="true">SQL</span><div><b>MySQL 学习手册</b><small>LEARN · PRACTICE · REVIEW</small></div></div><nav aria-label="章节导航"><a class="nav-link" href="#chapter-1">阅读地图</a>
+<a class="nav-link" href="#chapter-2">1. 系统全景与基础概念</a>
+<a class="nav-link" href="#chapter-3">2. 在 Mac 上安装 MySQL</a>
+<a class="nav-link" href="#chapter-4">3. 启动与停止 MySQL 服务</a>
+<a class="nav-link" href="#chapter-5">4. 通过命令行连接 MySQL</a>
+<a class="nav-link" href="#chapter-6">5. 账号、权限与资源限制：连接需要通过哪些“门”</a>
+<a class="nav-link" href="#chapter-7">6. DBeaver 的操作地图</a>
+<a class="nav-link" href="#chapter-8">7. 创建 notes 数据库与表</a>
+<a class="nav-link" href="#chapter-9">8. 常用 SQL 语法与场景</a>
+<a class="nav-link" href="#chapter-10">9. 多表关系与 JOIN</a>
+<a class="nav-link" href="#chapter-11">10. 事务、索引与表结构演进</a>
+<a class="nav-link" href="#chapter-12">11. 前后端与数据库如何交互</a>
+<a class="nav-link" href="#chapter-13">12. Node 接入 MySQL：notes CRUD 参考实现</a>
+<a class="nav-link" href="#chapter-14">13. React 接口调用与 Vite 开发代理</a>
+<a class="nav-link" href="#chapter-15">14. 从启动到验收的完整操作流程</a>
+<a class="nav-link" href="#chapter-16">15. 真实故障与排查方法</a>
+<a class="nav-link" href="#chapter-17">16. 备份、上线与 Docker</a>
+<a class="nav-link" href="#chapter-18">17. 练习路线与速查表</a>
+<a class="nav-link" href="#chapter-19">18. 官方资料与查阅方式</a></nav><div class="sidebar-footer">独立 HTML · 可离线阅读<a href="react.html">React 学习手册 ↗</a><a href="mysql-learning-guide.html">MySQL 学习手册 ↗</a><a href="fullstack-knowledge-system.html">全栈开发知识体系 ↗</a></div></aside><div class="shell"><header class="toolbar"><button type="button" class="menu" id="menu" aria-expanded="false" aria-controls="sidebar">目录</button><span class="crumb">MySQL 学习手册</span><div class="search-box"><input id="search" type="search" aria-label="搜索文档全文" placeholder="搜索概念、语法或问题…" autocomplete="off" aria-controls="results"><span aria-hidden="true">⌘ / Ctrl K</span></div><button type="button" id="theme">深色</button><button type="button" class="print" id="print">打印</button></header><main id="main"><div class="hero"><p class="eyebrow">MYSQL · FROM INSTALLATION TO FULL STACK</p><h1>MySQL 学习手册：从安装、SQL 到 React + Node 项目实践</h1><p class="lead">串起安装、连接、SQL、DBeaver 与 React + Node 的完整实践链路。</p><div class="meta"><span>19 个阅读章节</span><span>75 段代码</span><span>27 张表格</span><span>2 幅流程图</span><span>离线可读</span></div></div><div class="intro"><blockquote>
+<p>整理日期：2026-11-11。面向学过 SQL、希望重新建立知识体系的初学者。</p>
+<p>本文基于我们的实际排错过程整理：Mac 官方 DMG 安装 MySQL、使用 DBeaver、创建 <code>react_notes</code> 数据库与 <code>notes_app</code> 账号，以及 React + Node 的 notes 增删改查。</p>
+<p>文中的项目代码是教学参考实现，没有自动修改你现有的项目，也没有在你的数据库上执行。操作系统路径、菜单名称和部分行为可能随版本变化；先确认本机状态，再执行对应操作。</p>
+</blockquote>
+</div><section class="results" id="results" hidden aria-label="搜索结果"><div class="results-header"><h2>全文搜索</h2><button type="button" id="clear-search">清除</button></div><p class="result-status" id="result-status" role="status" aria-live="polite"></p><div id="result-list"></div></section><article><section class="chapter" id="chapter-1" aria-label="阅读地图"><h2 id="heading-1">阅读地图</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>章节</th>
+<th>需要解决的问题</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="#s1">1. 系统全景与基础概念</a></td>
+<td>MySQL、SQL、DBeaver、Node 分别是什么</td>
+</tr>
+<tr>
+<td><a href="#s2">2. 在 Mac 上安装 MySQL</a></td>
+<td>DMG、PKG、安装路径和版本验证</td>
+</tr>
+<tr>
+<td><a href="#s3">3. 启动与停止 MySQL 服务</a></td>
+<td>launchd、launchctl、mysqld 的关系</td>
+</tr>
+<tr>
+<td><a href="#s4">4. 通过命令行连接</a></td>
+<td>参数、TCP、Socket、连接的原理</td>
+</tr>
+<tr>
+<td><a href="#s5">5. 账号、权限与资源限制</a></td>
+<td>root、项目账号、GRANT、1226 错误</td>
+</tr>
+<tr>
+<td><a href="#s6">6. DBeaver 的操作地图</a></td>
+<td>连接、执行 SQL、查看表、编辑数据</td>
+</tr>
+<tr>
+<td><a href="#s7">7. 创建 notes 数据库与表</a></td>
+<td>字段、类型、主键、默认值、字符集</td>
+</tr>
+<tr>
+<td><a href="#s8">8. 常用 SQL 语法</a></td>
+<td>增删改查、筛选、排序、统计、AS</td>
+</tr>
+<tr>
+<td><a href="#s9">9. 多表关系与 JOIN</a></td>
+<td>左表、右表、LEFT JOIN、INNER JOIN</td>
+</tr>
+<tr>
+<td><a href="#s10">10. 事务、索引与表结构演进</a></td>
+<td>数据一致性、查询性能和迁移</td>
+</tr>
+<tr>
+<td><a href="#s11">11. 前后端与数据库如何交互</a></td>
+<td>HTTP、JSON、连接池、SQL 的完整链路</td>
+</tr>
+<tr>
+<td><a href="#s12">12. Node 接入 MySQL</a></td>
+<td>环境变量、连接池和完整 CRUD 接口</td>
+</tr>
+<tr>
+<td><a href="#s13">13. React 接口调用与开发代理</a></td>
+<td>Vite 代理、请求封装和页面示例</td>
+</tr>
+<tr>
+<td><a href="#s14">14. 从启动到验收的操作流程</a></td>
+<td>每天开发时先做什么、如何确认成功</td>
+</tr>
+<tr>
+<td><a href="#s15">15. 真实故障与排查方法</a></td>
+<td>1045、1046、1141、1226、502 等</td>
+</tr>
+<tr>
+<td><a href="#s16">16. 备份、上线与 Docker</a></td>
+<td>本地到云端、持久化与网络边界</td>
+</tr>
+<tr>
+<td><a href="#s17">17. 练习路线与速查表</a></td>
+<td>把知识变成可以独立完成的操作</td>
+</tr>
+<tr>
+<td><a href="#s18">18. 官方资料</a></td>
+<td>后续查阅入口</td>
+</tr>
+</tbody></table></div>
+<p><a id="s1"></a></p>
+</section>
+<section class="chapter" id="chapter-2" aria-label="1. 系统全景与基础概念"><h2 id="heading-2">1. 系统全景与基础概念</h2>
+<h3 id="heading-3">1.1 先记住完整的数据流</h3>
+<figure class="diagram"><figcaption>前端、后端、数据库与管理工具</figcaption><div class="flow"><div class="node"><strong>React</strong><small>浏览器中的页面</small></div><span class="arrow "><small>HTTP 请求 / JSON 响应</small><span class="arrow-glyph">↔</span></span><div class="node"><strong>Node / Express</strong><small>业务校验与接口</small></div><span class="arrow "><small>mysql2 / SQL / 查询结果</small><span class="arrow-glyph">↔</span></span><div class="node"><strong>MySQL 服务</strong><small>数据持久化</small></div></div><div class="branch"><p><b>DBeaver → MySQL</b>图形化客户端通过数据库连接执行 SQL。</p><p><b>mysql 命令行 → MySQL</b>命令行客户端直接连接并执行 SQL。</p></div><details><summary>查看原始 Mermaid 图定义</summary><div class="codebox"><div class="codebar"><span>mermaid</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>flowchart LR
+    R[浏览器中的 React] --&gt;|HTTP 请求 / JSON| N[Node / Express]
+    N --&gt;|mysql2 连接 / SQL| M[(MySQL 服务)]
+    M --&gt;|查询结果| N
+    N --&gt;|HTTP 响应 / JSON| R
+    D[DBeaver] --&gt;|数据库连接 / SQL| M
+    C[mysql 命令行客户端] --&gt;|数据库连接 / SQL| M
+</code></pre></div></details></figure><p>React 负责界面；Node 负责接收请求、校验数据、执行业务规则；MySQL 负责存储和查询数据。DBeaver 和命令行是帮助开发者直接操作数据库的工具。</p>
+<p>关闭 DBeaver 不会删除数据，也不等于停止 MySQL。关闭浏览器不会停止 Node 或 MySQL。退出 <code>mysql&gt;</code> 只会断开当前命令行连接。</p>
+<h3 id="heading-4">1.2 高频名词</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>是什么</th>
+<th>在你的项目中做什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MySQL Server</td>
+<td>数据库服务端软件</td>
+<td>保存 <code>react_notes</code> 等数据库，接收 SQL</td>
+</tr>
+<tr>
+<td><code>mysqld</code></td>
+<td>MySQL 服务端程序</td>
+<td>启动后成为后台进程</td>
+</tr>
+<tr>
+<td><code>mysql</code></td>
+<td>命令行客户端程序</td>
+<td>登录服务端、输入 SQL、查看结果</td>
+</tr>
+<tr>
+<td>SQL</td>
+<td>操作关系型数据库的语言</td>
+<td>查询、插入、更新、删除、建表和授权</td>
+</tr>
+<tr>
+<td>DBeaver</td>
+<td>图形化数据库客户端</td>
+<td>管理连接、执行 SQL、查看表与数据</td>
+</tr>
+<tr>
+<td>mysql2</td>
+<td>Node 使用的 MySQL 驱动</td>
+<td>让后端代码建立数据库连接并执行 SQL</td>
+</tr>
+<tr>
+<td>数据库 Database</td>
+<td>一组表等对象的容器</td>
+<td><code>react_notes</code></td>
+</tr>
+<tr>
+<td>表 Table</td>
+<td>按行列组织的一类数据</td>
+<td><code>notes</code></td>
+</tr>
+<tr>
+<td>行 Row</td>
+<td>一条记录</td>
+<td>一篇笔记</td>
+</tr>
+<tr>
+<td>列 Column</td>
+<td>记录的一个属性</td>
+<td><code>id</code>、<code>content</code>、<code>created_at</code></td>
+</tr>
+<tr>
+<td>Schema</td>
+<td>结构命名空间</td>
+<td>在 MySQL 中通常与 Database 同义使用</td>
+</tr>
+<tr>
+<td>连接 Connection</td>
+<td>客户端与服务端的会话</td>
+<td>DBeaver、Node、命令行各自建立连接</td>
+</tr>
+<tr>
+<td>连接池 Pool</td>
+<td>可复用连接的集合</td>
+<td>避免每个请求都重新建立连接</td>
+</tr>
+</tbody></table></div>
+<h3 id="heading-5">1.3 四个阶段不能混淆</h3>
+<div class="codebox"><div class="codebar"><span>text</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>安装软件 → 启动服务 → 客户端连接 → 执行 SQL
+</code></pre></div><ul>
+<li><strong>已安装</strong>：磁盘上有 MySQL 程序。</li>
+<li><strong>已启动</strong>：有 <code>mysqld</code> 进程在运行。</li>
+<li><strong>已连接</strong>：客户端通过网络或 Socket 找到服务，并完成身份验证。</li>
+<li><strong>可正常使用</strong>：账号有权限、有资源额度，而且目标库表存在。</li>
+</ul>
+<p><code>mysql --version</code> 只能证明客户端程序可执行；出现 <code>mysql&gt;</code> 能证明登录成功；执行 <code>SELECT 1;</code> 成功能进一步证明当前连接可以执行基本查询。</p>
+<h3 id="heading-6">1.4 三组容易混淆的账号与密码</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>身份</th>
+<th>属于哪一层</th>
+<th>用在哪里</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Mac 登录账号 / 管理员</td>
+<td>操作系统</td>
+<td><code>sudo</code> 请求的密码</td>
+</tr>
+<tr>
+<td>MySQL <code>root</code></td>
+<td>数据库</td>
+<td>创建库、创建账号、分配权限</td>
+</tr>
+<tr>
+<td>MySQL <code>notes_app</code></td>
+<td>数据库</td>
+<td>Node 项目日常读写笔记</td>
+</tr>
+<tr>
+<td>网站用户</td>
+<td>业务系统</td>
+<td>未来登录你的笔记网站</td>
+</tr>
+</tbody></table></div>
+<p>数据库项目账号不等于网站用户。以后即使网站有一千个用户，Node 也可以使用同一个数据库项目账号，通过业务表和后端权限判断隔离各用户的数据。</p>
+<p><a id="s2"></a></p>
+</section>
+<section class="chapter" id="chapter-3" aria-label="2. 在 Mac 上安装 MySQL"><h2 id="heading-7">2. 在 Mac 上安装 MySQL</h2>
+<h3 id="heading-8">2.1 DMG 与真正安装的关系</h3>
+<p><code>.dmg</code> 是磁盘镜像。双击后，macOS 会把它挂载成一个临时磁盘。镜像里面可能有需要拖到 Applications 的 <code>.app</code>，也可能有需要运行的 <code>.pkg</code> 安装程序。</p>
+<p>官方 MySQL 的常见流程：</p>
+<ol>
+<li>下载符合芯片架构的安装镜像：Apple Silicon 选择 ARM64，Intel Mac 选择 x86_64。</li>
+<li>双击 DMG，再执行其中的安装包。</li>
+<li>完成安装和初始化，妥善保存 MySQL 管理员密码。</li>
+<li>验证程序与服务。</li>
+<li>确认安装成功后，推出挂载的镜像，再删除下载的 DMG 即可。</li>
+</ol>
+<p>仅打开 DMG 不等于已经完成安装。MySQL 服务也不一定像普通桌面 App 一样出现在启动台。</p>
+<h3 id="heading-9">2.2 安装方式有什么区别</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>方式</th>
+<th>适合什么情况</th>
+<th>服务管理方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>官方 DMG / PKG</td>
+<td>希望按官方安装器安装</td>
+<td>官方安装的 launchd 服务</td>
+</tr>
+<tr>
+<td>Homebrew</td>
+<td>熟悉命令行包管理</td>
+<td>一般使用 <code>brew services</code></td>
+</tr>
+<tr>
+<td>Docker</td>
+<td>希望隔离环境、方便重建</td>
+<td>Docker / Compose</td>
+</tr>
+</tbody></table></div>
+<p>你目前沿用 <strong>官方安装器 + launchd</strong> 即可。不要同时混用多套安装方式，否则容易连错实例、端口或数据目录。</p>
+<h3 id="heading-10">2.3 常见路径</h3>
+<p>以下是这次学习中使用的官方安装器布局；其他安装方式的路径会不同。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>路径</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/usr/local/mysql</code></td>
+<td>安装入口，常见为指向具体版本目录的符号链接</td>
+</tr>
+<tr>
+<td><code>/usr/local/mysql/bin/mysql</code></td>
+<td>命令行客户端</td>
+</tr>
+<tr>
+<td><code>/usr/local/mysql/bin/mysqld</code></td>
+<td>服务端程序</td>
+</tr>
+<tr>
+<td><code>/usr/local/mysql/data</code></td>
+<td>数据目录，需要保护与备份</td>
+</tr>
+<tr>
+<td><code>/Library/LaunchDaemons/com.oracle.oss.mysql.mysqld.plist</code></td>
+<td>macOS 服务启动配置</td>
+</tr>
+</tbody></table></div>
+<p>在 <strong>Mac 终端</strong>执行：</p>
+<div class="codebox"><div class="codebar"><span>bash</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>/usr/local/mysql/bin/mysql --version
+</code></pre></div><p>这是客户端版本。连接后执行下面的 SQL 才是查询服务端版本：</p>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>SELECT VERSION();
+</code></pre></div><p>系统设置里搜索不到 MySQL，不能直接推断安装失败。是否有设置面板与安装内容、系统版本有关，可以继续通过命令和连接结果判断。</p>
+<h3 id="heading-11">2.4 可选：配置 PATH</h3>
+<p>为了以后直接输入 <code>mysql</code>，在 <code>~/.zshrc</code> 中加入一次：</p>
+<div class="codebox"><div class="codebar"><span>bash</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>export PATH=&quot;/usr/local/mysql/bin:$PATH&quot;
+</code></pre></div><p>然后在终端执行：</p>
+<div class="codebox"><div class="codebar"><span>bash</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>source ~/.zshrc
+mysql --version
+</code></pre></div><p>PATH 是操作系统查找可执行程序的目录列表。配置后只是缩短命令，不会启动数据库，也不会改变密码。</p>
+<p><a id="s3"></a></p>
+</section>
+<section class="chapter" id="chapter-4" aria-label="3. 启动与停止 MySQL 服务"><h2 id="heading-12">3. 启动与停止 MySQL 服务</h2>
+<h3 id="heading-13">3.1 执行原理</h3>
+<div class="codebox"><div class="codebar"><span>text</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>你执行 launchctl
+    ↓
+macOS 的 launchd 读取服务配置
+    ↓
+按配置的用户、路径和参数启动 mysqld
+    ↓
+mysqld 加载配置、打开数据文件、初始化内部组件
+    ↓
+在允许的 TCP 地址/端口以及 Unix Socket 上等待连接
+</code></pre></div><p><code>launchd</code> 是 macOS 的服务管理器；<code>launchctl</code> 是控制它的命令行工具。官方安装器通常提供对应的 plist 配置，其中可以指定程序、数据目录、运行用户和启动条件。<a href="https://dev.mysql.com/doc/refman/8.4/en/macos-installation-launchd.html">官方说明</a></p>
+<h3 id="heading-14">3.2 先查状态，再决定是否启动</h3>
+<p>以下命令都在 <strong>Mac 终端</strong>执行，不是在 <code>mysql&gt;</code> 里执行。</p>
+<div class="codebox"><div class="codebar"><span>bash</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code># 查看服务是否已经注册，以及运行状态
+sudo launchctl print system/com.oracle.oss.mysql.mysqld
+
+# 查看 MySQL 默认端口是否有监听者
+lsof -nP -iTCP:3306 -sTCP:LISTEN
+</code></pre></div><p><code>launchctl print</code> 的输出中，<code>state = running</code> 和 <code>pid</code> 是重要线索。端口有监听只证明有进程监听，不足以证明密码正确或账号有查询权限。</p>
+<h3 id="heading-15">3.3 情况一：服务尚未加载</h3>
+<p>确认安装器生成的 plist 存在，并且服务确实未加载后执行：</p>
+<div class="codebox"><div class="codebar"><span>bash</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>sudo launchctl enable system/com.oracle.oss.mysql.mysqld
+
+sudo launchctl bootstrap system \
+  /Library/LaunchDaemons/com.oracle.oss.mysql.mysqld.plist
+</code></pre></div><div class="table-scroll"><table>
+<thead>
+<tr>
+<th>部分</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>sudo</code></td>
+<td>使用 Mac 管理员权限执行后续命令</td>
+</tr>
+<tr>
+<td><code>launchctl</code></td>
+<td>操作 macOS 服务管理器</td>
+</tr>
+<tr>
+<td><code>enable</code></td>
+<td>解除该服务的禁用状态，本身不等于立即启动</td>
+</tr>
+<tr>
+<td><code>system</code></td>
+<td>系统服务所在的域</td>
+</tr>
+<tr>
+<td><code>com.oracle.oss.mysql.mysqld</code></td>
+<td>服务标识，来自 plist 的 Label</td>
+</tr>
+<tr>
+<td><code>bootstrap</code></td>
+<td>将服务定义加载到目标域</td>
+</tr>
+<tr>
+<td><code>.plist</code> 路径</td>
+<td>告诉系统从哪里读取服务定义</td>
+</tr>
+</tbody></table></div>
+<p>如果配置包含 <code>RunAtLoad = true</code>，加载服务后会按条件启动进程。</p>
+<p><code>sudo</code> 要求的是 <strong>Mac 登录密码</strong>，不是 MySQL root 密码。输入时不会显示星号，输入完成后按回车即可。</p>
+<h3 id="heading-16">3.4 情况二：服务已加载，但没有运行</h3>
+<div class="codebox"><div class="codebar"><span>bash</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>sudo launchctl kickstart system/com.oracle.oss.mysql.mysqld
+</code></pre></div><p>这会请求已加载的服务立即运行。若它反复退出，应检查错误日志，而不是不断重复启动。</p>
+<p>常见教程中的 <code>kickstart -k</code> 会先终止已经运行的实例再启动，不应把它当作日常状态检查命令。</p>
+<h3 id="heading-17">3.5 停止服务</h3>
+<p>需要停止数据库时执行：</p>
+<div class="codebox"><div class="codebar"><span>bash</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>sudo launchctl bootout system/com.oracle.oss.mysql.mysqld
+</code></pre></div><p>它会移除当前加载的服务，并停止对应进程。之后需要启动时，重新 <code>bootstrap</code>。</p>
+<p>如果还希望持续禁止自动加载，可额外执行：</p>
+<div class="codebox"><div class="codebar"><span>bash</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>sudo launchctl disable system/com.oracle.oss.mysql.mysqld
+</code></pre></div><p>下次使用前先 <code>enable</code>。不要在有业务请求时随意停止数据库。</p>
+<h3 id="heading-18">3.6 启动失败从哪里看</h3>
+<div class="codebox"><div class="codebar"><span>bash</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code># 检查配置文件的语法
+plutil -lint /Library/LaunchDaemons/com.oracle.oss.mysql.mysqld.plist
+
+# 阅读启动配置，确认实际程序、数据目录与日志路径
+plutil -p /Library/LaunchDaemons/com.oracle.oss.mysql.mysqld.plist
+
+# 按本次安装的常见日志位置查看最近记录；以实际配置为准
+sudo tail -n 80 /usr/local/mysql/data/mysqld.local.err
+</code></pre></div><p><code>Bootstrap failed: 5: Input/output error</code> 是加载失败的概括信息，可能涉及服务已经加载、配置、权限或程序退出，不能仅凭这一行认定磁盘损坏。</p>
+<p>不要因为启动错误就删除数据目录、重新初始化数据库或强行启动第二个 <code>mysqld</code>。</p>
+<p><a id="s4"></a></p>
+</section>
+<section class="chapter" id="chapter-5" aria-label="4. 通过命令行连接 MySQL"><h2 id="heading-19">4. 通过命令行连接 MySQL</h2>
+<h3 id="heading-20">4.1 使用 root 管理员连接</h3>
+<p>在 <strong>Mac 终端</strong>执行：</p>
+<div class="codebox"><div class="codebar"><span>bash</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>/usr/local/mysql/bin/mysql \
+  -h 127.0.0.1 \
+  -P 3306 \
+  -u root \
+  -p
+</code></pre></div><p>末尾的反斜杠表示命令下一行继续；反斜杠后不要加空格。也可以写成一行：</p>
+<div class="codebox"><div class="codebar"><span>bash</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>/usr/local/mysql/bin/mysql -h 127.0.0.1 -P 3306 -u root -p
+</code></pre></div><div class="table-scroll"><table>
+<thead>
+<tr>
+<th>部分</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/usr/local/mysql/bin/mysql</code></td>
+<td>启动客户端程序</td>
+</tr>
+<tr>
+<td><code>-h 127.0.0.1</code></td>
+<td>连接当前机器的回环地址</td>
+</tr>
+<tr>
+<td><code>-P 3306</code></td>
+<td>目标 TCP 端口，大写 <code>P</code></td>
+</tr>
+<tr>
+<td><code>-u root</code></td>
+<td>使用 MySQL 的 root 账号</td>
+</tr>
+<tr>
+<td><code>-p</code></td>
+<td>稍后提示输入密码，小写 <code>p</code></td>
+</tr>
+</tbody></table></div>
+<p>不要把真实密码直接写进命令，以免进入终端历史或其他记录。</p>
+<h3 id="heading-21">4.2 使用项目账号并选择数据库</h3>
+<div class="codebox"><div class="codebar"><span>bash</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>/usr/local/mysql/bin/mysql \
+  -h 127.0.0.1 -P 3306 \
+  -u notes_app -p react_notes
+</code></pre></div><p>最后的 <code>react_notes</code> 是登录后默认使用的数据库，并不是密码。</p>
+<p>出现 <code>Welcome to the MySQL monitor</code> 和 <code>mysql&gt;</code>，表示当前登录成功。接着执行：</p>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>SELECT 1;
+SELECT CURRENT_USER(), DATABASE(), VERSION();
+SHOW GRANTS;
+</code></pre></div><div class="table-scroll"><table>
+<thead>
+<tr>
+<th>表达式</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>CURRENT_USER()</code></td>
+<td>实际用于权限验证的数据库账号</td>
+</tr>
+<tr>
+<td><code>USER()</code></td>
+<td>客户端提供的用户名及客户端来源信息</td>
+</tr>
+<tr>
+<td><code>DATABASE()</code></td>
+<td>当前连接默认选择的数据库，未选择时为 NULL</td>
+</tr>
+<tr>
+<td><code>VERSION()</code></td>
+<td>服务端版本</td>
+</tr>
+<tr>
+<td><code>SHOW GRANTS</code></td>
+<td>查看当前账号的授权</td>
+</tr>
+</tbody></table></div>
+<p><code>Your MySQL connection id is 26</code> 中的数字是会话标识，不是错误码，也不是权限级别。</p>
+<h3 id="heading-22">4.3 TCP 和 Unix Socket</h3>
+<ul>
+<li><code>127.0.0.1</code>：在这里明确走本机 TCP，关注监听地址与端口。</li>
+<li><code>localhost</code>：MySQL 命令行客户端在 Unix/macOS 上通常优先使用 Unix Socket；不同驱动行为可能不同。</li>
+<li>Socket：本机进程通过特殊文件路径通信，不依靠 TCP 端口。</li>
+</ul>
+<p>排查时保持明确的连接参数，避免命令行连了 Socket、Node 连了 TCP，却误以为二者连接方式完全相同。</p>
+<h3 id="heading-23">4.4 登录背后发生了什么</h3>
+<div class="codebox"><div class="codebar"><span>text</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>客户端读取参数
+  → 建立 TCP 或 Socket 连接
+  → MySQL 与客户端协商连接能力、认证方式等
+  → 验证账号身份
+  → 检查请求的数据库访问权限
+  → 建立会话
+  → 每次执行语句时检查相应权限和资源限制
+  → 执行 SQL，返回结果或错误
+</code></pre></div><p>因此“登录成功”和“所有 SQL 都能执行”是两件事。</p>
+<h3 id="heading-24">4.5 区分两个输入环境</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>提示符示意</th>
+<th>在哪里</th>
+<th>应输入什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>dhy@192 ~ %</code></td>
+<td>Mac Shell</td>
+<td><code>mysql</code>、<code>npm</code>、<code>launchctl</code> 等命令</td>
+</tr>
+<tr>
+<td><code>mysql&gt;</code></td>
+<td>MySQL 客户端</td>
+<td><code>SELECT</code>、<code>SHOW</code>、<code>USE</code> 等 SQL</td>
+</tr>
+<tr>
+<td><code>-&gt;</code></td>
+<td>MySQL 等待继续输入</td>
+<td>常见原因是缺少分号或语句未写完</td>
+</tr>
+</tbody></table></div>
+<p>SQL 通常使用 <code>;</code> 结束。输入 <code>\c</code> 可取消当前未完成的语句。输入 <code>exit;</code> 或 <code>quit;</code> 退出当前客户端，不会停止服务。</p>
+<p><a id="s5"></a></p>
+</section>
+<section class="chapter" id="chapter-6" aria-label="5. 账号、权限与资源限制：连接需要通过哪些“门”"><h2 id="heading-25">5. 账号、权限与资源限制：连接需要通过哪些“门”</h2>
+<h3 id="heading-26">5.1 分层检查</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>层次</th>
+<th>检查什么</th>
+<th>常见现象</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>服务与网络</td>
+<td>服务是否启动、地址端口是否可达</td>
+<td>拒绝连接、超时</td>
+</tr>
+<tr>
+<td>身份验证</td>
+<td>用户、来源、密码、认证方式</td>
+<td><code>Access denied</code> / 1045</td>
+</tr>
+<tr>
+<td>操作权限</td>
+<td>是否允许操作目标库表</td>
+<td><code>command denied</code> / 1142 等</td>
+</tr>
+<tr>
+<td>资源限制</td>
+<td>每小时查询量、更新量、连接数量</td>
+<td>1226 / <code>max_questions</code></td>
+</tr>
+<tr>
+<td>业务权限</td>
+<td>当前网站用户能否访问这条笔记</td>
+<td>应由 Node 判断，不能只靠数据库账号</td>
+</tr>
+</tbody></table></div>
+<h3 id="heading-27">5.2 MySQL 的账号由用户名和来源共同确定</h3>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>&#39;notes_app&#39;@&#39;127.0.0.1&#39;
+&#39;notes_app&#39;@&#39;localhost&#39;
+</code></pre></div><p>它们是两个不同的账号定义。<code>@</code> 后的 Host 描述客户端允许来自哪里，不是给数据库服务端设置的监听地址。连接时服务端根据来源、名称解析等规则选择匹配账号；不要只凭报错中的主机文字推断一定匹配了哪一条，登录后用 <code>CURRENT_USER()</code> 确认。<a href="https://dev.mysql.com/doc/refman/8.4/en/account-names.html">账号名称说明</a></p>
+<p><code>&#39;notes_app&#39;@&#39;%&#39;</code> 表示宽泛匹配来源的账号定义，不等于网络端口已开放，也不适合作为解决本机问题的默认手段。</p>
+<h3 id="heading-28">5.3 建立项目账号</h3>
+<p>下面的 SQL 由 <strong>root 或具有相应管理权限的账号</strong>执行。先按第 7 章创建 <code>react_notes</code> 数据库。</p>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>CREATE USER IF NOT EXISTS &#39;notes_app&#39;@&#39;127.0.0.1&#39;
+IDENTIFIED BY &#39;替换为你设置的项目密码&#39;;
+
+GRANT SELECT, INSERT, UPDATE, DELETE
+ON react_notes.*
+TO &#39;notes_app&#39;@&#39;127.0.0.1&#39;;
+
+SHOW GRANTS FOR &#39;notes_app&#39;@&#39;127.0.0.1&#39;;
+</code></pre></div><div class="table-scroll"><table>
+<thead>
+<tr>
+<th>语法</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>CREATE USER</code></td>
+<td>创建账号</td>
+</tr>
+<tr>
+<td><code>IF NOT EXISTS</code></td>
+<td>账号已存在时不重复创建，不会因此更新密码</td>
+</tr>
+<tr>
+<td><code>IDENTIFIED BY</code></td>
+<td>设置密码</td>
+</tr>
+<tr>
+<td><code>GRANT</code></td>
+<td>授权</td>
+</tr>
+<tr>
+<td><code>SELECT</code> / <code>INSERT</code> / <code>UPDATE</code> / <code>DELETE</code></td>
+<td>查 / 增 / 改 / 删</td>
+</tr>
+<tr>
+<td><code>react_notes.*</code></td>
+<td>该数据库下的所有表</td>
+</tr>
+<tr>
+<td><code>TO</code></td>
+<td>权限授予哪个账号</td>
+</tr>
+</tbody></table></div>
+<p>如果账号已经存在，并且你明确需要改密码，才执行：</p>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>ALTER USER &#39;notes_app&#39;@&#39;127.0.0.1&#39;
+IDENTIFIED BY &#39;替换为新的项目密码&#39;;
+</code></pre></div><p>改完后同步更新 Node 的数据库配置与 DBeaver 保存的密码。不要把重置密码当作所有连接错误的通用解决办法。</p>
+<p>使用 <code>CREATE USER</code>、<code>ALTER USER</code>、<code>GRANT</code> 这些账号管理语句后，通常不需要再执行 <code>FLUSH PRIVILEGES</code>。更新账号密码后，应用中的旧连接可能还存在，重启后端可以让连接池重新认证。</p>
+<h3 id="heading-29">5.4 root 与项目账号的职责</h3>
+<ul>
+<li>root：初始化数据库、创建表、执行结构迁移、管理账号。</li>
+<li>notes_app：应用运行时执行必要的业务读写。</li>
+<li>未来的迁移账号：可单独持有建表、改表等权限。</li>
+</ul>
+<p>本地临时使用 root 可以帮助验证连接，但项目日常运行应切回专用账号。只有 CRUD 权限的 <code>notes_app</code> 无法建表，这是预期的权限隔离。</p>
+<h3 id="heading-30">5.5 查询实际账号与限制</h3>
+<p>由 root 执行：</p>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>SELECT User, Host, max_questions, max_updates,
+       max_connections, max_user_connections
+FROM mysql.user
+WHERE User = &#39;notes_app&#39;;
+</code></pre></div><div class="table-scroll"><table>
+<thead>
+<tr>
+<th>存储字段 / 配置项</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>max_questions</code> / <code>MAX_QUERIES_PER_HOUR</code></td>
+<td>每小时 SQL 语句次数上限</td>
+</tr>
+<tr>
+<td><code>max_updates</code> / <code>MAX_UPDATES_PER_HOUR</code></td>
+<td>每小时更新类语句次数上限</td>
+</tr>
+<tr>
+<td><code>max_connections</code> / <code>MAX_CONNECTIONS_PER_HOUR</code></td>
+<td>每小时新建连接次数上限</td>
+</tr>
+<tr>
+<td><code>max_user_connections</code> / <code>MAX_USER_CONNECTIONS</code></td>
+<td>同时连接数上限</td>
+</tr>
+</tbody></table></div>
+<h3 id="heading-31">5.6 你实际遇到的 1226 错误</h3>
+<div class="codebox"><div class="codebar"><span>text</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>User &#39;notes_app&#39; has exceeded the &#39;max_questions&#39; resource
+(current value: 2)
+</code></pre></div><p>这里的 <code>2</code> 是账号配置的每小时语句上限，不是两条记录，也不是两个并发连接。DBeaver、Node、命令行使用同一账号时共同消耗额度，重新连接不会重新获得一份额度。</p>
+<p>由 root 解除这一项限制：</p>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>ALTER USER &#39;notes_app&#39;@&#39;127.0.0.1&#39;
+WITH MAX_QUERIES_PER_HOUR 0;
+</code></pre></div><p><code>0</code> 对这个每小时限制表示不设上限。这个修改不需要重启 MySQL，也不会额外授予 CRUD 权限。其他每小时限制为 <code>0</code> 也表示不设对应上限；但 <code>MAX_USER_CONNECTIONS = 0</code> 会受全局 <code>max_user_connections</code> 配置影响，不要混为一谈。<a href="https://dev.mysql.com/doc/refman/8.4/en/user-resources.html">资源限制说明</a></p>
+<p><a id="s6"></a></p>
+</section>
+<section class="chapter" id="chapter-7" aria-label="6. DBeaver 的操作地图"><h2 id="heading-32">6. DBeaver 的操作地图</h2>
+<h3 id="heading-33">6.1 DBeaver 的作用</h3>
+<p>DBeaver 是客户端，连接已经运行的 MySQL。安装 DBeaver 不会自动替你安装或启动 MySQL。界面显示的表结构有缓存，所以外部执行建表后可能需要刷新导航树。</p>
+<p>常见同类工具还有 MySQL Workbench、DataGrip、TablePlus、Navicat。学习阶段先熟练使用一个工具即可；下面以你已经安装的 DBeaver 为主。</p>
+<h3 id="heading-34">6.2 新建连接</h3>
+<ol>
+<li>新建数据库连接，选择 MySQL 驱动。</li>
+<li>填写下表信息。</li>
+<li>首次连接如提示下载驱动，按提示安装。</li>
+<li>点击“测试连接 / Test Connection”。</li>
+<li>测试成功后保存。</li>
+</ol>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>配置</th>
+<th>本地示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Host</td>
+<td><code>127.0.0.1</code></td>
+</tr>
+<tr>
+<td>Port</td>
+<td><code>3306</code></td>
+</tr>
+<tr>
+<td>Database</td>
+<td>可先留空；项目连接填写 <code>react_notes</code></td>
+</tr>
+<tr>
+<td>Username</td>
+<td>管理用 <code>root</code>，项目验证用 <code>notes_app</code></td>
+</tr>
+<tr>
+<td>Password</td>
+<td>对应 MySQL 账号的密码</td>
+</tr>
+</tbody></table></div>
+<p>建议保存两条名称清晰的连接：<code>本地 MySQL - 管理员</code> 和 <code>本地 notes - 项目账号</code>。连接的显示名称可以自定义，不决定实际使用哪个账号；以编辑连接中的配置为准。</p>
+<p>如果遇到认证插件、证书或公钥相关错误，先记录完整报错并检查驱动版本、认证和 TLS 配置，不要一开始就随意关闭安全校验。</p>
+<h3 id="heading-35">6.3 在哪里编辑 SQL</h3>
+<ol>
+<li>选中正确的数据库连接。</li>
+<li>右键进入 <strong>SQL Editor → New SQL Script</strong> 一类菜单。</li>
+<li>在脚本编辑区输入 SQL。</li>
+<li>使用工具栏或菜单执行，结果显示在下方结果区。</li>
+</ol>
+<p>两种执行方式要分清：</p>
+<ul>
+<li><strong>Execute SQL Statement</strong>：执行当前语句或选中的文本。</li>
+<li><strong>Execute SQL Script</strong>：按脚本执行多条语句。</li>
+</ul>
+<p>如果脚本包含 <code>CREATE DATABASE</code>、<code>USE</code>、<code>CREATE TABLE</code>，却只把光标放在第三条执行，前两条不会因此自动执行。最稳妥的是明确逐条执行，或选择整个初始化脚本执行。快捷键受系统和键位方案影响，以菜单显示为准。<a href="https://dbeaver.com/docs/dbeaver/SQL-Execution/">SQL 执行文档</a></p>
+<h3 id="heading-36">6.4 查看数据库、表结构和数据</h3>
+<p>导航树一般如下：</p>
+<div class="codebox"><div class="codebar"><span>text</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>连接
+└── Databases
+    └── react_notes
+        └── Tables
+            └── notes
+                ├── Columns
+                ├── Constraints
+                ├── Foreign Keys
+                ├── Indexes
+                └── Triggers
+</code></pre></div><div class="table-scroll"><table>
+<thead>
+<tr>
+<th>位置</th>
+<th>主要看什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Properties</td>
+<td>表名、存储引擎、字符集、字段等结构信息</td>
+</tr>
+<tr>
+<td>Columns</td>
+<td>字段类型、是否允许 NULL、默认值、自增</td>
+</tr>
+<tr>
+<td>Data</td>
+<td>实际记录，通常按批次加载</td>
+</tr>
+<tr>
+<td>Constraints</td>
+<td>主键、唯一约束等</td>
+</tr>
+<tr>
+<td>Foreign Keys</td>
+<td>当前表指向其他表的外键关系</td>
+</tr>
+<tr>
+<td>References</td>
+<td>其他表指向当前表的关系</td>
+</tr>
+<tr>
+<td>Indexes</td>
+<td>帮助查询的索引</td>
+</tr>
+<tr>
+<td>DDL</td>
+<td>对应的建表 SQL，适合学习或核对实际定义</td>
+</tr>
+<tr>
+<td>Diagram</td>
+<td>可视化关系图；是否能显示关系取决于实际约束等</td>
+</tr>
+</tbody></table></div>
+<p>看不到刚创建的表：先刷新对应数据库或 Tables 节点，确认没有过滤器，再检查是不是连错数据库或连接。</p>
+<h3 id="heading-37">6.5 在 Data 页进行增删改查</h3>
+<ul>
+<li>查看：打开表的 Data 页，或右键选择查看数据。</li>
+<li>新增：使用新增行按钮，填写 <code>content</code>；<code>id</code> 和有默认值的创建时间通常交给数据库生成。</li>
+<li>修改：编辑对应单元格，检查待保存的变更。</li>
+<li>删除：选中目标行，执行删除操作并确认目标。</li>
+<li>保存：点击 Save / Persist 等按钮，确认 SQL 已执行。</li>
+</ul>
+<p><strong>“编辑了格子”“保存了更改”“事务提交了”是可能分开的步骤。</strong> Auto-commit 开启时，保存执行的变更通常随即提交；手动提交模式下，还需要 Commit。Rollback 可以撤回未提交的数据变更。</p>
+<p>不要把结果页自动显示的前若干行误认为表里只有这么多数据。精确计数使用：</p>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>SELECT COUNT(*) FROM react_notes.notes;
+</code></pre></div><h3 id="heading-38">6.6 图形界面管理用户</h3>
+<p>使用 root 连接，找到 Users，创建或打开目标用户，填写用户名、Host、认证信息，选择 Schema / Object 权限，并保存。具体页签取决于 DBeaver 和 MySQL 版本。</p>
+<p>关注三个位置：</p>
+<ol>
+<li>用户名与 Host 是否完全正确。</li>
+<li><code>react_notes</code> 上是否有需要的权限。</li>
+<li>Resource Limits 一类配置是否误填了很小的每小时限制。</li>
+</ol>
+<p>如果 GUI 没有对应项，或希望准确复现配置，使用 SQL 更直接。界面出现新用户不代表已经持久化到服务端，保存后再用 SQL 核验。</p>
+<p><a id="s7"></a></p>
+</section>
+<section class="chapter" id="chapter-8" aria-label="7. 创建 notes 数据库与表"><h2 id="heading-39">7. 创建 notes 数据库与表</h2>
+<h3 id="heading-40">7.1 初始化 SQL</h3>
+<p>以下由 root 在 SQL 编辑器执行。为了避免当前数据库状态不明确，建表时直接写完整表名。</p>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>CREATE DATABASE IF NOT EXISTS react_notes
+CHARACTER SET utf8mb4;
+
+CREATE TABLE IF NOT EXISTS react_notes.notes (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    content VARCHAR(1000) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+USE react_notes;
+
+SHOW TABLES;
+DESCRIBE notes;
+SHOW CREATE TABLE notes;
+</code></pre></div><p><code>IF NOT EXISTS</code> 只能避免重复创建对象，<strong>不会自动修改已有表的结构</strong>。实际字段以 <code>SHOW CREATE TABLE</code> 为准。</p>
+<h3 id="heading-41">7.2 字段与约束</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>配置</th>
+<th>含义</th>
+<th>对项目的影响</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>笔记编号</td>
+<td>接口通过它定位某条笔记</td>
+</tr>
+<tr>
+<td><code>INT UNSIGNED</code></td>
+<td>无符号整数</td>
+<td>可保存非负整数，常用来存编号</td>
+</tr>
+<tr>
+<td><code>AUTO_INCREMENT</code></td>
+<td>自动分配递增编号</td>
+<td>新增时通常不手动传 <code>id</code></td>
+</tr>
+<tr>
+<td><code>PRIMARY KEY</code> / <code>PRI</code></td>
+<td>主键</td>
+<td>唯一标识每条记录，隐含非空</td>
+</tr>
+<tr>
+<td><code>content VARCHAR(1000)</code></td>
+<td>最多 1000 个字符的可变长字符串</td>
+<td>适合简单短笔记</td>
+</tr>
+<tr>
+<td><code>NOT NULL</code></td>
+<td>不接受 SQL NULL</td>
+<td>但不会禁止空字符串，需要额外校验</td>
+</tr>
+<tr>
+<td><code>created_at TIMESTAMP</code></td>
+<td>创建时间</td>
+<td>读取时与会话时区有关</td>
+</tr>
+<tr>
+<td><code>DEFAULT CURRENT_TIMESTAMP</code></td>
+<td>插入时未提供该字段则用当前时间</td>
+<td>不代表每次更新内容都自动改时间</td>
+</tr>
+<tr>
+<td><code>ENGINE = InnoDB</code></td>
+<td>存储引擎</td>
+<td>支持事务、外键等能力</td>
+</tr>
+<tr>
+<td><code>utf8mb4</code></td>
+<td>字符集</td>
+<td>支持完整 Unicode 编码，包括常见 emoji</td>
+</tr>
+</tbody></table></div>
+<p>自增编号允许有空洞：删除、回滚等都可能使序号不连续。不要把最大 <code>id</code> 当作记录数量。</p>
+<h3 id="heading-42">7.3 字符集与排序规则</h3>
+<ul>
+<li>Charset 决定字符如何编码。</li>
+<li>Collation 决定字符串如何比较与排序。</li>
+<li>界面中的 <code>utf8mb4_0900_ai_ci</code>，其中 <code>ai</code> 表示比较时不区分重音，<code>ci</code> 表示不区分大小写；适用字符集和版本由实际环境决定。</li>
+<li>密码应使用专业密码哈希方式保存，不能因为某个字符串排序规则就认为密码存储安全。</li>
+</ul>
+<p>表名旁边的 <code>16K</code> 等数值通常是存储空间相关信息，不是精确行数。</p>
+<h3 id="heading-43">7.4 常见类型选择</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>常见用途</th>
+<th>选择提醒</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>INT</code> / <code>BIGINT</code></td>
+<td>编号、整数计数</td>
+<td>BIGINT 可能超出 JavaScript 安全整数范围</td>
+</tr>
+<tr>
+<td><code>VARCHAR(n)</code></td>
+<td>名称、标题、短文本</td>
+<td><code>n</code> 是字符数上限，底层仍受字节与行大小约束</td>
+</tr>
+<tr>
+<td><code>TEXT</code></td>
+<td>较长正文</td>
+<td>不需要为了短笔记一开始就使用</td>
+</tr>
+<tr>
+<td><code>DECIMAL(p,s)</code></td>
+<td>需要精确小数的金额</td>
+<td>避免用浮点数表示必须精确的金额</td>
+</tr>
+<tr>
+<td><code>DATE</code></td>
+<td>日期</td>
+<td>不包含时分秒</td>
+</tr>
+<tr>
+<td><code>DATETIME</code></td>
+<td>业务日期时间</td>
+<td>需要明确保存和展示的时区约定</td>
+</tr>
+<tr>
+<td><code>TIMESTAMP</code></td>
+<td>时间点</td>
+<td>按会话时区转换，有类型范围限制</td>
+</tr>
+<tr>
+<td><code>JSON</code></td>
+<td>部分结构灵活的属性</td>
+<td>核心关联字段仍应合理建模</td>
+</tr>
+</tbody></table></div>
+<p><a id="s8"></a></p>
+</section>
+<section class="chapter" id="chapter-9" aria-label="8. 常用 SQL 语法与场景"><h2 id="heading-44">8. 常用 SQL 语法与场景</h2>
+<p>本章默认已经执行 <code>USE react_notes;</code>。示例中的编号仅用于说明，操作前先查询确认记录。涉及结构变更的语句使用管理账号。</p>
+<h3 id="heading-45">8.1 SQL 的分类与基本规则</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>类别</th>
+<th>常见命令</th>
+<th>解决什么问题</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>查询</td>
+<td><code>SELECT</code></td>
+<td>读取记录与统计信息</td>
+</tr>
+<tr>
+<td>数据修改 DML</td>
+<td><code>INSERT</code>、<code>UPDATE</code>、<code>DELETE</code></td>
+<td>增删改记录</td>
+</tr>
+<tr>
+<td>结构定义 DDL</td>
+<td><code>CREATE</code>、<code>ALTER</code>、<code>DROP</code></td>
+<td>建库、建表、改结构</td>
+</tr>
+<tr>
+<td>权限管理</td>
+<td><code>GRANT</code>、<code>REVOKE</code></td>
+<td>谁能执行哪些操作</td>
+</tr>
+<tr>
+<td>事务控制</td>
+<td><code>START TRANSACTION</code>、<code>COMMIT</code>、<code>ROLLBACK</code></td>
+<td>多步操作的提交与撤销</td>
+</tr>
+</tbody></table></div>
+<p>关键字通常不区分大小写，建议大写关键字、保持名称风格一致。表名大小写行为可能随系统与配置变化，项目中统一小写更省心。</p>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>-- 这是单行注释，两个减号后留空格
+/* 这是块注释 */
+
+SELECT &#39;字符串&#39;;
+SELECT `content` FROM notes;
+</code></pre></div><p>单引号用于字符串；反引号用于标识符。不要依赖双引号同时兼容两者，因为 SQL 模式可能改变其意义。</p>
+<h3 id="heading-46">8.2 选择数据库与检查结构</h3>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>SHOW DATABASES;
+USE react_notes;
+SELECT DATABASE();
+SHOW TABLES;
+DESCRIBE notes;
+SHOW CREATE TABLE notes;
+</code></pre></div><p>另一种写法是完整限定表名，不依赖 <code>USE</code>：</p>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>SELECT id, content FROM react_notes.notes;
+</code></pre></div><h3 id="heading-47">8.3 新增：INSERT</h3>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>INSERT INTO notes (content)
+VALUES (&#39;今天开始学习 MySQL&#39;);
+
+INSERT INTO notes (content)
+VALUES (&#39;学习 SELECT&#39;), (&#39;学习 Node 连接数据库&#39;);
+</code></pre></div><p>省略的 <code>id</code> 由自增生成，<code>created_at</code> 使用默认值。建议显式写字段列表，不要依赖表中字段的固定顺序。</p>
+<h3 id="heading-48">8.4 查询：SELECT</h3>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>-- 学习时快速查看；正式接口通常明确列出所需字段
+SELECT * FROM notes;
+
+SELECT id, content, created_at
+FROM notes;
+
+SELECT id, content
+FROM notes
+WHERE id = 1;
+</code></pre></div><p><code>SELECT</code> 后面是需要返回的列或表达式；<code>FROM</code> 后面是数据来源；<code>WHERE</code> 是行的筛选条件。</p>
+<h3 id="heading-49">8.5 筛选：WHERE</h3>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>-- 多个条件同时满足
+SELECT id, content FROM notes
+WHERE id &gt;= 2 AND id &lt;= 10;
+
+-- 满足其中一个条件
+SELECT id, content FROM notes
+WHERE id = 1 OR id = 3;
+
+SELECT id, content FROM notes
+WHERE id IN (1, 3, 5);
+
+-- BETWEEN 包含两端
+SELECT id, content FROM notes
+WHERE id BETWEEN 1 AND 10;
+
+-- 匹配包含关键词的内容
+SELECT id, content FROM notes
+WHERE content LIKE &#39;%学习%&#39;;
+
+-- 匹配以指定文本开头的内容
+SELECT id, content FROM notes
+WHERE content LIKE &#39;学习%&#39;;
+
+-- 按日期范围筛选，采用左闭右开区间
+SELECT id, content FROM notes
+WHERE created_at &gt;= &#39;2026-11-01 00:00:00&#39;
+  AND created_at &lt;  &#39;2026-12-01 00:00:00&#39;;
+</code></pre></div><p><code>%</code> 匹配零个或多个字符；<code>_</code> 匹配一个字符。混合 <code>AND</code>、<code>OR</code> 时建议写括号，清楚表达优先级。</p>
+<h3 id="heading-50">8.6 NULL 与空字符串</h3>
+<p><code>NULL</code> 表示缺失或未知，<code>&#39;&#39;</code> 是一个存在但长度为零的字符串。</p>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>-- 可空字段要这样判断，不能写 = NULL
+SELECT id FROM notes WHERE content IS NULL;
+
+SELECT id FROM notes WHERE content IS NOT NULL;
+
+SELECT id FROM notes WHERE content = &#39;&#39;;
+</code></pre></div><p>当前 <code>content</code> 是 NOT NULL，所以正常情况下第一条查询不会返回记录；它仍然可能保存空字符串，除非后端或数据库约束阻止。</p>
+<h3 id="heading-51">8.7 排序与分页</h3>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>-- 降序，按最新创建时间优先；id 用于时间相同时稳定排序
+SELECT id, content, created_at
+FROM notes
+ORDER BY created_at DESC, id DESC
+LIMIT 10;
+
+-- 从第 11 条开始取 10 条，偏移量从 0 算起
+SELECT id, content FROM notes
+ORDER BY id DESC
+LIMIT 10 OFFSET 10;
+
+-- 下一页游标示例：继续读取 id 小于上一页最后一条的记录
+SELECT id, content FROM notes
+WHERE id &lt; 100
+ORDER BY id DESC
+LIMIT 10;
+</code></pre></div><p><code>ASC</code> 为升序，<code>DESC</code> 为降序。没有 <code>ORDER BY</code> 时不要依赖结果顺序。大偏移量分页可能越来越慢；数据量增长后可考虑游标分页。</p>
+<h3 id="heading-52">8.8 修改：UPDATE</h3>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>-- 先确认目标
+SELECT id, content FROM notes WHERE id = 1;
+
+UPDATE notes
+SET content = &#39;已经学会修改笔记&#39;
+WHERE id = 1;
+</code></pre></div><p>没有 <code>WHERE</code> 会修改所有行。返回的受影响行数还可能受驱动是否报告“匹配行”或“实际变化行”影响，不能总把 0 简单理解成记录不存在。</p>
+<h3 id="heading-53">8.9 删除：DELETE</h3>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>SELECT id, content FROM notes WHERE id = 1;
+
+DELETE FROM notes
+WHERE id = 1;
+</code></pre></div><p>没有 <code>WHERE</code> 会删除所有行。<code>DELETE</code> 删除记录，<code>DROP TABLE</code> 删除整张表，<code>DROP DATABASE</code> 删除数据库；<code>TRUNCATE</code> 清空表，属于有隐式提交行为的结构类操作，不适合用来练习可回滚删除。</p>
+<h3 id="heading-54">8.10 AS：给列或表起别名</h3>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>SELECT
+    id AS note_id,
+    content AS note_content,
+    CHAR_LENGTH(content) AS content_length
+FROM notes AS n
+ORDER BY content_length DESC;
+</code></pre></div><div class="table-scroll"><table>
+<thead>
+<tr>
+<th>形式</th>
+<th>AS 前面</th>
+<th>AS 后面</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>content AS note_content</code></td>
+<td>原字段</td>
+<td>查询结果里的列名</td>
+</tr>
+<tr>
+<td><code>CHAR_LENGTH(content) AS content_length</code></td>
+<td>表达式</td>
+<td>计算结果的列名</td>
+</tr>
+<tr>
+<td><code>notes AS n</code></td>
+<td>原表名</td>
+<td>当前查询中使用的表简称</td>
+</tr>
+</tbody></table></div>
+<p>别名不会改掉数据库里的真实名称。表别名常用于 JOIN，列别名常用于统计结果和接口字段映射。<code>AS</code> 在许多这些位置可以省略，但初学时保留更直观。</p>
+<p>同一查询中，列别名通常可以用于 <code>ORDER BY</code>，但不能直接用于 <code>WHERE</code>；筛选表达式时重复写表达式或使用子查询。</p>
+<h3 id="heading-55">8.11 聚合、分组与 HAVING</h3>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>SELECT COUNT(*) AS total FROM notes;
+
+SELECT MAX(id) AS max_id,
+       MIN(id) AS min_id,
+       AVG(CHAR_LENGTH(content)) AS avg_length
+FROM notes;
+
+SELECT DATE(created_at) AS note_date,
+       COUNT(*) AS total
+FROM notes
+GROUP BY DATE(created_at)
+HAVING COUNT(*) &gt;= 2
+ORDER BY note_date DESC;
+</code></pre></div><ul>
+<li><code>COUNT(*)</code> 统计行数；<code>COUNT(字段)</code> 统计该字段非 NULL 的行数。</li>
+<li><code>WHERE</code> 在分组前筛选原始行；<code>HAVING</code> 筛选分组后的结果。</li>
+<li>选择非聚合字段时，应让它符合分组规则，不要依赖宽松 SQL 模式得到不确定结果。</li>
+</ul>
+<p>理解查询的逻辑顺序可以参考：</p>
+<div class="codebox"><div class="codebar"><span>text</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>FROM / JOIN → WHERE → GROUP BY → HAVING → SELECT → ORDER BY → LIMIT
+</code></pre></div><p>这用于理解语义，并不等于数据库底层一定按这个物理顺序逐步执行。</p>
+<h3 id="heading-56">8.12 子查询与 EXISTS</h3>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>-- 比平均长度更长的笔记
+SELECT id, content FROM notes
+WHERE CHAR_LENGTH(content) &gt; (
+    SELECT AVG(CHAR_LENGTH(content)) FROM notes
+);
+
+-- 判断有没有记录
+SELECT EXISTS(
+    SELECT 1 FROM notes WHERE id = 1
+) AS note_exists;
+</code></pre></div><p>基础语法可继续参考 <a href="https://dev.mysql.com/doc/refman/8.4/en/tutorial.html">MySQL 官方教程</a>。</p>
+<p><a id="s9"></a></p>
+</section>
+<section class="chapter" id="chapter-10" aria-label="9. 多表关系与 JOIN"><h2 id="heading-57">9. 多表关系与 JOIN</h2>
+<h3 id="heading-58">9.1 什么时候需要多表</h3>
+<p>一篇笔记属于一个用户，一个用户可以拥有多篇笔记。这是“一对多”。如果一篇笔记有多个标签、一个标签也能属于多篇笔记，则通常通过关联表表达“多对多”。</p>
+<p>不要把用户姓名复制到每一篇笔记中充当关联。一般用 <code>user_id</code> 保存用户主键，再通过 JOIN 读取姓名。</p>
+<h3 id="heading-59">9.2 独立练习表</h3>
+<p>下面是可选练习，由 root 在 <code>react_notes</code> 中执行。使用独立表名，避免改动当前 notes 表。创建完成后新增数据的脚本只执行一次，重复执行会触发主键冲突。</p>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>USE react_notes;
+
+CREATE TABLE IF NOT EXISTS learning_users (
+    id INT UNSIGNED PRIMARY KEY,
+    name VARCHAR(50) NOT NULL
+) ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS learning_notes (
+    id INT UNSIGNED PRIMARY KEY,
+    user_id INT UNSIGNED NOT NULL,
+    content VARCHAR(1000) NOT NULL,
+    CONSTRAINT fk_learning_notes_user
+        FOREIGN KEY (user_id) REFERENCES learning_users(id)
+) ENGINE = InnoDB;
+
+INSERT INTO learning_users (id, name)
+VALUES (1, &#39;小明&#39;), (2, &#39;小红&#39;), (3, &#39;小李&#39;);
+
+INSERT INTO learning_notes (id, user_id, content)
+VALUES (101, 1, &#39;学习 React&#39;),
+       (102, 1, &#39;学习 MySQL&#39;),
+       (103, 2, &#39;学习 Node&#39;);
+</code></pre></div><p>外键约束使 <code>user_id</code> 必须引用存在的用户。当前定义未配置级联删除，因此删除仍被引用的用户通常会被阻止。</p>
+<h3 id="heading-60">9.3 左表与右表由 SQL 位置决定</h3>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>FROM learning_users AS u
+LEFT JOIN learning_notes AS n ON n.user_id = u.id
+</code></pre></div><p>这里左表是 <code>learning_users</code>，右表是 <code>learning_notes</code>。它们没有永久的左右身份，交换写法后角色也会变化。</p>
+<h3 id="heading-61">9.4 LEFT JOIN：保留所有左表记录</h3>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>SELECT u.id AS user_id,
+       u.name AS user_name,
+       n.id AS note_id,
+       n.content
+FROM learning_users AS u
+LEFT JOIN learning_notes AS n
+    ON n.user_id = u.id
+ORDER BY u.id, n.id;
+</code></pre></div><div class="table-scroll"><table>
+<thead>
+<tr>
+<th>user_id</th>
+<th>user_name</th>
+<th>note_id</th>
+<th>content</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>小明</td>
+<td>101</td>
+<td>学习 React</td>
+</tr>
+<tr>
+<td>1</td>
+<td>小明</td>
+<td>102</td>
+<td>学习 MySQL</td>
+</tr>
+<tr>
+<td>2</td>
+<td>小红</td>
+<td>103</td>
+<td>学习 Node</td>
+</tr>
+<tr>
+<td>3</td>
+<td>小李</td>
+<td>NULL</td>
+<td>NULL</td>
+</tr>
+</tbody></table></div>
+<p>用途：展示所有用户及其笔记、展示没有订单的客户、查找缺少关联数据的对象。左表一行匹配右表多行时，结果会展开为多行。</p>
+<h3 id="heading-62">9.5 INNER JOIN：只保留匹配成功的组合</h3>
+<p>把上面 <code>LEFT JOIN</code> 改成 <code>INNER JOIN</code>，小李就不会出现，因为没有匹配的笔记。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>连接类型</th>
+<th>结果规则</th>
+<th>常见场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>INNER JOIN</td>
+<td>只返回匹配的组合</td>
+<td>查询已有笔记及其作者</td>
+</tr>
+<tr>
+<td>LEFT JOIN</td>
+<td>匹配组合 + 未匹配左行</td>
+<td>所有用户，包括零笔记用户</td>
+</tr>
+<tr>
+<td>RIGHT JOIN</td>
+<td>匹配组合 + 未匹配右行</td>
+<td>可交换表顺序改写为 LEFT JOIN</td>
+</tr>
+</tbody></table></div>
+<p>INNER JOIN 的对称性不代表改变 SELECT 字段顺序后输出列也会保持相同；它也不能保证结果排序或执行计划相同。</p>
+<h3 id="heading-63">9.6 ON 与 WHERE 的区别很重要</h3>
+<p>下面保留所有用户，只匹配内容含 MySQL 的笔记：</p>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>SELECT u.name, n.content
+FROM learning_users AS u
+LEFT JOIN learning_notes AS n
+    ON n.user_id = u.id
+   AND n.content LIKE &#39;%MySQL%&#39;;
+</code></pre></div><p>如果把内容条件放到 WHERE：</p>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>SELECT u.name, n.content
+FROM learning_users AS u
+LEFT JOIN learning_notes AS n
+    ON n.user_id = u.id
+WHERE n.content LIKE &#39;%MySQL%&#39;;
+</code></pre></div><p>未匹配时补出的 NULL 行无法通过这个条件，因此会被过滤掉。这是 LEFT JOIN 看起来像 INNER JOIN 的常见原因。</p>
+<h3 id="heading-64">9.7 找出没有笔记的用户、统计每人笔记数</h3>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>SELECT u.id, u.name
+FROM learning_users AS u
+LEFT JOIN learning_notes AS n ON n.user_id = u.id
+WHERE n.id IS NULL;
+
+SELECT u.id, u.name, COUNT(n.id) AS note_count
+FROM learning_users AS u
+LEFT JOIN learning_notes AS n ON n.user_id = u.id
+GROUP BY u.id, u.name;
+</code></pre></div><p>这里统计 <code>COUNT(n.id)</code>，不能换成 <code>COUNT(*)</code> 来计算零笔记数量：未匹配的用户仍然有一行补 NULL 的结果，<code>COUNT(*)</code> 会把它算成 1。<a href="https://dev.mysql.com/doc/refman/8.4/en/join.html">JOIN 官方说明</a></p>
+<p><a id="s10"></a></p>
+</section>
+<section class="chapter" id="chapter-11" aria-label="10. 事务、索引与表结构演进"><h2 id="heading-65">10. 事务、索引与表结构演进</h2>
+<h3 id="heading-66">10.1 事务：一组操作一起成功或一起撤销</h3>
+<p>典型场景包括转账、创建订单并扣减库存、同时保存主记录和关联记录。</p>
+<p>在同一连接里练习可回滚修改：</p>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>START TRANSACTION;
+
+UPDATE notes SET content = &#39;事务练习：准备撤回&#39;
+WHERE id = 1;
+
+SELECT id, content FROM notes WHERE id = 1;
+
+ROLLBACK;
+
+SELECT id, content FROM notes WHERE id = 1;
+</code></pre></div><p>真正需要保存时，用 <code>COMMIT</code> 结束事务。常说的 ACID 是原子性、一致性、隔离性、持久性；事务能力仍需要正确的业务规则和约束配合。</p>
+<p>注意：</p>
+<ul>
+<li>默认自动提交下，一条成功的数据修改语句通常立即提交。</li>
+<li><code>ROLLBACK</code> 不能撤销已经提交的操作。</li>
+<li><code>CREATE TABLE</code>、<code>ALTER TABLE</code> 等许多 DDL 会触发隐式提交，不能把它们当作普通 DML 回滚练习。</li>
+<li>事务绑定到连接。Node 事务必须从连接池取出同一条连接完成，最后释放。</li>
+<li>避免长事务和在事务中等待用户操作；死锁等异常需要按业务语义处理重试。</li>
+</ul>
+<h3 id="heading-67">10.2 索引：帮助定位记录</h3>
+<p>主键本身已有索引。按 <code>WHERE id = ?</code> 读取笔记不需要再给 <code>id</code> 创建重复索引。</p>
+<p>如果实际查询经常按创建时间与编号排序，可评估：</p>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>-- 结构变更由管理账号执行，命令只需执行一次
+CREATE INDEX idx_notes_created_at_id
+ON notes (created_at, id);
+
+EXPLAIN
+SELECT id, content, created_at FROM notes
+ORDER BY created_at DESC, id DESC
+LIMIT 20;
+</code></pre></div><p><code>EXPLAIN</code> 用于观察计划，关注使用的索引、访问方式和估计扫描量。小表未选某个索引不一定是异常，优化器会比较成本。</p>
+<p>索引也占空间，并增加写入成本。<code>LIKE &#39;%关键词%&#39;</code> 通常不能靠普通 B-tree 索引有效定位；索引不是“越多越快”。</p>
+<h3 id="heading-68">10.3 表结构要以迁移方式演进</h3>
+<p>例如未来需要最后更新时间：</p>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>ALTER TABLE notes
+ADD COLUMN updated_at TIMESTAMP NOT NULL
+    DEFAULT CURRENT_TIMESTAMP
+    ON UPDATE CURRENT_TIMESTAMP;
+</code></pre></div><p>这是一次性结构变更，重复执行会因列已存在而报错。应记录执行版本，而不是每次启动后端都执行一遍。</p>
+<p>可采用版本文件：</p>
+<div class="codebox"><div class="codebar"><span>text</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>node/sql/001_create_notes.sql
+node/sql/002_add_updated_at.sql
+</code></pre></div><p>这些是建议的文件组织示意。已有项目需要先核对当前结构，再确定迁移的起点。迁移代码可以提交 Git，数据库数据需要另外备份。</p>
+<p><a id="s11"></a></p>
+</section>
+<section class="chapter" id="chapter-12" aria-label="11. 前后端与数据库如何交互"><h2 id="heading-69">11. 前后端与数据库如何交互</h2>
+<h3 id="heading-70">11.1 本地开发的地址地图</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>服务</th>
+<th>常见地址</th>
+<th>说什么协议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Vite 开发服务</td>
+<td><code>http://localhost:5173</code></td>
+<td>HTTP，提供页面与开发代理</td>
+</tr>
+<tr>
+<td>Node API</td>
+<td><code>http://127.0.0.1:3001</code></td>
+<td>HTTP，接收接口请求</td>
+</tr>
+<tr>
+<td>MySQL</td>
+<td><code>127.0.0.1:3306</code></td>
+<td>MySQL 数据库协议</td>
+</tr>
+</tbody></table></div>
+<p>端口不是账号，也不是库名。在浏览器输入 <code>http://127.0.0.1:3306</code> 不能像网站一样管理数据库，因为协议不同。</p>
+<h3 id="heading-71">11.2 新增笔记的一次完整流程</h3>
+<div class="codebox"><div class="codebar"><span>text</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>1. 用户在 React 文本框输入内容并点击保存。
+2. React fetch(&#39;/api/notes&#39;) 发送 POST，内容为 JSON。
+3. Vite 根据 /api 规则转发给 Node 的 3001 端口。
+4. Express 解析 JSON，检查内容类型、长度、用户权限等。
+5. Node 调用 mysql2，用项目账号通过连接池执行参数化 INSERT。
+6. MySQL 检查权限、约束并保存记录，返回新 id 等信息。
+7. Node 返回 201 和 JSON。
+8. React 读取响应，把新记录展示到列表。
+</code></pre></div><p>HTTP 的 JSON 和 SQL 不是同一种语言。Node 驱动负责把后端的数据访问操作转换成与 MySQL 服务端的通信。</p>
+<h3 id="heading-72">11.3 为什么浏览器不直接连 MySQL</h3>
+<p>浏览器代码对用户可见，不应持有数据库密码。后端还需要统一执行身份验证、数据范围限制、输入校验和业务规则。</p>
+<p>业务接口不应接收“任意 SQL”然后原样执行。前端只传业务参数，例如笔记内容和编号；SQL 结构由后端代码决定。</p>
+<h3 id="heading-73">11.4 连接池与参数化</h3>
+<div class="codebox"><div class="codebar"><span>js</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>const [rows] = await pool.execute(
+  &#39;SELECT id, content FROM notes WHERE id = ?&#39;,
+  [noteId]
+);
+</code></pre></div><p><code>?</code> 是值的占位符；后面的数组按顺序提供参数。不要用字符串拼接把用户输入嵌进 SQL。占位符用于值，不能直接代替任意表名或排序字段；动态字段需要由后端白名单选择。<a href="https://sidorares.github.io/node-mysql2/docs/examples/queries/prepared-statements">mysql2 预处理语句</a></p>
+<p>连接池通常按需要建立并复用连接；<code>connectionLimit: 5</code> 不表示应用总共只能处理五个请求，也不表示每次查询只能返回五行。多进程部署时，每个进程各自的连接池都要计入总连接预算。</p>
+<p><a id="s12"></a></p>
+</section>
+<section class="chapter" id="chapter-13" aria-label="12. Node 接入 MySQL：notes CRUD 参考实现"><h2 id="heading-74">12. Node 接入 MySQL：notes CRUD 参考实现</h2>
+<p>以下按你提到的 <code>node</code> 后端、<code>vite-project</code> 前端目录组织。路径是示意；请在自己的 React 项目中对应位置修改。代码使用 <strong>CommonJS + Express 5</strong>，不要直接混入声明了 <code>&quot;type&quot;: &quot;module&quot;</code> 的后端；如果已有接口，应先合并而不是覆盖。</p>
+<h3 id="heading-75">12.1 文件结构</h3>
+<div class="codebox"><div class="codebar"><span>text</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>react/
+├── node/
+│   ├── .env                # 真实配置，禁止提交
+│   ├── .env.example        # 配置模板，可提交
+│   ├── db.js
+│   ├── index.js
+│   └── package.json
+└── vite-project/
+    ├── vite.config.js
+    └── src/
+        ├── api.js
+        └── App.jsx
+</code></pre></div><h3 id="heading-76">12.2 安装依赖与启动脚本</h3>
+<p>在后端目录执行：</p>
+<div class="codebox"><div class="codebar"><span>bash</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>cd node
+npm install express@5 mysql2 dotenv
+</code></pre></div><p>在现有 <code>package.json</code> 的 scripts 中合并：</p>
+<div class="codebox"><div class="codebar"><span>json</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>{
+  &quot;scripts&quot;: {
+    &quot;dev&quot;: &quot;node --watch index.js&quot;,
+    &quot;start&quot;: &quot;node index.js&quot;
+  }
+}
+</code></pre></div><p>不要用上面的片段替换整个已有 package.json。使用支持 <code>--watch</code> 的 Node 版本，实际开发与部署版本应统一。</p>
+<h3 id="heading-77">12.3 环境变量</h3>
+<p>后端 <code>.env</code> 内容示例：</p>
+<div class="codebox"><div class="codebar"><span>dotenv</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>NODE_ENV=development
+PORT=3001
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_USER=notes_app
+DB_PASSWORD=&quot;替换为项目账号实际密码&quot;
+DB_NAME=react_notes
+</code></pre></div><p>密码必须与 MySQL 账号一致。有 <code>#</code> 等特殊字符时，dotenv 文件中用合适的引号包裹，避免被当作注释。将不含真实密码的同名配置模板保存为 <code>.env.example</code>。</p>
+<p>Git 忽略规则示例：</p>
+<div class="codebox"><div class="codebar"><span>gitignore</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>.env
+.env.*
+!.env.example
+</code></pre></div><p>忽略规则不能清除已经被提交过的秘密。数据库密码不能放到前端 <code>VITE_*</code> 变量里，因为这类变量会进入浏览器构建产物。</p>
+<h3 id="heading-78">12.4 db.js：创建连接池</h3>
+<div class="codebox"><div class="codebar"><span>js</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>const path = require(&#39;node:path&#39;);
+const mysql = require(&#39;mysql2/promise&#39;);
+
+require(&#39;dotenv&#39;).config({ path: path.join(__dirname, &#39;.env&#39;) });
+
+for (const key of [&#39;DB_HOST&#39;, &#39;DB_USER&#39;, &#39;DB_PASSWORD&#39;, &#39;DB_NAME&#39;]) {
+  if (!process.env[key]) throw new Error(`缺少环境变量：${key}`);
+}
+
+const pool = mysql.createPool({
+  host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT || 3306),
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  charset: &#39;utf8mb4&#39;,
+  waitForConnections: true,
+  connectionLimit: 5,
+  queueLimit: 50,
+});
+
+module.exports = pool;
+</code></pre></div><p>显式指定 <code>.env</code> 路径，可以减少“从其他工作目录启动导致没读到配置”的问题。它仍允许部署环境通过已有环境变量提供配置。</p>
+<p><code>pool.execute()</code> 会借用和归还连接；只有手动 <code>getConnection()</code> 才需要自己在结束后 <code>release()</code>。不要每个请求都 <code>pool.end()</code>，那会关闭整个池。<a href="https://sidorares.github.io/node-mysql2/docs/examples/connections/create-pool">连接池说明</a></p>
+<h3 id="heading-79">12.5 接口约定</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>操作</th>
+<th>HTTP</th>
+<th>地址</th>
+<th>成功返回</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>健康检查</td>
+<td>GET</td>
+<td><code>/api/health</code></td>
+<td>200，数据库基本查询成功</td>
+</tr>
+<tr>
+<td>查询列表</td>
+<td>GET</td>
+<td><code>/api/notes</code></td>
+<td>200，最近 100 条笔记数组</td>
+</tr>
+<tr>
+<td>查询单条</td>
+<td>GET</td>
+<td><code>/api/notes/:id</code></td>
+<td>200，一条笔记</td>
+</tr>
+<tr>
+<td>新增</td>
+<td>POST</td>
+<td><code>/api/notes</code></td>
+<td>201，新笔记</td>
+</tr>
+<tr>
+<td>修改内容</td>
+<td>PUT</td>
+<td><code>/api/notes/:id</code></td>
+<td>200，修改后的笔记</td>
+</tr>
+<tr>
+<td>删除</td>
+<td>DELETE</td>
+<td><code>/api/notes/:id</code></td>
+<td>204，无响应体</td>
+</tr>
+</tbody></table></div>
+<p>新增、修改的请求体均为 <code>{&quot;content&quot;:&quot;笔记内容&quot;}</code>。找不到记录返回 404；输入不合法返回 400；未预期错误返回 500，具体原因记录在后端。</p>
+<h3 id="heading-80">12.6 index.js：完整后端示例</h3>
+<div class="codebox"><div class="codebar"><span>js</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>const express = require(&#39;express&#39;);
+const pool = require(&#39;./db&#39;);
+
+const app = express();
+app.use(express.json({ limit: &#39;32kb&#39; }));
+
+function httpError(status, message) {
+  return Object.assign(new Error(message), { status });
+}
+
+function parseId(value) {
+  if (!/^[1-9]\d*$/.test(value)) {
+    throw httpError(400, &#39;笔记编号必须是正整数&#39;);
+  }
+  const id = Number(value);
+  if (!Number.isSafeInteger(id) || id &gt; 4294967295) {
+    throw httpError(400, &#39;笔记编号超出范围&#39;);
+  }
+  return id;
+}
+
+function parseContent(body) {
+  if (typeof body?.content !== &#39;string&#39;) {
+    throw httpError(400, &#39;content 必须是字符串&#39;);
+  }
+  const content = body.content.trim();
+  if (!content || Array.from(content).length &gt; 1000) {
+    throw httpError(400, &#39;笔记内容应为 1 至 1000 个字符&#39;);
+  }
+  return content;
+}
+
+async function findNote(id) {
+  const [rows] = await pool.execute(
+    &#39;SELECT id, content, created_at FROM notes WHERE id = ?&#39;,
+    [id]
+  );
+  return rows[0];
+}
+
+app.get(&#39;/api/health&#39;, async (req, res) =&gt; {
+  await pool.execute(&#39;SELECT 1&#39;);
+  res.json({ ok: true });
+});
+
+app.get(&#39;/api/notes&#39;, async (req, res) =&gt; {
+  const [rows] = await pool.execute(
+    &#39;SELECT id, content, created_at FROM notes ORDER BY id DESC LIMIT 100&#39;
+  );
+  res.json(rows);
+});
+
+app.get(&#39;/api/notes/:id&#39;, async (req, res) =&gt; {
+  const note = await findNote(parseId(req.params.id));
+  if (!note) throw httpError(404, &#39;笔记不存在&#39;);
+  res.json(note);
+});
+
+app.post(&#39;/api/notes&#39;, async (req, res) =&gt; {
+  const content = parseContent(req.body);
+  const [result] = await pool.execute(
+    &#39;INSERT INTO notes (content) VALUES (?)&#39;,
+    [content]
+  );
+  const note = await findNote(result.insertId);
+  res.status(201).json(note);
+});
+
+app.put(&#39;/api/notes/:id&#39;, async (req, res) =&gt; {
+  const id = parseId(req.params.id);
+  const content = parseContent(req.body);
+  await pool.execute(&#39;UPDATE notes SET content = ? WHERE id = ?&#39;, [content, id]);
+  const note = await findNote(id);
+  if (!note) throw httpError(404, &#39;笔记不存在&#39;);
+  res.json(note);
+});
+
+app.delete(&#39;/api/notes/:id&#39;, async (req, res) =&gt; {
+  const id = parseId(req.params.id);
+  const [result] = await pool.execute(&#39;DELETE FROM notes WHERE id = ?&#39;, [id]);
+  if (result.affectedRows === 0) throw httpError(404, &#39;笔记不存在&#39;);
+  res.status(204).end();
+});
+
+app.use((req, res) =&gt; {
+  res.status(404).json({ message: &#39;接口不存在&#39; });
+});
+
+app.use((err, req, res, next) =&gt; {
+  if (res.headersSent) return next(err);
+  const status = Number.isInteger(err.status) &amp;&amp; err.status &gt;= 400 &amp;&amp; err.status &lt; 500
+    ? err.status
+    : 500;
+  if (status === 500) {
+    console.error(&#39;接口错误：&#39;, { code: err.code, message: err.message });
+  }
+  const message = err.type === &#39;entity.parse.failed&#39;
+    ? &#39;请求体不是合法 JSON&#39;
+    : status === 413
+      ? &#39;请求内容过大&#39;
+      : status === 500
+        ? &#39;服务暂时不可用，请检查后端日志&#39;
+        : err.message;
+  res.status(status).json({ message });
+});
+
+let server;
+
+async function start() {
+  // 不仅验证能连接，还提前验证 notes 表和 SELECT 权限。
+  await pool.execute(&#39;SELECT id FROM notes LIMIT 1&#39;);
+  const port = Number(process.env.PORT || 3001);
+  server = app.listen(port, &#39;127.0.0.1&#39;, () =&gt; {
+    console.log(`API 已启动：http://127.0.0.1:${port}`);
+  });
+  server.on(&#39;error&#39;, (err) =&gt; {
+    console.error(&#39;HTTP 服务启动失败：&#39;, { code: err.code, message: err.message });
+    pool.end().finally(() =&gt; process.exit(1));
+  });
+}
+
+let stopping = false;
+async function shutdown() {
+  if (stopping) return;
+  stopping = true;
+  const timeout = setTimeout(() =&gt; process.exit(1), 10000);
+  timeout.unref();
+  try {
+    if (server) await new Promise((resolve) =&gt; server.close(resolve));
+    await pool.end();
+    process.exit(0);
+  } catch (err) {
+    console.error(&#39;关闭服务失败：&#39;, err.message);
+    process.exit(1);
+  }
+}
+
+process.on(&#39;SIGINT&#39;, shutdown);
+process.on(&#39;SIGTERM&#39;, shutdown);
+
+start().catch(async (err) =&gt; {
+  console.error(&#39;启动失败：&#39;, { code: err.code, message: err.message });
+  await pool.end();
+  process.exit(1);
+});
+</code></pre></div><p>Express 5 会将异步路由抛出的错误传给错误处理中间件，因此示例没有给每条路由重复写 try/catch。Express 4 需要额外的异步错误转发包装。<a href="https://expressjs.com/en/guide/error-handling.html">Express 错误处理</a></p>
+<p>这是一套<strong>单人本地学习</strong>接口，没有登录和按用户隔离数据，不应直接作为公开可写服务上线。后续多用户场景需要后端从可信登录身份获取用户编号，并在查询、修改、删除中限制数据归属。</p>
+<p>新增后再查询、修改后再查询是两个语句；这个教学实现没有承诺这些操作在高并发下原子完成。确有并发一致性要求时再明确事务、锁或版本号策略。</p>
+<h3 id="heading-81">12.7 驱动返回值怎么读</h3>
+<div class="codebox"><div class="codebar"><span>js</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>const [rows, fields] = await pool.execute(&#39;SELECT id, content FROM notes&#39;);
+const [result] = await pool.execute(
+  &#39;INSERT INTO notes (content) VALUES (?)&#39;,
+  [&#39;学习返回值&#39;]
+);
+</code></pre></div><ul>
+<li>SELECT 的 <code>rows</code> 是记录数组，<code>fields</code> 是列元信息。</li>
+<li>INSERT 的 <code>result.insertId</code> 是本次生成的编号。</li>
+<li>DELETE 的 <code>result.affectedRows</code> 可用于判断删除是否命中。</li>
+<li><code>await</code> 等待数据库操作结果，但不会阻塞整个 Node 事件循环去同步等待网络 I/O。</li>
+</ul>
+<h3 id="heading-82">12.8 Node 事务写法</h3>
+<p>未来需要多条写操作一起成功时，基本结构如下。两条 UPDATE 仅用于演示事务组织；实际要按业务检查目标是否存在等规则。</p>
+<div class="codebox"><div class="codebar"><span>js</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>const connection = await pool.getConnection();
+try {
+  await connection.beginTransaction();
+  await connection.execute(
+    &#39;UPDATE notes SET content = ? WHERE id = ?&#39;, [&#39;第一条内容&#39;, 1]
+  );
+  await connection.execute(
+    &#39;UPDATE notes SET content = ? WHERE id = ?&#39;, [&#39;第二条内容&#39;, 2]
+  );
+  await connection.commit();
+} catch (err) {
+  await connection.rollback();
+  throw err;
+} finally {
+  connection.release();
+}
+</code></pre></div><p>不要分别对 <code>pool</code> 执行 BEGIN、两个 UPDATE、COMMIT，因为这些调用可能借到不同连接。</p>
+<p><a id="s13"></a></p>
+</section>
+<section class="chapter" id="chapter-14" aria-label="13. React 接口调用与 Vite 开发代理"><h2 id="heading-83">13. React 接口调用与 Vite 开发代理</h2>
+<h3 id="heading-84">13.1 Vite 配置</h3>
+<p>在前端 <code>vite.config.js</code> 合并代理配置，保留项目已有插件与其他配置：</p>
+<div class="codebox"><div class="codebar"><span>js</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>import { defineConfig } from &#39;vite&#39;;
+import react from &#39;@vitejs/plugin-react&#39;;
+
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    port: 5173,
+    strictPort: true,
+    proxy: {
+      &#39;/api&#39;: {
+        target: &#39;http://127.0.0.1:3001&#39;,
+        changeOrigin: true,
+      },
+    },
+  },
+});
+</code></pre></div><p>浏览器请求 <code>/api/notes</code> 后，后端仍收到 <code>/api/notes</code>，这里不要删除 <code>/api</code> 前缀，因为示例后端的路由本来就包含它。配置修改后重启 Vite。</p>
+<p><code>changeOrigin</code> 主要调整转发请求的 Host 等信息，不是数据库权限设置，也不能替代所有跨域配置。这里浏览器请求同源的 Vite，由 Vite 代理到 Node，因此不需要再为这个流程添加浏览器跨域访问规则。</p>
+<p>Vite 的 <code>server.proxy</code> 属于开发服务器配置，前端构建后不会自动带到生产环境；上线要由 Nginx 或托管平台提供转发。<a href="https://vite.dev/config/server-options.html#server-proxy">Vite 服务配置</a></p>
+<h3 id="heading-85">13.2 api.js：先检查 HTTP 状态，再处理响应</h3>
+<div class="codebox"><div class="codebar"><span>js</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>export async function request(path, options = {}) {
+  const response = await fetch(path, {
+    ...options,
+    headers: {
+      ...(options.body ? { &#39;Content-Type&#39;: &#39;application/json&#39; } : {}),
+      ...options.headers,
+    },
+  });
+
+  const text = await response.text();
+  let data = null;
+  let isJson = false;
+  if (text) {
+    try {
+      data = JSON.parse(text);
+      isJson = true;
+    } catch {
+      // 代理报错可能返回纯文本或 HTML，稍后按 HTTP 状态处理。
+    }
+  }
+
+  if (!response.ok) {
+    throw new Error(
+      typeof data?.message === &#39;string&#39; ? data.message : `请求失败（HTTP ${response.status}）`
+    );
+  }
+  if (response.status === 204) return null;
+  if (!isJson) throw new Error(&#39;接口未返回预期的 JSON 数据&#39;);
+  return data;
+}
+
+export const notesApi = {
+  list: () =&gt; request(&#39;/api/notes&#39;),
+  create: (content) =&gt; request(&#39;/api/notes&#39;, {
+    method: &#39;POST&#39;, body: JSON.stringify({ content }),
+  }),
+  update: (id, content) =&gt; request(`/api/notes/${id}`, {
+    method: &#39;PUT&#39;, body: JSON.stringify({ content }),
+  }),
+  remove: (id) =&gt; request(`/api/notes/${id}`, { method: &#39;DELETE&#39; }),
+};
+</code></pre></div><p><code>fetch</code> 遇到 HTTP 400、500、502 时通常仍会得到 Response，需要自己检查 <code>response.ok</code>；网络连接本身失败才会直接拒绝 Promise。204 没有响应体，不能再无条件调用 <code>response.json()</code>。</p>
+<h3 id="heading-86">13.3 App.jsx：最小增删改查页面</h3>
+<div class="codebox"><div class="codebar"><span>jsx</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>import { useEffect, useState } from &#39;react&#39;;
+import { notesApi } from &#39;./api&#39;;
+
+export default function App() {
+  const [notes, setNotes] = useState([]);
+  const [content, setContent] = useState(&#39;&#39;);
+  const [editingId, setEditingId] = useState(null);
+  const [error, setError] = useState(&#39;&#39;);
+  const [loading, setLoading] = useState(true);
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() =&gt; {
+    let active = true;
+    notesApi.list()
+      .then((data) =&gt; { if (active) setNotes(data); })
+      .catch((err) =&gt; { if (active) setError(err.message); })
+      .finally(() =&gt; { if (active) setLoading(false); });
+    return () =&gt; { active = false; };
+  }, []);
+
+  async function save(event) {
+    event.preventDefault();
+    if (busy || loading) return;
+    setBusy(true);
+    setError(&#39;&#39;);
+    try {
+      const note = editingId === null
+        ? await notesApi.create(content)
+        : await notesApi.update(editingId, content);
+      setNotes((previous) =&gt; editingId === null
+        ? [note, ...previous].slice(0, 100)
+        : previous.map((item) =&gt; item.id === note.id ? note : item));
+      setContent(&#39;&#39;);
+      setEditingId(null);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function remove(id) {
+    if (busy || !window.confirm(&#39;确认删除这条笔记？&#39;)) return;
+    setBusy(true);
+    setError(&#39;&#39;);
+    try {
+      await notesApi.remove(id);
+      setNotes((previous) =&gt; previous.filter((item) =&gt; item.id !== id));
+      if (editingId === id) {
+        setEditingId(null);
+        setContent(&#39;&#39;);
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    &lt;main&gt;
+      &lt;h1&gt;我的笔记&lt;/h1&gt;
+      {error &amp;&amp; &lt;p role=&quot;alert&quot;&gt;{error}&lt;/p&gt;}
+      &lt;form onSubmit={save}&gt;
+        &lt;label&gt;
+          {editingId === null ? &#39;新增笔记&#39; : &#39;编辑笔记&#39;}
+          &lt;textarea
+            value={content}
+            disabled={busy || loading}
+            onChange={(event) =&gt; setContent(event.target.value)}
+            required
+          /&gt;
+        &lt;/label&gt;
+        &lt;button disabled={busy || loading || !content.trim()}&gt;
+          {busy ? &#39;处理中…&#39; : &#39;保存&#39;}
+        &lt;/button&gt;
+        {editingId !== null &amp;&amp; (
+          &lt;button type=&quot;button&quot; disabled={busy} onClick={() =&gt; {
+            setEditingId(null);
+            setContent(&#39;&#39;);
+          }}&gt;取消编辑&lt;/button&gt;
+        )}
+      &lt;/form&gt;
+      {loading ? &lt;p&gt;正在加载…&lt;/p&gt; : notes.length === 0 ? &lt;p&gt;还没有笔记。&lt;/p&gt; : (
+        &lt;ul&gt;
+          {notes.map((note) =&gt; (
+            &lt;li key={note.id}&gt;
+              &lt;p style={{ whiteSpace: &#39;pre-wrap&#39; }}&gt;{note.content}&lt;/p&gt;
+              &lt;small&gt;{new Date(note.created_at).toLocaleString()}&lt;/small&gt;
+              &lt;button disabled={busy} onClick={() =&gt; {
+                setEditingId(note.id);
+                setContent(note.content);
+              }}&gt;编辑&lt;/button&gt;
+              &lt;button disabled={busy} onClick={() =&gt; remove(note.id)}&gt;删除&lt;/button&gt;
+            &lt;/li&gt;
+          ))}
+        &lt;/ul&gt;
+      )}
+    &lt;/main&gt;
+  );
+}
+</code></pre></div><p>这个页面重点演示数据交互，省略样式、搜索和分页 UI。列表只展示接口返回的最近 100 条，完整数量可通过 SQL 查询。刷新页面会再次从数据库读取，而不是依赖上次页面内存。</p>
+<p>时间在数据库会话、Node 解析、JSON 序列化和浏览器展示之间会经过转换。初学时先检查是否一致，部署时统一数据库、应用和 API 的时区约定，常见做法是统一按 UTC 传输时间点、按用户时区展示。</p>
+<p><a id="s14"></a></p>
+</section>
+<section class="chapter" id="chapter-15" aria-label="14. 从启动到验收的完整操作流程"><h2 id="heading-87">14. 从启动到验收的完整操作流程</h2>
+<h3 id="heading-88">14.1 第一次搭建</h3>
+<ol>
+<li>安装 MySQL，确认客户端程序存在。</li>
+<li>确认 MySQL 服务运行，使用 root 登录。</li>
+<li>初始化 <code>react_notes.notes</code>，检查实际建表语句。</li>
+<li>创建 <code>notes_app</code>，授予必要权限，确认没有误设极小的资源限制。</li>
+<li>用项目账号单独登录并查询 notes，确认权限。</li>
+<li>设置后端 <code>.env</code>，安装依赖，启动 Node。</li>
+<li>直接测试 Node API，再启动前端代理与页面。</li>
+<li>从页面完成增删改查，在 DBeaver 交叉确认持久化结果。</li>
+</ol>
+<h3 id="heading-89">14.2 每天开发时</h3>
+<p>数据库可能已经随系统启动，不必每天重复安装、创建账号或建表。</p>
+<div class="codebox"><div class="codebar"><span>text</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>确认 MySQL 在运行
+  → 终端 A：进入 node，执行 npm run dev
+  → 终端 B：进入 vite-project，执行 npm run dev
+  → 浏览器打开 Vite 实际打印的地址
+</code></pre></div><p>终端用于启动程序时应保持运行。前端运行不代表后端已经运行；后端显示“等待文件变化”也不一定代表 API 已成功监听。</p>
+<h3 id="heading-90">14.3 先验证后端，再验证代理</h3>
+<p>在 Mac 终端执行：</p>
+<div class="codebox"><div class="codebar"><span>bash</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code># 直接访问后端
+curl -i http://127.0.0.1:3001/api/health
+curl -i http://127.0.0.1:3001/api/notes
+
+# 再经过 Vite 代理访问，确认当前 Vite 使用的是 5173
+curl -i http://localhost:5173/api/notes
+
+# 新增一条测试数据
+curl -i -X POST http://127.0.0.1:3001/api/notes \
+  -H &#39;Content-Type: application/json&#39; \
+  --data &#39;{&quot;content&quot;:&quot;通过接口新增的测试笔记&quot;}&#39;
+</code></pre></div><p>记下新增响应里的实际 <code>id</code>，用于后续修改和删除；不要照抄固定编号去修改已有业务数据。</p>
+<h3 id="heading-91">14.4 最小验收清单</h3>
+<ul>
+<li><input disabled="" type="checkbox"> 项目账号可以执行 <code>SELECT CURRENT_USER(), DATABASE();</code>。</li>
+<li><input disabled="" type="checkbox"> Node 正常监听，健康检查返回 200。</li>
+<li><input disabled="" type="checkbox"> 列表接口返回 JSON 数组，空列表返回 <code>[]</code>。</li>
+<li><input disabled="" type="checkbox"> 页面新增后，DBeaver 可以查到同一条记录。</li>
+<li><input disabled="" type="checkbox"> 页面修改后，刷新页面仍是新内容。</li>
+<li><input disabled="" type="checkbox"> 删除后，页面和数据库都找不到该条记录。</li>
+<li><input disabled="" type="checkbox"> 空白内容和超长内容返回清楚的输入错误。</li>
+<li><input disabled="" type="checkbox"> 不存在的编号返回 404。</li>
+<li><input disabled="" type="checkbox"> 停止 Node 后，前端能显示失败信息，不出现无意义 JSON 解析错误。</li>
+<li><input disabled="" type="checkbox"> 重启 Node 后，数据库中的笔记仍存在。</li>
+</ul>
+<p><a id="s15"></a></p>
+</section>
+<section class="chapter" id="chapter-16" aria-label="15. 真实故障与排查方法"><h2 id="heading-92">15. 真实故障与排查方法</h2>
+<h3 id="heading-93">15.1 总原则：先找到哪一段断了</h3>
+<div class="codebox"><div class="codebar"><span>text</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>浏览器 → Vite 代理 → Node API → MySQL
+</code></pre></div><p>前端报错不一定是前端代码的根因。先检查浏览器 Network 的 URL、方法、状态码、响应体，再看 Vite 和 Node 的终端日志，最后定位数据库。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>现象 / 错误</th>
+<th>所在层</th>
+<th>优先检查</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>mysql: command not found</code></td>
+<td>本地命令查找</td>
+<td>PATH 或使用客户端绝对路径</td>
+</tr>
+<tr>
+<td><code>sudo: 3 incorrect password attempts</code></td>
+<td>Mac 权限</td>
+<td>输入的是 Mac 登录密码，不是数据库密码</td>
+</tr>
+<tr>
+<td><code>Bootstrap failed: 5</code></td>
+<td>系统服务管理</td>
+<td>是否重复加载、plist、权限、真实错误日志</td>
+</tr>
+<tr>
+<td><code>Can&#39;t connect</code> / 2002 / 2003</td>
+<td>数据库连接</td>
+<td>服务、TCP 地址端口或 Socket 路径</td>
+</tr>
+<tr>
+<td><code>Access denied</code> / 1045</td>
+<td>数据库认证</td>
+<td>账号定义、来源匹配、密码、实际读到的配置</td>
+</tr>
+<tr>
+<td><code>No database selected</code> / 1046</td>
+<td>会话默认库</td>
+<td>执行 USE，或使用完整表名</td>
+</tr>
+<tr>
+<td><code>Unknown database</code> / 1049</td>
+<td>目标库</td>
+<td>名字是否正确、库是否真的创建</td>
+</tr>
+<tr>
+<td><code>Table ... doesn&#39;t exist</code> / 1146</td>
+<td>目标表</td>
+<td>数据库、表名、大小写、迁移执行情况</td>
+</tr>
+<tr>
+<td><code>command denied</code> / 1142</td>
+<td>操作权限</td>
+<td>使用 root 核对并授予必要权限</td>
+</tr>
+<tr>
+<td><code>There is no such grant ...</code> / 1141</td>
+<td>指定账号授权查询</td>
+<td>精确 User/Host、连接实例、账号是否保存</td>
+</tr>
+<tr>
+<td><code>max_questions</code> / 1226</td>
+<td>账号资源额度</td>
+<td>是否误设 MAX_QUERIES_PER_HOUR 等限制</td>
+</tr>
+<tr>
+<td><code>ECONNREFUSED 127.0.0.1:3001</code></td>
+<td>代理到后端</td>
+<td>Node 是否监听、是否启动即失败</td>
+</tr>
+<tr>
+<td>HTTP 502</td>
+<td>代理转发</td>
+<td>上游连接、端口、进程状态、代理日志</td>
+</tr>
+<tr>
+<td><code>Unexpected end of JSON input</code></td>
+<td>响应处理</td>
+<td>空响应、204、代理纯文本错误、后端返回格式</td>
+</tr>
+<tr>
+<td><code>EADDRINUSE</code></td>
+<td>监听端口</td>
+<td>是否已有进程占用，不要盲目重复启动</td>
+</tr>
+</tbody></table></div>
+<h3 id="heading-94">15.2 1045 不等于一定没有这个账号</h3>
+<p>你曾遇到：</p>
+<div class="codebox"><div class="codebar"><span>text</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>Access denied for user &#39;notes_app&#39;@&#39;localhost&#39; (using password: YES)
+</code></pre></div><p>可能是账号不存在、来源匹配不符合预期、密码不同，或后端没有读取到你以为的配置。<code>using password: YES</code> 只表示提交了密码，不代表正确。</p>
+<p>排查顺序：</p>
+<ol>
+<li>用 root 查询 <code>mysql.user</code> 中目标用户名的 Host。</li>
+<li>用明确参数在命令行登录，验证账号本身。</li>
+<li>核对后端 <code>.env</code> 的 Host、Port、User、Database，以及密码是否一致。</li>
+<li>修改 <code>.env</code> 后重启后端。不要假设文件监听一定会监控隐藏配置文件。</li>
+<li>登录后用 <code>CURRENT_USER()</code> 确认实际匹配账号。</li>
+</ol>
+<h3 id="heading-95">15.3 1046：脚本写了 USE，为什么还说没选库</h3>
+<p>DBeaver 可能只执行了光标所在的 CREATE TABLE，前面的 USE 并未执行；也可能在另一条连接或会话执行了 USE。</p>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>USE react_notes;
+SELECT DATABASE();
+
+-- 或者不依赖会话默认库
+SELECT * FROM react_notes.notes LIMIT 10;
+</code></pre></div><h3 id="heading-96">15.4 1141：无法查看指定账号权限</h3>
+<p>执行的对象必须完全匹配账号定义：</p>
+<div class="codebox"><div class="codebar"><span>sql</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>-- root 执行
+SELECT User, Host FROM mysql.user WHERE User = &#39;notes_app&#39;;
+SHOW GRANTS FOR &#39;notes_app&#39;@&#39;127.0.0.1&#39;;
+</code></pre></div><p>如果左侧界面显示用户但服务端查不到，检查是否还没保存、是否是缓存或另一实例。不要仅凭界面颜色判断创建已经完成。</p>
+<h3 id="heading-97">15.5 502 与 JSON 解析错误的一条因果链</h3>
+<p>这次项目里出现过这样的链路：</p>
+<div class="codebox"><div class="codebar"><span>text</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>Node 使用 notes_app 连接 MySQL 失败
+  → 启动流程退出，3001 没有监听
+  → Vite 转发 /api/notes 连接被拒绝
+  → 浏览器收到代理错误响应（截图为 502）
+  → 前端无条件解析 JSON
+  → 出现 Unexpected end of JSON input
+</code></pre></div><p>根因要修复数据库账号和 Node 启动；同时前端也要正确检查状态和响应格式。单独捕获 JSON 异常不会让后端恢复。</p>
+<h3 id="heading-98">15.6 密码重置为什么不能盲目照抄</h3>
+<p>你曾经手动启动重置实例，但日志提示服务启动失败。仅创建了重置 SQL 文件，不代表密码已经成功修改。</p>
+<p>真正执行重置时要先确认：连接的是哪一个实例、数据目录、正常服务是否停止、重置实例是否成功执行、错误日志是否有报错。重置后还要关闭临时实例，清理含密码的临时文件，并恢复正常启动方式。</p>
+<p>本文不提供脱离现场状态的一键重置脚本。忘记密码时按安装版本的官方恢复流程操作，先保护数据，不删除数据目录、不反复初始化、不同时启动两个实例争抢同一数据目录。</p>
+<h3 id="heading-99">15.7 建议记录的排错信息</h3>
+<div class="codebox"><div class="codebar"><span>text</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>发生时间：
+操作目标：
+在哪个客户端执行：
+连接的 Host / Port / User / Database：
+完整错误码与错误信息（隐藏密码）：
+浏览器 HTTP 状态和响应体：
+后端对应日志：
+已经验证的事实：
+本次只修改了什么：
+修复后如何验证：
+</code></pre></div><p><a id="s16"></a></p>
+</section>
+<section class="chapter" id="chapter-17" aria-label="16. 备份、上线与 Docker"><h2 id="heading-100">16. 备份、上线与 Docker</h2>
+<h3 id="heading-101">16.1 备份不等于复制项目代码</h3>
+<p>Git 保存的是代码和迁移文件，数据库记录保存在 MySQL 数据目录中。服务器坏了、数据目录丢了，重新拉代码不能自动找回笔记。</p>
+<p>对本例 InnoDB 数据库进行逻辑备份，在 <strong>Mac 终端</strong>执行：</p>
+<div class="codebox"><div class="codebar"><span>bash</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>/usr/local/mysql/bin/mysqldump \
+  -h 127.0.0.1 -P 3306 -u root -p \
+  --single-transaction --no-tablespaces \
+  --databases react_notes &gt; react_notes_backup.sql
+</code></pre></div><p>这会在当前工作目录创建文件；同名文件可能被覆盖，实际使用应加日期或选择新的文件名。执行后确认命令成功、文件有内容。事务快照适用于 InnoDB，备份期间避免结构变更；若使用过程、事件等对象，还需要按需要备份它们。<a href="https://dev.mysql.com/doc/refman/8.4/en/mysqldump.html">mysqldump 官方说明</a></p>
+<p>恢复应先在独立测试实例演练。<strong>下面的导入会向目标实例写入数据，可能与已有表冲突或覆盖记录，只在确认目标正确后执行：</strong></p>
+<div class="codebox"><div class="codebar"><span>bash</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>/usr/local/mysql/bin/mysql \
+  -h 127.0.0.1 -P 3306 -u root -p \
+  &lt; react_notes_backup.sql
+</code></pre></div><p>备份文件可能包含敏感数据，不要提交到公开仓库。备份要有异机副本，并定期验证能恢复。</p>
+<h3 id="heading-102">16.2 你的单台云服务器方案仍可接入数据库</h3>
+<figure class="diagram"><figcaption>云服务器部署与数据库管理</figcaption><div class="flow"><div class="node"><strong>浏览器 / 小程序客户端</strong></div><span class="arrow one"><small>HTTPS</small><span class="arrow-glyph">→</span></span><div class="node"><strong>Nginx</strong><small>统一访问入口</small></div><span class="arrow one"><small>/api 请求</small><span class="arrow-glyph">→</span></span><div class="node"><strong>Node API</strong></div><span class="arrow one"><small>本机或私网连接</small><span class="arrow-glyph">→</span></span><div class="node"><strong>MySQL</strong><small>持久业务数据</small></div></div><div class="branch"><p><b>Nginx → React 构建产物</b>提供 HTML、JavaScript、CSS 等静态资源。</p><p><b>DBeaver → SSH 隧道 → MySQL</b>通过受控的管理链路访问数据库。</p></div><details><summary>查看原始 Mermaid 图定义</summary><div class="codebox"><div class="codebar"><span>mermaid</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>flowchart LR
+    B[浏览器 / 小程序客户端] --&gt;|HTTPS| G[Nginx]
+    G --&gt;|静态资源| F[React 构建产物]
+    G --&gt;|/api 请求| A[Node API]
+    A --&gt;|本机或私网连接| D[(MySQL)]
+    T[DBeaver] --&gt;|SSH 隧道| D
+</code></pre></div></details></figure><p>前后端分离指它们通过接口协作、可以独立构建部署，不意味着初学阶段必须买两台服务器。可以先在一台云服务器部署 Nginx、Node、MySQL，再根据负载拆分。</p>
+<p>2 核 2 GiB 的机器可以用于轻量学习，实际可容纳的项目数和并发要看内存、SQL、资源和访问量；MySQL、Node、Docker 及构建任务共用有限资源，不能仅凭“装得下”判断长期承载能力。</p>
+<h3 id="heading-103">16.3 上线时发生哪些变化</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>本地</th>
+<th>线上</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Vite 开发服务器提供页面</td>
+<td><code>npm run build</code> 后由静态服务器提供 dist</td>
+</tr>
+<tr>
+<td>Vite <code>/api</code> 代理</td>
+<td>Nginx 或平台反向代理</td>
+</tr>
+<tr>
+<td>手动启动 Node</td>
+<td>systemd、PM2 或容器管理进程</td>
+</tr>
+<tr>
+<td>本机 <code>.env</code></td>
+<td>服务器独立配置或秘密管理</td>
+</tr>
+<tr>
+<td>本机 MySQL</td>
+<td>服务器 MySQL 或托管数据库</td>
+</tr>
+<tr>
+<td>手动备份</td>
+<td>定时备份与恢复演练</td>
+</tr>
+</tbody></table></div>
+<p>通常对外提供 HTTPS；Node 的 3001 和 MySQL 的 3306 不必直接暴露公网。云安全组、服务器防火墙、监听地址和数据库账号来源限制是不同层的配置，需要一起核对。远程管理数据库可使用 SSH 隧道，而不是为了 DBeaver 连接直接向所有来源开放 3306。</p>
+<h3 id="heading-104">16.4 Nginx 在这里负责什么</h3>
+<p>Nginx 可以提供 React 的 HTML / JS / CSS，把 <code>/api</code> 请求转发给 Node，并处理 HTTPS 等入口工作。</p>
+<p>曾讨论的这行：</p>
+<div class="codebox"><div class="codebar"><span>nginx</span><button type="button" class="copy" aria-label="复制代码">复制</button></div><pre><code>try_files $uri $uri/ /index.html;
+</code></pre></div><ul>
+<li><code>$uri</code>：根据当前 URI，在当前 root / alias 等文件路径配置下尝试找资源。</li>
+<li><code>$uri/</code>：末尾带 <code>/</code>，用来尝试目录。</li>
+<li><code>/index.html</code>：前面没找到时回退到 React 入口，供前端路由接管。</li>
+</ul>
+<p>例如直接打开 <code>/notes/123</code> 时，磁盘上通常没有同名文件，回退入口后 React 再根据 URL 显示页面。API 的 location 应单独正确配置，避免接口错误也返回 HTML。Nginx 的 <code>proxy_pass</code> 是否带路径和尾斜杠会影响转发路径，必须与 Node 的 <code>/api</code> 路由保持一致。<a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#try_files">try_files 官方说明</a></p>
+<h3 id="heading-105">16.5 Docker：隔离与交付方式，不会替代数据管理</h3>
+<ul>
+<li>容器可以打包 MySQL、Node 和 Nginx 的运行环境。</li>
+<li>MySQL 数据要放到明确的持久化卷，不能只存在可被替换的容器层。</li>
+<li>初始化脚本通常只在空数据目录首次初始化时执行，不是自动迁移工具。</li>
+<li>重建 Node 容器不应要求删除数据库卷；<code>docker compose down -v</code> 会删除受管理的卷，操作前必须清楚影响。</li>
+<li>容器中的 <code>127.0.0.1</code> 指向容器自己，不是宿主机，也不是另一个容器。</li>
+<li>同一 Compose 网络中，Node 一般通过数据库服务名（例如 <code>mysql</code>）和容器端口连接；发布到宿主机的端口是另一层。</li>
+<li>Compose 中“先启动数据库容器”不等于数据库已经可以认证并查询，需要健康检查或应用连接重试策略。</li>
+<li>本文 Node 示例绑定 <code>127.0.0.1</code>，适用于本机代理模式；放入容器并让其他容器访问时，需要按网络设计改为监听 <code>0.0.0.0</code>，同时限制对外暴露。</li>
+<li>迁移到 Docker 前先学会原生的安装、连接、权限和备份，会更容易理解容器里发生的问题。</li>
+</ul>
+<p><a id="s17"></a></p>
+</section>
+<section class="chapter" id="chapter-18" aria-label="17. 练习路线与速查表"><h2 id="heading-106">17. 练习路线与速查表</h2>
+<h3 id="heading-107">17.1 分阶段掌握</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>练习</th>
+<th>完成标准</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1：连接</td>
+<td>判断安装、服务、连接、查询的区别</td>
+<td>能解释每一步，并独立登录</td>
+</tr>
+<tr>
+<td>2：工具</td>
+<td>建 DBeaver 连接、开 SQL 编辑器、查看数据</td>
+<td>能在 GUI 和 SQL 中交叉验证</td>
+</tr>
+<tr>
+<td>3：单表</td>
+<td>写 INSERT / SELECT / UPDATE / DELETE</td>
+<td>不依赖照抄，能使用 WHERE</td>
+</tr>
+<tr>
+<td>4：查询</td>
+<td>排序、分页、AS、聚合、分组</td>
+<td>能写每日笔记数量与关键词查询</td>
+</tr>
+<tr>
+<td>5：多表</td>
+<td>创建练习表，比较 LEFT / INNER JOIN</td>
+<td>能解释 NULL 补行和一对多展开</td>
+</tr>
+<tr>
+<td>6：后端</td>
+<td>配置账号和连接池，完成 CRUD API</td>
+<td>curl 能验证成功和失败路径</td>
+</tr>
+<tr>
+<td>7：前端</td>
+<td>React 调 API，处理加载与错误</td>
+<td>页面操作能正确落库</td>
+</tr>
+<tr>
+<td>8：工程</td>
+<td>事务、索引、迁移、备份</td>
+<td>能恢复测试备份、用日志排错</td>
+</tr>
+<tr>
+<td>9：上线</td>
+<td>Nginx + Node + MySQL，之后再容器化</td>
+<td>公开入口清楚，数据持久化和访问边界明确</td>
+</tr>
+</tbody></table></div>
+<h3 id="heading-108">17.2 SQL 高频速查</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>目的</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>当前库</td>
+<td><code>SELECT DATABASE();</code></td>
+</tr>
+<tr>
+<td>当前账号</td>
+<td><code>SELECT CURRENT_USER();</code></td>
+</tr>
+<tr>
+<td>选择库</td>
+<td><code>USE react_notes;</code></td>
+</tr>
+<tr>
+<td>查看表</td>
+<td><code>SHOW TABLES;</code></td>
+</tr>
+<tr>
+<td>查看字段</td>
+<td><code>DESCRIBE notes;</code></td>
+</tr>
+<tr>
+<td>查看建表定义</td>
+<td><code>SHOW CREATE TABLE notes;</code></td>
+</tr>
+<tr>
+<td>新增</td>
+<td><code>INSERT INTO notes (content) VALUES (&#39;内容&#39;);</code></td>
+</tr>
+<tr>
+<td>查询单条</td>
+<td><code>SELECT id, content FROM notes WHERE id = 1;</code></td>
+</tr>
+<tr>
+<td>最新十条</td>
+<td><code>SELECT id, content FROM notes ORDER BY id DESC LIMIT 10;</code></td>
+</tr>
+<tr>
+<td>模糊查询</td>
+<td><code>SELECT id, content FROM notes WHERE content LIKE &#39;%学习%&#39;;</code></td>
+</tr>
+<tr>
+<td>修改</td>
+<td><code>UPDATE notes SET content = &#39;新内容&#39; WHERE id = 1;</code></td>
+</tr>
+<tr>
+<td>删除</td>
+<td><code>DELETE FROM notes WHERE id = 1;</code></td>
+</tr>
+<tr>
+<td>数量</td>
+<td><code>SELECT COUNT(*) AS total FROM notes;</code></td>
+</tr>
+<tr>
+<td>看当前授权</td>
+<td><code>SHOW GRANTS;</code></td>
+</tr>
+<tr>
+<td>事务</td>
+<td><code>START TRANSACTION;</code> → 操作 → <code>COMMIT;</code> 或 <code>ROLLBACK;</code></td>
+</tr>
+</tbody></table></div>
+<h3 id="heading-109">17.3 判断问题的五个问题</h3>
+<ol>
+<li>我现在操作的是 Shell、MySQL SQL 编辑器，还是前端页面？</li>
+<li>我连接的具体 Host、Port、User、Database 是什么？</li>
+<li>故障发生在启动、连接、认证、权限、资源限制还是业务逻辑？</li>
+<li>有什么错误码、日志或响应体能证明，而不是只靠猜测？</li>
+<li>修复后，是否从页面到数据库验证了一次完整操作？</li>
+</ol>
+<h3 id="heading-110">17.4 能自己讲清楚这些问题，就形成了第一版知识体系</h3>
+<ul>
+<li>为什么 MySQL 不在桌面应用列表中也可以正常运行？</li>
+<li>为什么 <code>mysql --version</code> 成功不代表数据库已经启动？</li>
+<li>为什么退出 DBeaver 后 Node 还能访问数据？</li>
+<li>为什么 <code>sudo</code> 密码、root 密码和项目密码可以不同？</li>
+<li>为什么能登录，但仍可能无法查询或建表？</li>
+<li>为什么前端报 JSON 错误，根因可能是后端数据库认证失败？</li>
+<li>为什么改 <code>.env</code> 后要确认 Node 已经重新加载配置？</li>
+<li>为什么 React 不能保存数据库密码？</li>
+<li>为什么 JOIN 可能让一个用户出现多行？</li>
+<li>为什么备份代码不能替代备份数据库？</li>
+<li>为什么容器里的 localhost 和 Mac 上的 localhost 不是同一个地址？</li>
+</ul>
+<p><a id="s18"></a></p>
+</section>
+<section class="chapter" id="chapter-19" aria-label="18. 官方资料与查阅方式"><h2 id="heading-111">18. 官方资料与查阅方式</h2>
+<p>本文主要使用跨版本常见语法。你截图中的服务端版本与下列部分参考文档版本不同，遇到版本专属行为时，应切换到安装版本对应的手册；以本机日志、实际建表语句、当前授权和配置为准。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>主题</th>
+<th>官方资料</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MySQL 入门与 SQL 基础</td>
+<td><a href="https://dev.mysql.com/doc/refman/8.4/en/tutorial.html">MySQL Tutorial</a></td>
+</tr>
+<tr>
+<td>macOS 官方服务启动配置</td>
+<td><a href="https://dev.mysql.com/doc/refman/8.4/en/macos-installation-launchd.html">MySQL Launch Daemon</a></td>
+</tr>
+<tr>
+<td>账号的 User 与 Host</td>
+<td><a href="https://dev.mysql.com/doc/refman/8.4/en/account-names.html">Specifying Account Names</a></td>
+</tr>
+<tr>
+<td>每小时与并发连接限制</td>
+<td><a href="https://dev.mysql.com/doc/refman/8.4/en/user-resources.html">Setting Account Resource Limits</a></td>
+</tr>
+<tr>
+<td>JOIN 的定义与规则</td>
+<td><a href="https://dev.mysql.com/doc/refman/8.4/en/join.html">JOIN Clause</a></td>
+</tr>
+<tr>
+<td>Node 数据库驱动</td>
+<td><a href="https://sidorares.github.io/node-mysql2/docs">mysql2 Quickstart</a></td>
+</tr>
+<tr>
+<td>连接池</td>
+<td><a href="https://sidorares.github.io/node-mysql2/docs/examples/connections/create-pool">mysql2 createPool</a></td>
+</tr>
+<tr>
+<td>参数化执行</td>
+<td><a href="https://sidorares.github.io/node-mysql2/docs/examples/queries/prepared-statements">mysql2 Prepared Statements</a></td>
+</tr>
+<tr>
+<td>Express 异步错误</td>
+<td><a href="https://expressjs.com/en/guide/error-handling.html">Express Error Handling</a></td>
+</tr>
+<tr>
+<td>DBeaver 执行 SQL</td>
+<td><a href="https://dbeaver.com/docs/dbeaver/SQL-Execution/">DBeaver SQL Execution</a></td>
+</tr>
+<tr>
+<td>Vite 开发代理</td>
+<td><a href="https://vite.dev/config/server-options.html#server-proxy">Vite server.proxy</a></td>
+</tr>
+<tr>
+<td>数据库逻辑备份</td>
+<td><a href="https://dev.mysql.com/doc/refman/8.4/en/mysqldump.html">mysqldump</a></td>
+</tr>
+<tr>
+<td>Nginx 静态资源查找与回退</td>
+<td><a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#try_files">try_files</a></td>
+</tr>
+</tbody></table></div>
+<p>macOS 服务命令可以在终端用 <code>man launchctl</code> 查阅本机自带说明，按 <code>q</code> 退出。查资料时优先带上完整错误码、产品版本和操作系统，避免混用 Homebrew、官方安装器、Linux 和 Docker 的操作步骤。</p>
+</section></article><footer class="footer">由同名 Markdown 文档生成 · 保留原文内容与代码<br>目录、搜索、流程图与阅读样式均可离线使用；外部资料链接需要网络。</footer></main></div><button type="button" class="back-top" id="top" hidden>↑ 顶部</button><script>
+(()=>{
+  const $=id=>document.getElementById(id);
+  const sidebar=$('sidebar'),backdrop=$('backdrop'),links=[...document.querySelectorAll('.nav-link')],chapters=[...document.querySelectorAll('.chapter')];
+  function setMenu(open){sidebar.classList.toggle('open',open);backdrop.classList.toggle('open',open);$('menu').setAttribute('aria-expanded',String(open));}
+  $('menu').onclick=()=>setMenu(!sidebar.classList.contains('open'));
+  backdrop.onclick=()=>setMenu(false);
+  links.forEach(a=>a.addEventListener('click',()=>setMenu(false)));
+  $('print').onclick=()=>print();
+  $('top').onclick=()=>scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+  function applyTheme(theme){document.documentElement.dataset.theme=theme;$('theme').textContent=theme==='dark'?'浅色':'深色';}
+  let theme=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+  try{theme=localStorage.getItem('study-doc-theme')||theme;}catch{}
+  applyTheme(theme);
+  $('theme').onclick=()=>{theme=document.documentElement.dataset.theme==='dark'?'light':'dark';applyTheme(theme);try{localStorage.setItem('study-doc-theme',theme);}catch{}};
+  document.querySelectorAll('.copy').forEach(button=>button.onclick=async()=>{
+    const text=button.closest('.codebox').querySelector('code').textContent;
+    try{
+      if(navigator.clipboard?.writeText)await navigator.clipboard.writeText(text);
+      else{const field=document.createElement('textarea');field.value=text;field.style.position='fixed';field.style.opacity='0';document.body.append(field);field.select();const ok=document.execCommand('copy');field.remove();if(!ok)throw new Error('copy failed');}
+      button.textContent='已复制';
+    }catch{button.textContent='请选中代码复制';}
+    setTimeout(()=>button.textContent='复制',1800);
+  });
+  const search=$('search'),results=$('results'),list=$('result-list');
+  const index=chapters.map(section=>({id:section.id,title:section.querySelector('h2').textContent,text:section.textContent.replace(/\s+/g,' ').trim()}));
+  function runSearch(){
+    const query=search.value.trim().toLowerCase();list.replaceChildren();results.hidden=!query;if(!query)return;
+    const found=index.filter(item=>item.text.toLowerCase().includes(query));
+    $('result-status').textContent=found.length?'找到 '+found.length+' 个相关章节，点击跳转。':'没有找到对应内容，请换个关键词。';
+    for(const item of found){const a=document.createElement('a');a.href='#'+item.id;a.className='result-item';const strong=document.createElement('strong');strong.textContent=item.title;const p=document.createElement('p');const start=Math.max(0,item.text.toLowerCase().indexOf(query)-45);p.textContent=(start?'…':'')+item.text.slice(start,start+170)+'…';a.append(strong,p);a.onclick=()=>{results.hidden=true;search.value='';};list.append(a);}
+  }
+  search.addEventListener('input',runSearch);
+  $('clear-search').onclick=()=>{search.value='';runSearch();search.focus();};
+  addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();search.focus();search.select();}if(e.key==='Escape'){setMenu(false);search.value='';runSearch();}});
+  let pending=false;
+  function update(){const total=document.documentElement.scrollHeight-innerHeight;$('progress').style.width=(total>0?Math.max(0,Math.min(100,scrollY/total*100)):100)+'%';let active=chapters[0];for(const item of chapters){if(item.getBoundingClientRect().top<155)active=item;else break;}links.forEach(a=>{const current=a.hash==='#'+active?.id;a.classList.toggle('active',current);if(current)a.setAttribute('aria-current','location');else a.removeAttribute('aria-current');});$('top').hidden=scrollY<600;pending=false;}
+  addEventListener('scroll',()=>{if(!pending){pending=true;requestAnimationFrame(update);}},{passive:true});addEventListener('resize',update);update();
+})();
+</script></body></html>

@@ -1,0 +1,4424 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="通用全栈开发知识手册：职责、请求流程、状态、数据库、部署、工程协作和故障定位。"><meta name="color-scheme" content="light dark"><title>全栈开发知识体系 · 学习与排障手册</title><style>
+:root{color-scheme:light;--bg:#f7f8fa;--paper:#fff;--ink:#243344;--muted:#637387;--line:#e2e7ed;--accent:#006c64;--soft:#eaf5f1;--code:#f1f4f7;--shadow:0 8px 24px #1b32400b;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+:root[data-theme=dark]{color-scheme:dark;--bg:#111820;--paper:#18232e;--ink:#e2e9ef;--muted:#a8b8c7;--line:#304150;--accent:#80d7bd;--soft:#203f3b;--code:#111b25;--shadow:none}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:90px}body{margin:0;color:var(--ink);background:var(--bg);font-size:16px;line-height:1.85}a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}button,input{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);outline-offset:3px}button{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:9px;padding:6px 12px}button:hover{background:var(--soft)}[hidden]{display:none!important}
+.skip{position:fixed;top:-100px;left:16px;z-index:20;background:var(--paper);padding:12px}.skip:focus{top:10px}.sidebar{position:fixed;inset:0 auto 0 0;width:288px;border-right:1px solid var(--line);background:var(--paper);overflow:auto;padding:26px 18px;z-index:12}.brand{display:flex;gap:12px;align-items:center;padding:0 8px 19px;border-bottom:1px solid var(--line)}.brand-mark{background:var(--accent);color:var(--paper);display:grid;place-items:center;width:38px;height:38px;border-radius:12px;font-weight:750;letter-spacing:-2px}.brand strong{display:block;font-size:16px}.brand small{color:var(--muted);font-size:11px;letter-spacing:1.2px}.state-link{display:block;background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:18px 6px;font-size:14px}.nav-group>p{font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--muted);padding:7px 12px 0;margin-bottom:8px}.nav-group>a{display:flex;gap:10px;padding:7px 12px;border-radius:7px;color:var(--muted);font-size:13px;line-height:1.6;margin:2px 0}.nav-group>a span:first-child{font-size:11px;min-width:19px;font-variant-numeric:tabular-nums;opacity:.7}.nav-group>a:hover,.nav-group>a.active{background:var(--soft);color:var(--accent);text-decoration:none}.sidebar-note{font-size:12px;color:var(--muted);padding:20px 12px 0}.shell{margin-left:288px}.topbar{position:sticky;top:0;z-index:9;background:var(--paper);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:12px 30px;min-height:66px}.crumb{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px}.search-wrap{margin-left:auto;position:relative;max-width:390px;flex:1}.search-wrap input{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:9px;color:var(--ink);padding:8px 47px 8px 13px;font-size:13px}.shortcut{position:absolute;right:10px;top:9px;color:var(--muted);font-size:11px;border:1px solid var(--line);border-radius:4px;padding:0 4px}.icon-button{font-size:12px;white-space:nowrap}.menu-button{display:none}.reading-progress{position:fixed;top:0;left:288px;right:0;height:3px;z-index:15;pointer-events:none}.reading-progress span{display:block;height:100%;width:0;background:var(--accent)}main{max-width:1120px;margin:auto;padding:38px 40px 80px}.hero{padding:27px 0 36px}.eyebrow{color:var(--accent);font-size:11px;font-weight:750;letter-spacing:2px}.hero h1{font-size:clamp(29px,3.3vw,42px);letter-spacing:-1px;line-height:1.35;margin:14px 0}.hero .lead{font-size:17px;max-width:720px;color:var(--muted)}.metadata{display:flex;flex-wrap:wrap;gap:8px;margin:23px 0}.metadata span{font-size:12px;background:var(--paper);border:1px solid var(--line);padding:3px 10px;border-radius:20px}.quick-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}.quick-links a{font-size:13px;border:1px solid var(--line);background:var(--paper);border-radius:9px;padding:9px 14px}.quick-links a:first-child{background:var(--accent);color:var(--paper);border-color:var(--accent)}.chapter{background:var(--paper);border:1px solid var(--line);border-radius:15px;margin:0 0 26px;padding:32px 36px;box-shadow:var(--shadow);overflow-wrap:anywhere}.chapter-label{font-size:10px;font-weight:750;color:var(--accent);letter-spacing:2px;margin:0 0 6px!important}.chapter h2{font-size:25px;line-height:1.45;letter-spacing:-.5px;margin:0 0 24px}.chapter h3{font-size:19px;line-height:1.5;margin:35px 0 14px;padding-top:5px;scroll-margin-top:90px}.chapter h4{font-size:16px;margin:27px 0 10px}.chapter p{margin:13px 0}.chapter ul,.chapter ol{padding-left:25px;margin:13px 0}.chapter li{padding-left:3px;margin:7px 0}.chapter blockquote{background:var(--soft);border-left:3px solid var(--accent);margin:20px 0;padding:4px 18px;color:var(--muted)}.chapter strong{font-weight:650}.chapter code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.86em;background:var(--code);border-radius:4px;padding:2px 5px}.chapter pre{background:var(--code);padding:18px 20px;border:1px solid var(--line);border-radius:10px;overflow-x:auto;line-height:1.7;font-size:13px;white-space:pre;overflow-wrap:normal;tab-size:2}.chapter pre code{background:transparent;padding:0;border-radius:0;font-size:inherit}.table-scroll{overflow-x:auto;margin:19px 0;border:1px solid var(--line);border-radius:9px}.table-scroll table{width:100%;border-collapse:collapse;font-size:13px;line-height:1.75;min-width:570px}.table-scroll th{background:var(--code);text-align:left;font-weight:650;padding:11px 13px;vertical-align:top;min-width:90px}.table-scroll td{border-top:1px solid var(--line);padding:12px 13px;vertical-align:top;min-width:90px}.table-scroll tr:hover td{background:var(--bg)}.table-scroll td:first-child{font-weight:550}.chapter a{text-underline-offset:3px}.chapter a[id]{display:block;scroll-margin-top:90px}.diagram{margin:23px 0 12px;padding:22px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}.diagram figcaption{font-size:14px;font-weight:650;margin-bottom:18px}.flow-row{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap}.flow-node{flex:1;min-width:90px;text-align:center;background:var(--soft);color:var(--accent);border:1px solid var(--line);border-radius:8px;padding:12px 9px;font-size:13px;font-weight:600}.flow-arrow{align-self:center;color:var(--muted)}.flow-branches{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.flow-branches>div{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:12px}.flow-branches strong{display:block;font-size:12px}.flow-branches span,.diagram>p{font-size:12px;color:var(--muted)}.diagram-source{font-size:12px;color:var(--muted);margin:0 0 22px}.diagram-source summary{cursor:pointer}.sequence{list-style:none;padding:0!important;counter-reset:sequence}.sequence li{position:relative;padding:8px 0 8px 34px!important;border-bottom:1px solid var(--line);counter-increment:sequence}.sequence li:before{content:counter(sequence);position:absolute;left:0;top:11px;display:grid;place-items:center;font-size:11px;width:22px;height:22px;border-radius:50%;background:var(--soft);color:var(--accent)}.sequence b{display:block;font-size:13px}.sequence span{display:block;color:var(--muted);font-size:12px}.search-panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;margin-bottom:26px;padding:24px;box-shadow:var(--shadow)}.search-panel-header{display:flex;justify-content:space-between;align-items:center;gap:12px}.search-panel-header h2{font-size:17px;margin:0}.search-status{color:var(--muted);font-size:13px}.search-results{list-style:none;padding:0;margin:12px 0 0}.search-results li{border-top:1px solid var(--line)}.search-results a{display:block;padding:14px 0}.search-results a:hover{text-decoration:none}.search-results strong{font-size:14px}.search-results p{font-size:13px;line-height:1.65;margin:5px 0 0;color:var(--muted)}mark{background:#ffebad;color:#48390b;border-radius:2px}.empty{padding:18px 0;color:var(--muted);font-size:14px}.footer{font-size:12px;color:var(--muted);text-align:center;margin-top:45px}.back-top{position:fixed;right:22px;bottom:20px;z-index:8;box-shadow:var(--shadow);font-size:12px}.backdrop{display:none}
+@media(min-width:1600px){main{max-width:1180px}.chapter{padding:40px 48px}}
+@media(max-width:1100px){.sidebar{width:246px;padding:22px 12px}.shell{margin-left:246px}.reading-progress{left:246px}main{padding:25px 24px 65px}.chapter{padding:28px 26px}.topbar{padding:12px 24px}.crumb{max-width:130px}.chapter h2{font-size:23px}}
+@media(max-width:800px){.sidebar{transform:translateX(-105%);visibility:hidden;width:280px;transition:transform .18s ease}.sidebar.open{transform:translateX(0);visibility:visible}.shell{margin-left:0}.reading-progress{left:0}.menu-button{display:block}.crumb{display:none}.topbar{padding:10px 14px;gap:8px}.search-wrap{max-width:none}.shortcut{display:none}.search-wrap input{padding-right:10px}.icon-button{padding:6px 9px}.print-button{display:none}main{padding:20px 14px 60px}.hero{padding:20px 7px 26px}.hero .lead{font-size:15px}.chapter{padding:24px 20px;border-radius:12px;font-size:15px}.chapter h2{font-size:22px}.chapter h3{font-size:18px}.backdrop.open{display:block;position:fixed;inset:0;background:#0b172766;z-index:11}.flow-branches{grid-template-columns:1fr}.diagram{padding:16px}.flow-node{font-size:12px;min-width:70px}.back-top{right:14px;bottom:14px}.search-panel{padding:18px}.quick-links a{font-size:12px}.table-scroll table{font-size:12px}.brand{padding-bottom:14px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.sidebar{transition:none}}
+@media print{:root,:root[data-theme=dark]{color-scheme:light;--bg:white;--paper:white;--ink:#111;--muted:#444;--line:#ccc;--accent:#124d45;--soft:#eef5f2;--code:#f4f4f4;--shadow:none}.sidebar,.topbar,.reading-progress,.back-top,.backdrop,.search-panel,.quick-links,.diagram-source,.skip{display:none!important}.shell{margin:0}main{max-width:none;padding:0}.hero{padding:0 0 20px}.chapter{display:block!important;border:0;border-radius:0;box-shadow:none;padding:15px 0;break-before:page}.chapter h2,.chapter h3{break-after:avoid}.table-scroll{overflow:visible;border-radius:0}.table-scroll table{min-width:0;font-size:9pt}.table-scroll tr{break-inside:avoid}.table-scroll td,.table-scroll th{min-width:0;padding:6px}pre{white-space:pre-wrap!important;overflow-wrap:anywhere!important}.flow-node,.flow-branches>div{break-inside:avoid}body{font-size:10.5pt;line-height:1.65}.chapter{font-size:10.5pt}.chapter h2{font-size:19pt}.chapter h3{font-size:14pt}.footer{margin:20px 0}.metadata span{font-size:9pt}}
+</style></head>
+<body><a class="skip" href="#main">跳到正文</a><div class="reading-progress" aria-hidden="true"><span id="progress"></span></div><div id="backdrop" class="backdrop"></div>
+<aside class="sidebar" id="sidebar" aria-label="手册目录"><div class="brand"><div class="brand-mark" aria-hidden="true">&lt;/&gt;</div><div><strong>全栈知识手册</strong><small>LEARN · BUILD · DEBUG</small></div></div><a class="state-link" href="#state-index">◎ 状态在哪里 · 全书索引</a><nav aria-label="章节导航"><div class="nav-group"><p>理解全景</p><a href="#section-0" data-chapter="0"><span>00</span><span>如何使用这份手册</span></a><a href="#section-1" data-chapter="1"><span>01</span><span>系统全景</span></a><a href="#section-2" data-chapter="2"><span>02</span><span>端到端流程</span></a><a href="#section-3" data-chapter="3"><span>03</span><span>需求与架构设计</span></a></div><div class="nav-group"><p>请求与数据</p><a href="#section-4" data-chapter="4"><span>04</span><span>前端与浏览器</span></a><a href="#section-5" data-chapter="5"><span>05</span><span>网络与访问入口</span></a><a href="#section-6" data-chapter="6"><span>06</span><span>接口与前后端通信</span></a><a href="#section-7" data-chapter="7"><span>07</span><span>后端、认证与权限</span></a><a href="#section-8" data-chapter="8"><span>08</span><span>数据库</span></a><a href="#section-9" data-chapter="9"><span>09</span><span>缓存</span></a><a href="#section-10" data-chapter="10"><span>10</span><span>异步任务与可靠性</span></a></div><div class="nav-group"><p>验证与交付</p><a href="#section-11" data-chapter="11"><span>11</span><span>测试与质量验证</span></a><a href="#section-12" data-chapter="12"><span>12</span><span>部署与运行环境</span></a><a href="#section-13" data-chapter="13"><span>13</span><span>CI/CD 与变更交付</span></a><a href="#section-14" data-chapter="14"><span>14</span><span>可观测性与线上排障</span></a></div><div class="nav-group"><p>查阅与实践</p><a href="#section-15" data-chapter="15"><span>15</span><span>AI 应用在全栈体系中的位置</span></a><a href="#section-16" data-chapter="16"><span>16</span><span>故障定位速查</span></a><a href="#section-17" data-chapter="17"><span>17</span><span>技术选型</span></a><a href="#section-18" data-chapter="18"><span>18</span><span>建立体系的实践路径</span></a><a href="#section-19" data-chapter="19"><span>19</span><span>术语、资料与排障记录模板</span></a></div><div class="nav-group"><p>深入工程能力</p><a href="#section-20" data-chapter="20"><span>20</span><span>计算机基础与操作系统</span></a><a href="#section-21" data-chapter="21"><span>21</span><span>系统设计、容量与性能工程</span></a><a href="#section-22" data-chapter="22"><span>22</span><span>分布式系统与数据一致性</span></a><a href="#section-23" data-chapter="23"><span>23</span><span>工程依赖、模块与构建原理</span></a><a href="#section-24" data-chapter="24"><span>24</span><span>Git 协作与变更管理</span></a><a href="#section-25" data-chapter="25"><span>25</span><span>文件、搜索与数据生命周期</span></a><a href="#section-26" data-chapter="26"><span>26</span><span>调试工具箱与故障演练</span></a></div></nav><p class="sidebar-note">通用知识体系 · 2026.10.08<br>离线可读，搜索在本地完成。</p></aside>
+<div class="shell"><header class="topbar"><button class="menu-button icon-button" id="menu" aria-expanded="false" aria-controls="sidebar">目录</button><span class="crumb" id="crumb">全栈开发知识体系</span><div class="search-wrap"><label for="search" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">全文搜索</label><input id="search" type="search" placeholder="搜索概念、流程或故障…" autocomplete="off" aria-controls="search-panel"><span class="shortcut" aria-hidden="true">⌘ K</span></div><button class="icon-button" id="theme">深色</button><button class="icon-button print-button" id="print">打印</button></header>
+<main id="main"><div class="hero"><p class="eyebrow">FULL STACK KNOWLEDGE HANDBOOK</p><h1>全栈开发知识体系</h1><p class="lead">从一次请求到一次发布，理解每一层的职责、状态与边界。<br>把零散的技术知识，连接成可以实现、验证和排障的完整流程。</p><div class="metadata"><span>27 个章节</span><span>3 幅流程图</span><span>73 张对照表</span><span>2026 年 10 月 8 日</span></div><div class="quick-links"><a href="#section-1">从系统全景开始 →</a><a href="#section-16">查找故障方向</a><a href="#section-18">按阶段实践</a></div></div>
+<section class="search-panel" id="search-panel" hidden aria-label="全文搜索结果"><div class="search-panel-header"><h2>搜索结果</h2><button id="clear-search" class="icon-button">清除搜索</button></div><p id="search-status" class="search-status" role="status" aria-live="polite"></p><ul class="search-results" id="search-results"></ul></section>
+<article aria-label="知识手册正文"><section class="chapter" id="section-0" aria-labelledby="chapter-heading-0"><p class="chapter-label">CHAPTER 00</p><h2 id="chapter-heading-0" tabindex="-1">0. 如何使用这份手册</h2>
+<p>第一次阅读，按第 1–14 章建立完整地图；开发遇到问题，先查第 16 章，再到第 26 章选择取证工具；需要动手学习，按第 18 章逐项验收。第 20–26 章补充底层原理、容量设计、分布式一致性与工程协作；第 1.4 节提供贯穿全书的“状态在哪里”索引。</p>
+<p>全栈能力可以分成三个层次：</p>
+<ol>
+<li><strong>能解释</strong>：描述一个请求经过哪里，谁拥有数据，哪里存在状态，哪里可能失败。</li>
+<li><strong>能实现</strong>：把功能从界面、接口、数据库一直做到部署，并验证成功与失败路径。</li>
+<li><strong>能定位和改进</strong>：用测量区分瓶颈，处理并发和故障，评估引入新组件的收益与代价。</li>
+</ol>
+<p>“知识体系完整”指这些环节能连起来，不意味着一个人精通所有数据库、云平台和后端语言。掌握一种实现，再理解可迁移的原理。</p>
+<h3 id="topic-0-1" tabindex="-1">阅读导航</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>主题</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="#section-1">1. 系统全景</a></td>
+<td>分层、职责、数据流和控制流</td>
+</tr>
+<tr>
+<td><a href="#section-2">2. 端到端流程</a></td>
+<td>页面加载、读请求、写请求和后台任务</td>
+</tr>
+<tr>
+<td><a href="#section-3">3. 需求与架构</a></td>
+<td>业务规则、数据建模、边界与质量要求</td>
+</tr>
+<tr>
+<td><a href="#section-4">4. 前端与浏览器</a></td>
+<td>渲染、状态、运行时、性能与错误处理</td>
+</tr>
+<tr>
+<td><a href="#section-5">5. 网络与访问入口</a></td>
+<td>DNS、TCP/QUIC、TLS、HTTP、代理和负载均衡</td>
+</tr>
+<tr>
+<td><a href="#section-6">6. 接口与前后端通信</a></td>
+<td>契约、状态码、跨域、Cookie、轮询与推送</td>
+</tr>
+<tr>
+<td><a href="#section-7">7. 后端、认证与权限</a></td>
+<td>服务端分层、业务逻辑、安全和并发</td>
+</tr>
+<tr>
+<td><a href="#section-8">8. 数据库</a></td>
+<td>SQL、索引、事务、连接池和持久化</td>
+</tr>
+<tr>
+<td><a href="#section-9">9. 缓存</a></td>
+<td>浏览器、CDN、服务端缓存与一致性</td>
+</tr>
+<tr>
+<td><a href="#section-10">10. 异步任务</a></td>
+<td>队列、重试、幂等、补偿与可靠性</td>
+</tr>
+<tr>
+<td><a href="#section-11">11. 测试</a></td>
+<td>单元、集成、契约、端到端与性能测试</td>
+</tr>
+<tr>
+<td><a href="#section-12">12. 部署</a></td>
+<td>构建、运行、容器、网络、配置与恢复</td>
+</tr>
+<tr>
+<td><a href="#section-13">13. CI/CD</a></td>
+<td>从提交代码到验证、发布和回退</td>
+</tr>
+<tr>
+<td><a href="#section-14">14. 可观测性</a></td>
+<td>日志、指标、追踪和逐层诊断</td>
+</tr>
+<tr>
+<td><a href="#section-15">15. AI 应用在系统中的位置</a></td>
+<td>模型、检索、工具调用与评估</td>
+</tr>
+<tr>
+<td><a href="#section-16">16. 故障定位速查</a></td>
+<td>按症状寻找证据，缩小范围</td>
+</tr>
+<tr>
+<td><a href="#section-17">17. 技术选型与能力边界</a></td>
+<td>什么时候需要一个组件</td>
+</tr>
+<tr>
+<td><a href="#section-18">18. 实践路径</a></td>
+<td>分阶段交付、故障演练与自测</td>
+</tr>
+<tr>
+<td><a href="#section-19">19. 术语与学习资料</a></td>
+<td>高频术语、官方资料、排障记录模板</td>
+</tr>
+<tr>
+<td><a href="#section-20">20. 计算机基础与操作系统</a></td>
+<td>进程、内存、I/O、文件描述符、数据结构</td>
+</tr>
+<tr>
+<td><a href="#section-21">21. 系统设计、容量与性能工程</a></td>
+<td>负载模型、容量估算、瓶颈、扩容与成本</td>
+</tr>
+<tr>
+<td><a href="#section-22">22. 分布式系统与数据一致性</a></td>
+<td>多实例、复制、部分失败、顺序、锁和补偿</td>
+</tr>
+<tr>
+<td><a href="#section-23">23. 工程依赖、模块与构建原理</a></td>
+<td>依赖图、锁文件、模块、编译、打包与调试映射</td>
+</tr>
+<tr>
+<td><a href="#section-24">24. Git 协作与变更管理</a></td>
+<td>工作区、提交、分支、审查、冲突与变更定位</td>
+</tr>
+<tr>
+<td><a href="#section-25">25. 文件、搜索与数据生命周期</a></td>
+<td>上传登记、清洗、派生索引、归档与清理</td>
+</tr>
+<tr>
+<td><a href="#section-26">26. 调试工具箱与故障演练</a></td>
+<td>工具选择、输出判读、完整取证与验证练习</td>
+</tr>
+<tr>
+<td><a href="#state-index">贯穿全书：状态在哪里</a></td>
+<td>状态归属、失效、同步、恢复与跨层排错</td>
+</tr>
+</tbody></table></div>
+</section>
+<section class="chapter" id="section-1" aria-labelledby="chapter-heading-1"><p class="chapter-label">CHAPTER 01</p><h2 id="chapter-heading-1" tabindex="-1">1. 系统全景：先理解各层的职责</h2>
+<h3 id="topic-1-1" tabindex="-1">1.1 运行时的完整地图</h3>
+<figure class="diagram"><figcaption>运行时的系统地图</figcaption><div class="flow-row"><div class="flow-node">用户</div><span class="flow-arrow" aria-hidden="true">→</span><div class="flow-node">浏览器</div><span class="flow-arrow" aria-hidden="true">→</span><div class="flow-node">访问入口</div><span class="flow-arrow" aria-hidden="true">→</span><div class="flow-node">应用服务</div></div><div class="flow-branches"><div><strong>资源分发</strong><span>入口 → 静态资源服务</span></div><div><strong>业务数据</strong><span>应用 → 数据库 / 可选缓存</span></div><div><strong>后台工作</strong><span>应用 → 队列 → Worker → 数据库</span></div><div><strong>外部能力</strong><span>应用 / Worker → 对象存储与外部 API</span></div></div><p>方框表示职责，不要求独立部署。缓存和队列按需求引入。</p></figure><details class="diagram-source"><summary>查看 Mermaid 图示源代码</summary><pre><code>flowchart LR
+    U[用户] --&gt; B[浏览器：界面与交互]
+    B --&gt; E[访问入口：可选 CDN / TLS / 代理 / 负载均衡]
+    E --&gt; S[静态资源服务]
+    E --&gt; A[应用服务：身份 / 权限 / 业务规则]
+    A --&gt; D[(数据库：持久业务数据)]
+    A --&gt; C[(可选缓存：可重建的热点数据)]
+    A --&gt; Q[可选任务队列]
+    Q --&gt; W[后台 Worker]
+    W --&gt; D
+    A --&gt; O[对象存储 / 外部 API]
+    W --&gt; O
+</code></pre></details>
+<p>这是逻辑分工，不要求每个方框都是一台机器。小型应用可以在一个进程中提供页面和 API，在一台主机运行应用与数据库；规模、隔离或稳定性要求提高后再拆分。托管平台也会替你承担其中部分职责。</p>
+<p>DNS 在建立目标连接前帮助解析地址；日志、监控、安全和测试贯穿各层，因此不应被理解成只在流程最后发生。</p>
+<h3 id="topic-1-2" tabindex="-1">1.2 每层负责什么</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>层或组件</th>
+<th>输入 → 输出</th>
+<th>主要解决的问题</th>
+<th>不能替代什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>浏览器与前端</td>
+<td>用户操作、服务端数据 → 页面与交互</td>
+<td>易用性、状态反馈、可视化</td>
+<td>服务端权限校验、可信业务计算</td>
+</tr>
+<tr>
+<td>DNS 与网络</td>
+<td>域名、目标地址 → 可达路径与连接</td>
+<td>找到服务、传输数据</td>
+<td>业务正确性</td>
+</tr>
+<tr>
+<td>CDN / 静态资源服务</td>
+<td>资源路径 → HTML、JS、CSS、图片</td>
+<td>资源分发、减少延迟和源站压力</td>
+<td>任意用户的实时业务状态</td>
+</tr>
+<tr>
+<td>反向代理 / 负载均衡</td>
+<td>外部请求 → 对应应用实例</td>
+<td>TLS 终止、路由、转发、流量分配</td>
+<td>所有应用层故障的修复</td>
+</tr>
+<tr>
+<td>应用服务</td>
+<td>请求、身份 → 业务结果</td>
+<td>校验、授权、规则、流程编排</td>
+<td>数据库约束、客户端展示</td>
+</tr>
+<tr>
+<td>数据库</td>
+<td>查询、变更 → 持久记录与查询结果</td>
+<td>数据组织、约束、事务、检索</td>
+<td>所有领域规则、无限吞吐</td>
+</tr>
+<tr>
+<td>缓存</td>
+<td>查询键 → 暂存结果</td>
+<td>降低延迟、减少重复工作</td>
+<td>默认的权威数据源与持久保证</td>
+</tr>
+<tr>
+<td>消息队列与 Worker</td>
+<td>待处理任务 → 异步结果</td>
+<td>解耦、削峰、长任务、重试</td>
+<td>自动消除重复执行与一致性问题</td>
+</tr>
+<tr>
+<td>对象存储</td>
+<td>文件内容、对象键 → 文件访问能力</td>
+<td>附件、图片、大文件、报表产物</td>
+<td>复杂关系查询和事务</td>
+</tr>
+<tr>
+<td>CI/CD</td>
+<td>代码变更 → 可验证、可发布的版本</td>
+<td>自动验证、可重复交付</td>
+<td>生产环境监控与恢复演练</td>
+</tr>
+<tr>
+<td>可观测性</td>
+<td>运行事件 → 证据、指标与关联链路</td>
+<td>发现、定位、解释问题</td>
+<td>自动做出正确业务决策</td>
+</tr>
+</tbody></table></div>
+<h3 id="topic-1-3" tabindex="-1">1.3 始终区分三条线</h3>
+<ul>
+<li><strong>数据流</strong>：用户输入如何进入服务端、数据库，最后变成界面数据。</li>
+<li><strong>身份与权限流</strong>：请求者是谁，能操作哪个资源，权限在哪里执行。</li>
+<li><strong>交付流</strong>：源代码如何变成构件，构件如何进入环境，出问题如何回退。</li>
+</ul>
+<p>例如“登录后看不到订单”可能是数据流问题，也可能是权限问题；“本地正常、线上异常”则经常还涉及交付流和环境差异。</p>
+<a id="state-index"></a>
+<h3 id="topic-1-4" tabindex="-1">1.4 贯穿全书的索引：状态在哪里</h3>
+<p>状态是系统记住的东西：当前页面选择、登录身份、一笔订单、任务进度、资源缓存、已经部署的版本，都属于状态。定位问题前，先确认哪个状态才是权威事实，哪些只是副本或派生结果。</p>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>保存位置</th>
+<th>保存什么</th>
+<th>谁负责更新 / 同步</th>
+<th>何时失效或丢失</th>
+<th>典型问题与相关章节</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>URL / 浏览器页面内存</td>
+<td>搜索条件、草稿、组件状态</td>
+<td>页面代码与导航逻辑</td>
+<td>刷新、页面卸载或主动重置；URL 可保留条件</td>
+<td>请求竞态、刷新丢状态；<a href="#section-4">前端</a></td>
+</tr>
+<tr>
+<td>浏览器持久存储与会话 Cookie</td>
+<td>本地偏好、会话标识、离线数据</td>
+<td>应用与浏览器策略</td>
+<td>清理、过期、作用域限制；不同机制行为不同</td>
+<td>登录丢失、切换账号残留；<a href="#section-6">通信</a></td>
+</tr>
+<tr>
+<td>前端查询缓存 / Service Worker</td>
+<td>服务端数据副本、资源副本</td>
+<td>查询客户端或 SW 更新策略</td>
+<td>失效、过期、缓存清理或版本切换</td>
+<td>接口已更新，页面仍旧；<a href="#section-9">缓存</a></td>
+</tr>
+<tr>
+<td>CDN / 反向代理</td>
+<td>可共享的资源和响应副本</td>
+<td>响应头、缓存键、主动刷新规则</td>
+<td>TTL、淘汰、配置变更或主动清除</td>
+<td>旧资源、缓存变体混用；<a href="#section-9">缓存</a></td>
+</tr>
+<tr>
+<td>应用进程内存</td>
+<td>临时计算、连接池、本地缓存、部分会话</td>
+<td>当前应用实例</td>
+<td>重启、崩溃、回收；不天然跨实例同步</td>
+<td>扩容后偶发错误；<a href="#section-20">操作系统</a>、<a href="#section-22">分布式</a></td>
+</tr>
+<tr>
+<td>数据库主库</td>
+<td>权威业务记录、约束、事务状态</td>
+<td>经授权的应用、受控迁移与作业</td>
+<td>按事务、备份和保留策略管理</td>
+<td>并发覆盖、误删、恢复；<a href="#section-8">数据库</a></td>
+</tr>
+<tr>
+<td>数据库副本 / 搜索索引</td>
+<td>复制或派生的可查询状态</td>
+<td>复制流、事件消费、索引作业</td>
+<td>可能暂时落后；重建和回放规则不同</td>
+<td>写入后搜索不到；<a href="#section-22">分布式</a>、<a href="#section-25">生命周期</a></td>
+</tr>
+<tr>
+<td>共享缓存 / 会话存储</td>
+<td>热点副本或共享身份状态</td>
+<td>应用、失效事件与过期规则</td>
+<td>过期、淘汰、故障；是否允许丢失取决于用途</td>
+<td>权限隔离、陈旧、击穿；<a href="#section-9">缓存</a></td>
+</tr>
+<tr>
+<td>队列 / 任务状态表</td>
+<td>待办任务、执行进度与结果索引</td>
+<td>生产者、Worker 与恢复逻辑</td>
+<td>确认、重试、租约失效与保留清理</td>
+<td>重复执行、卡在运行中；<a href="#section-10">异步任务</a></td>
+</tr>
+<tr>
+<td>对象存储</td>
+<td>附件、原始文件、报告产物</td>
+<td>上传、登记与清理工作流</td>
+<td>生命周期规则、覆盖、删除、版本保留</td>
+<td>孤立文件、元信息不一致；<a href="#section-25">生命周期</a></td>
+</tr>
+<tr>
+<td>构件库 / 部署配置</td>
+<td>已构建版本、运行参数与发布记录</td>
+<td>构建和发布系统</td>
+<td>构件清理、配置变更、发布或回退</td>
+<td>同提交不同构件、配置漂移；<a href="#section-13">CI/CD</a>、<a href="#section-23">构建</a></td>
+</tr>
+</tbody></table></div>
+<p>每份重要状态都应该能回答：</p>
+<ol>
+<li><strong>权威来源是什么？</strong> 用户界面、本地缓存、搜索结果往往只是呈现或副本。</li>
+<li><strong>谁可以修改？</strong> 通过哪个接口和授权检查，是否有并发控制？</li>
+<li><strong>如何传播？</strong> 同步更新、失效重读、复制、事件消费还是定期重建？</li>
+<li><strong>允许落后多久？</strong> 明确时间、版本或业务节点，不能仅写“最终会一致”。</li>
+<li><strong>如何恢复？</strong> 能从权威源重建，还是必须依赖备份、审计或外部对账？</li>
+</ol>
+<p>例：修改订单后，详情已更新但搜索列表未变。依次比较写入结果、权威数据库记录、索引消费进度、搜索响应原文和前端状态。先找到首次出现版本差异的位置，再处理该段传播链；不要把所有缓存同时清掉而失去证据。</p>
+</section>
+<section class="chapter" id="section-2" aria-labelledby="chapter-heading-2"><p class="chapter-label">CHAPTER 02</p><h2 id="chapter-heading-2" tabindex="-1">2. 端到端流程：把知识连成可以追踪的路径</h2>
+<h3 id="topic-2-1" tabindex="-1">2.1 打开一个网页时发生了什么</h3>
+<p>下表是新访问的概念顺序。实际浏览器会并行请求资源，复用 DNS、缓存和连接，不会每次完整重做所有步骤。</p>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>做了什么</th>
+<th>产生的结果</th>
+<th>出错先看什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1. 解析 URL</td>
+<td>分解协议、域名、端口、路径、查询参数</td>
+<td>确定目标资源</td>
+<td>地址、环境配置、重定向</td>
+</tr>
+<tr>
+<td>2. 查询缓存与 DNS</td>
+<td>尝试已有缓存；必要时解析域名</td>
+<td>获得资源或服务器地址</td>
+<td>DNS 记录、解析结果、缓存状态</td>
+</tr>
+<tr>
+<td>3. 建立连接</td>
+<td>使用 TCP，或 HTTP/3 的 QUIC 连接</td>
+<td>可通信的通道</td>
+<td>端口监听、防火墙、连通性</td>
+</tr>
+<tr>
+<td>4. 建立 HTTPS 安全连接</td>
+<td>验证证书，协商加密参数</td>
+<td>受保护的连接</td>
+<td>证书域名、有效期、信任链</td>
+</tr>
+<tr>
+<td>5. 获取 HTML</td>
+<td>请求经过入口、缓存或应用服务器</td>
+<td>HTML 响应</td>
+<td>状态码、响应体、入口日志</td>
+</tr>
+<tr>
+<td>6. 加载资源</td>
+<td>获取 CSS、JS、字体、图片</td>
+<td>页面依赖准备好</td>
+<td>资源 404、MIME 类型、资源版本</td>
+</tr>
+<tr>
+<td>7. 解析并渲染</td>
+<td>构建 DOM、计算样式、布局与绘制，执行脚本</td>
+<td>可见页面</td>
+<td>Console、Performance、长任务</td>
+</tr>
+<tr>
+<td>8. 获取业务数据</td>
+<td>页面按需要请求 API</td>
+<td>数据进入客户端状态</td>
+<td>Network、API 契约、后端日志</td>
+</tr>
+<tr>
+<td>9. 响应后续操作</td>
+<td>更新状态、导航、再次请求</td>
+<td>持续交互</td>
+<td>竞态、状态同步、异常反馈</td>
+</tr>
+</tbody></table></div>
+<p>服务端渲染的页面可能在第 5 步之前就已经查询业务数据；纯客户端渲染通常更依赖第 8 步。渲染模式会改变步骤所在的位置。</p>
+<h3 id="topic-2-2" tabindex="-1">2.2 一次读取请求：查看订单列表</h3>
+<figure class="diagram"><figcaption>一次读取请求：查看订单列表</figcaption><ol class="sequence"><li><b>用户 → 前端</b><span>打开列表，发起 GET /api/orders?limit=20</span></li><li><b>前端 → 访问入口 → 应用</b><span>路由转发并关联请求 ID</span></li><li><b>应用</b><span>验证身份、权限与参数</span></li><li><b>应用 → 数据库 → 应用</b><span>按授权范围查询、分页并返回记录</span></li><li><b>应用 → 访问入口 → 前端</b><span>返回 HTTP 状态与 JSON</span></li><li><b>前端 → 用户</b><span>检查响应，展示结果、空状态或错误</span></li></ol></figure><details class="diagram-source"><summary>查看 Mermaid 图示源代码</summary><pre><code>sequenceDiagram
+    participant U as 用户
+    participant F as 前端
+    participant P as 访问入口
+    participant A as 应用服务
+    participant D as 数据库
+    U-&gt;&gt;F: 打开订单列表
+    F-&gt;&gt;P: GET /api/orders?limit=20
+    P-&gt;&gt;A: 路由转发并关联请求 ID
+    A-&gt;&gt;A: 身份验证、权限和参数校验
+    A-&gt;&gt;D: 按授权范围查询并分页
+    D--&gt;&gt;A: 返回记录
+    A--&gt;&gt;P: 序列化 JSON 与 HTTP 状态
+    P--&gt;&gt;F: 返回响应
+    F-&gt;&gt;F: 检查状态和数据，更新界面
+    F--&gt;&gt;U: 展示结果、空状态或错误
+</code></pre></details>
+<p>关键边界：前端提交过滤条件；服务端决定允许查看哪些记录。服务端不能直接相信客户端传来的 <code>userId</code> 或 <code>tenantId</code> 就代表访问授权。</p>
+<p>如果增加缓存，仍需在适当位置验证权限，并保证缓存键及结果包含正确的用户或租户隔离。</p>
+<h3 id="topic-2-3" tabindex="-1">2.3 一次写入请求：创建订单</h3>
+<ol>
+<li>前端校验必填项，展示提交状态，生成此次操作的标识。</li>
+<li>服务端验证身份、权限、字段类型和业务规则；价格等关键值由可信服务端数据确定。</li>
+<li>在数据库事务中写订单、订单项，并按业务要求处理库存和唯一约束。</li>
+<li>事务提交成功，返回订单 ID 和当前状态；同步创建通常使用 <code>201 Created</code>。</li>
+<li>刷新或失效相关缓存，前端同步列表、详情或余额等关联状态。</li>
+<li>邮件、报表等后续工作按需要异步执行。要求可靠投递时，使用第 10 章介绍的事务性发件箱等方案。</li>
+</ol>
+<p><strong>写入最容易忽略的情况：服务端已提交，但客户端没有收到响应。</strong> 客户端看到超时，不代表操作失败。重复提交需要幂等设计，或先通过操作标识查询结果。</p>
+<p>前端禁用按钮能改善体验；数据库唯一约束和服务端幂等记录处理多标签页、网络重试和并发请求。</p>
+<h3 id="topic-2-4" tabindex="-1">2.4 一个长任务：导出大量订单</h3>
+<pre><code class="language-text">提交导出请求
+  → 校验权限并创建任务记录
+  → 返回 202 和 taskId
+  → Worker 分批读取数据、生成文件
+  → 保存文件并更新任务状态
+  → 前端轮询或订阅任务进度
+  → 用户下载结果
+</code></pre>
+<p><code>202 Accepted</code> 表示已接受处理，不表示导出已经完成。任务应有 <code>queued/running/succeeded/failed/cancelled</code> 等明确状态，并在访问任务、下载文件时再次校验归属。</p>
+</section>
+<section class="chapter" id="section-3" aria-labelledby="chapter-heading-3"><p class="chapter-label">CHAPTER 03</p><h2 id="chapter-heading-3" tabindex="-1">3. 需求与架构设计：实现之前先确定什么是正确</h2>
+<h3 id="topic-3-1" tabindex="-1">3.1 从需求到交付物</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>要回答的问题</th>
+<th>形成的产物</th>
+<th>为什么影响后续开发</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>谁使用，想完成什么？</td>
+<td>用户流程、用例与验收标准</td>
+<td>决定页面和接口的真实边界</td>
+</tr>
+<tr>
+<td>哪些操作允许，哪些不允许？</td>
+<td>角色与资源权限矩阵</td>
+<td>决定服务端授权检查</td>
+</tr>
+<tr>
+<td>数据是什么，如何关联？</td>
+<td>实体关系图、字段说明</td>
+<td>决定表、约束、接口结构</td>
+</tr>
+<tr>
+<td>状态如何变化？</td>
+<td>状态机与转换规则</td>
+<td>避免非法流程和并发覆盖</td>
+</tr>
+<tr>
+<td>什么数据不能丢、不能重复？</td>
+<td>一致性与幂等要求</td>
+<td>决定事务、唯一约束和异步方案</td>
+</tr>
+<tr>
+<td>多快、多可靠才够用？</td>
+<td>响应时间、可用性、数据新鲜度目标</td>
+<td>决定容量、缓存、降级和告警</td>
+</tr>
+<tr>
+<td>如何判断上线成功？</td>
+<td>发布检查、指标与回退条件</td>
+<td>避免仅凭页面能打开判断</td>
+</tr>
+</tbody></table></div>
+<p>示例：订单从“待付款”进入“已付款”，应由可信支付结果触发；客户端不能自行修改状态。“已付款后能否取消”属于业务规则，应在服务端统一执行。</p>
+<h3 id="topic-3-2" tabindex="-1">3.2 先建立模块边界，再考虑服务拆分</h3>
+<p>常见模块有用户、权限、订单、报表、通知。模块可以共处一个应用，也可以独立部署。</p>
+<ul>
+<li>单体应用：部署和调用简单，适合先建立业务闭环。</li>
+<li>模块化单体：保留统一部署，同时明确依赖方向和数据归属。</li>
+<li>微服务：适用于明确的团队、独立扩缩容或隔离要求；会增加网络调用、分布式一致性、发布和诊断成本。</li>
+</ul>
+<p>“前后端分离”不意味着必须使用不同域名，也不意味着必须微服务。分离的是职责、代码或交付方式，对外仍可统一由一个域名提供页面与 <code>/api</code>。</p>
+<h3 id="topic-3-3" tabindex="-1">3.3 非功能需求要写得可验证</h3>
+<p>把“要快、要稳定”改成具体问题：目标用户在哪里？同时多少人？单次数据量多大？用户能接受多旧的数据？哪些操作必须强一致？故障后允许丢多少数据、多久恢复？</p>
+<p>并发用户数、每秒请求数、每个请求的计算量、数据库扫描量是不同维度。描述性能时必须附带测试条件。</p>
+</section>
+<section class="chapter" id="section-4" aria-labelledby="chapter-heading-4"><p class="chapter-label">CHAPTER 04</p><h2 id="chapter-heading-4" tabindex="-1">4. 前端与浏览器：从拿到数据到让用户正确操作</h2>
+<h3 id="topic-4-1" tabindex="-1">4.1 前端的职责</h3>
+<p>前端负责用户输入、交互反馈、信息组织、可访问性，以及客户端状态和资源效率。业务数据最终需要服务端确认，前端还应正确表现等待、空结果、失败、过期和部分成功。</p>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>知识</th>
+<th>解决的问题</th>
+<th>典型故障线索</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>HTML 语义与可访问性</td>
+<td>表单、键盘、读屏和结构表达</td>
+<td>看得见但键盘不可用，输入无法提交</td>
+</tr>
+<tr>
+<td>CSS 布局与适配</td>
+<td>页面尺寸、排列、响应式</td>
+<td>溢出、遮挡、布局跳动</td>
+</tr>
+<tr>
+<td>JavaScript 与异步</td>
+<td>事件处理、请求和计算</td>
+<td>Promise 未处理、旧结果覆盖新结果</td>
+</tr>
+<tr>
+<td>TypeScript</td>
+<td>编译阶段表达约束、发现类型错误</td>
+<td>类型声明与真实响应不一致</td>
+</tr>
+<tr>
+<td>组件与状态管理</td>
+<td>拆分界面、维护一致的交互状态</td>
+<td>重复数据源、修改后部分页面不更新</td>
+</tr>
+<tr>
+<td>浏览器渲染与性能</td>
+<td>避免长任务和无效渲染</td>
+<td>接口很快但页面卡顿</td>
+</tr>
+<tr>
+<td>构建工具</td>
+<td>模块转换、资源打包、生产构件</td>
+<td>开发正常、生产路径或配置错误</td>
+</tr>
+</tbody></table></div>
+<p>TypeScript 类型通常不会替你验证运行时 API 响应；外部输入仍需运行时校验。前端表单校验用于尽早反馈，服务端仍须重复执行可信校验。</p>
+<h3 id="topic-4-2" tabindex="-1">4.2 三类状态不要混在一起</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>状态类型</th>
+<th>例子</th>
+<th>管理重点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>本地交互状态</td>
+<td>弹窗是否打开、当前草稿</td>
+<td>组件范围、取消与重置</td>
+</tr>
+<tr>
+<td>服务端状态的客户端副本</td>
+<td>订单列表、用户资料</td>
+<td>缓存、重新获取、失效和竞态</td>
+</tr>
+<tr>
+<td>URL 状态</td>
+<td>搜索词、页码、排序条件</td>
+<td>可分享、可刷新、浏览器前进后退</td>
+</tr>
+</tbody></table></div>
+<p>“修改订单成功，但列表不变”可能只是客户端查询缓存没有失效；“刷新仍是旧值”则还需要检查服务端、CDN、数据库副本等后续层次。</p>
+<h3 id="topic-4-3" tabindex="-1">4.3 渲染模式解决什么问题</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>模式</th>
+<th>HTML / 数据在哪里生成</th>
+<th>擅长</th>
+<th>需要注意</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CSR 客户端渲染</td>
+<td>浏览器执行 JS 后生成主要界面</td>
+<td>强交互应用、后台系统</td>
+<td>首屏依赖 JS 和后续请求</td>
+</tr>
+<tr>
+<td>SSR 服务端渲染</td>
+<td>服务端按请求生成 HTML</td>
+<td>首屏、可索引内容、动态页面</td>
+<td>服务端成本、数据权限与 hydration 一致性</td>
+</tr>
+<tr>
+<td>SSG 静态生成</td>
+<td>构建时生成页面</td>
+<td>内容相对稳定、缓存和分发</td>
+<td>更新时效、构建规模</td>
+</tr>
+<tr>
+<td>混合渲染</td>
+<td>按页面或组件组合</td>
+<td>同时满足内容和交互需求</td>
+<td>明确哪些代码在浏览器、构建机或服务器运行</td>
+</tr>
+</tbody></table></div>
+<p>SSR 不自动保证快速；服务端也可能被慢查询拖延。浏览器拿到 SSR HTML 后，交互部分通常还需要客户端脚本接管。</p>
+<h3 id="topic-4-4" tabindex="-1">4.4 请求竞态与错误处理</h3>
+<p>用户连续输入 A、AB、ABC，三个请求可能按 ABC、AB、A 的顺序返回。最后到达的结果不一定是用户当前需要的结果。</p>
+<p>可采用取消旧请求、请求序号、查询键隔离等方式，只接受当前操作对应的结果。取消浏览器请求不保证服务端已开始的写入被撤销。</p>
+<p>前端至少处理：加载中、成功、空结果、可重试错误、权限不足、取消和数据过期。自动重试前应区分读取、幂等写入以及无法确认结果的写入。</p>
+<h3 id="topic-4-5" tabindex="-1">4.5 前端排查顺序</h3>
+<ol>
+<li>Console 是否有脚本、模块加载或渲染错误？</li>
+<li>Network 中是否真的发出了请求，参数是否对应当前界面？</li>
+<li>响应原文是否正确，还是格式化、时区、单位或状态映射出错？</li>
+<li>Performance 中时间花在脚本、布局、绘制还是网络等待？</li>
+<li>是否有重复请求、事件监听未释放、定时器叠加或不必要的重复渲染？</li>
+</ol>
+</section>
+<section class="chapter" id="section-5" aria-labelledby="chapter-heading-5"><p class="chapter-label">CHAPTER 05</p><h2 id="chapter-heading-5" tabindex="-1">5. 网络与访问入口：请求如何找到并抵达服务</h2>
+<h3 id="topic-5-1" tabindex="-1">5.1 从地址到进程</h3>
+<p>以 <code>https://app.example.com/api/orders?limit=20</code> 为例：</p>
+<ul>
+<li><code>https</code>：请求使用 HTTPS。</li>
+<li><code>app.example.com</code>：主机名，通过 DNS 等解析机制获得地址。</li>
+<li>默认端口 <code>443</code>：帮助定位提供 HTTPS 的网络端点。</li>
+<li><code>/api/orders</code>：由代理和应用路由决定如何处理。</li>
+<li><code>limit=20</code>：查询参数，由应用解释。</li>
+<li>URL 中 <code>#</code> 后的 fragment 通常由客户端处理，不随 HTTP 请求发送到服务器。</li>
+</ul>
+<p>域名不等于服务器；一台服务器可以承载多个域名，一个域名也可以对应多个节点。端口用于区分同一地址上的服务，路径用于应用层路由。</p>
+<h3 id="topic-5-2" tabindex="-1">5.2 网络各层解决的问题</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>环节</th>
+<th>核心职责</th>
+<th>常见误判</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DNS</td>
+<td>把名字解析为地址等记录</td>
+<td>DNS 正确不代表端口和应用可用</td>
+</tr>
+<tr>
+<td>IP 与路由</td>
+<td>把数据送往目标网络位置</td>
+<td>能 ping 通不代表 HTTPS 或应用正常</td>
+</tr>
+<tr>
+<td>TCP</td>
+<td>提供可靠有序的字节流，处理传输重试与流控</td>
+<td>可靠传输不代表业务操作只执行一次</td>
+</tr>
+<tr>
+<td>TLS</td>
+<td>验证服务端身份并加密连接内容</td>
+<td>HTTPS 不会替你检查业务权限</td>
+</tr>
+<tr>
+<td>HTTP</td>
+<td>约定请求、响应、方法、状态和头部</td>
+<td>HTTP 成功不等于业务结果一定正确</td>
+</tr>
+<tr>
+<td>QUIC / HTTP/3</td>
+<td>使用基于 UDP 的 QUIC 提供可靠流和安全连接</td>
+<td>不能把所有 HTTPS 都简化为 TCP</td>
+</tr>
+</tbody></table></div>
+<p>HTTP/1.1 和 HTTP/2 常运行在 TCP 上，HTTPS 还使用 TLS；HTTP/3 使用 QUIC。学习排障时，重点是区分名字解析、连接、安全握手和应用响应，而不是把所有请求错误都称为“网络问题”。HTTP 的请求、响应与代理关系可参考 <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Overview">MDN：HTTP 概述</a>，HTTP/3 的传输关系见 <a href="https://www.rfc-editor.org/rfc/rfc9114.html">RFC 9114</a>。</p>
+<h3 id="topic-5-3" tabindex="-1">5.3 代理、网关、负载均衡和 CDN</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>站在哪一侧</th>
+<th>主要用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>正向代理</td>
+<td>代表客户端向外访问</td>
+<td>统一出口、访问控制、转发</td>
+</tr>
+<tr>
+<td>反向代理</td>
+<td>代表服务端接收请求</td>
+<td>HTTPS、域名/路径路由、转发、静态资源</td>
+</tr>
+<tr>
+<td>负载均衡</td>
+<td>位于多个实例之前</td>
+<td>分配流量，避开不健康实例</td>
+</tr>
+<tr>
+<td>API 网关</td>
+<td>位于 API 入口</td>
+<td>可集中处理鉴权、配额、路由和协议适配</td>
+</tr>
+<tr>
+<td>CDN</td>
+<td>靠近用户的分发节点</td>
+<td>缓存和分发资源，减少访问距离与源站压力</td>
+</tr>
+</tbody></table></div>
+<p>这些能力可以由同一产品承担。代理能提供入口控制，但应用仍需执行资源级授权。日志应记录请求到达了哪一层、转发到哪里、最终由谁生成响应。</p>
+<h3 id="topic-5-4" tabindex="-1">5.4 测量连接与响应</h3>
+<p>以下仅为诊断命令示例。将保留示例域名替换为你有权检查的服务；不包含任何真实凭据。</p>
+<pre><code class="language-bash">dig app.example.com
+curl -I https://app.example.com/
+curl -sS -o /dev/null \
+  -w &#39;DNS:%{time_namelookup} TCP:%{time_connect} TLS:%{time_appconnect} TTFB:%{time_starttransfer} TOTAL:%{time_total}\n&#39; \
+  https://app.example.com/api/health
+</code></pre>
+<p><code>curl -I</code> 发的是 HEAD，不一定与 GET 行为完全相同。上述计时是从请求开始累计的时间点，不应直接全部相加；连接复用、重定向、代理和缓存都会影响解释。</p>
+<p>TTFB 是收到响应首字节前的等待，可能包含网络、排队、代理与服务端处理。TTFB 高不能单凭一个数字断言数据库慢，应关联服务端耗时和链路追踪。</p>
+</section>
+<section class="chapter" id="section-6" aria-labelledby="chapter-heading-6"><p class="chapter-label">CHAPTER 06</p><h2 id="chapter-heading-6" tabindex="-1">6. 接口与前后端通信：双方如何达成一致</h2>
+<h3 id="topic-6-1" tabindex="-1">6.1 接口是一份契约</h3>
+<p>一个接口至少约定：方法与路径、参数位置、字段类型、认证方式、授权范围、成功响应、错误码、分页、时间和单位、超时及重试语义。</p>
+<p>接口契约可以用 OpenAPI 等方式描述。生成类型与客户端有助于减少重复，但仍需要运行时校验、兼容性检查和真实请求测试。</p>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>参数或内容</th>
+<th>放在哪里</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>资源标识</td>
+<td>路径参数</td>
+<td><code>/api/orders/123</code></td>
+</tr>
+<tr>
+<td>查询条件</td>
+<td>Query</td>
+<td><code>?status=paid&amp;limit=20</code></td>
+</tr>
+<tr>
+<td>新增或更新的数据</td>
+<td>Request body</td>
+<td>JSON、表单或文件</td>
+</tr>
+<tr>
+<td>内容类型、协商、认证等</td>
+<td>Header / Cookie</td>
+<td><code>Content-Type</code>、<code>Accept</code>、会话 Cookie</td>
+</tr>
+<tr>
+<td>操作结果</td>
+<td>状态码、响应头、响应体</td>
+<td><code>201</code>、新资源位置、订单 JSON</td>
+</tr>
+</tbody></table></div>
+<p>敏感信息尽量不放 URL，URL 容易进入日志、浏览器历史和中间系统。URL 编码只是传输格式，不是加密。</p>
+<p>常用方法表达不同操作意图：</p>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>常见用途</th>
+<th>重试前要理解的语义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GET / HEAD</td>
+<td>获取资源 / 获取相应响应头而无响应体</td>
+<td>按协议应为安全、幂等操作；不要用 GET 执行业务写入</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>提交处理请求、创建下级资源</td>
+<td>不天然幂等，重复执行需业务幂等保护</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td>创建或替换目标资源的表示</td>
+<td>按设计应幂等，不能实现成每次调用都额外累加</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td>对资源应用部分修改</td>
+<td>不保证幂等；“设为 5”和“增加 5”的行为不同</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>删除目标资源的关联</td>
+<td>按设计应幂等，重复请求的响应状态可以不同</td>
+</tr>
+<tr>
+<td>OPTIONS</td>
+<td>查询支持的通信选项</td>
+<td>浏览器 CORS 预检会使用它</td>
+</tr>
+</tbody></table></div>
+<p>幂等关注重复操作的预期效果，不要求每次状态码和响应体相同。仅使用某个方法名不会自动使实现正确。<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods">MDN：HTTP 请求方法</a></p>
+<h3 id="topic-6-2" tabindex="-1">6.2 一个最小通信示例</h3>
+<p>下面是教学接口格式，不绑定任何语言或框架：</p>
+<pre><code class="language-http">GET /api/orders?limit=20 HTTP/1.1
+Host: app.example.com
+Accept: application/json
+</code></pre>
+<pre><code class="language-json">{
+  &quot;data&quot;: [{ &quot;id&quot;: &quot;123&quot;, &quot;status&quot;: &quot;paid&quot;, &quot;totalAmount&quot;: &quot;199.00&quot;, &quot;currency&quot;: &quot;CNY&quot; }],
+  &quot;page&quot;: { &quot;nextCursor&quot;: &quot;cursor-example&quot; },
+  &quot;requestId&quot;: &quot;req-example&quot;
+}
+</code></pre>
+<p>这里的金额按币种的主要单位传递为十进制字符串，例如 <code>199.00 CNY</code>；数据库示例使用对应的十进制列。也可以选择最小货币单位整数，但必须在契约中明确，并同步调整字段、计算与测试，不能将不同单位混用。</p>
+<p>浏览器读取 JSON 的基本步骤：</p>
+<pre><code class="language-javascript">async function listOrders(signal) {
+  const response = await fetch(&#39;/api/orders?limit=20&#39;, {
+    headers: { Accept: &#39;application/json&#39; },
+    credentials: &#39;same-origin&#39;,
+    signal,
+  });
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+  return response.json(); // 实际项目还应校验响应结构，并按错误类型反馈。
+}
+</code></pre>
+<p><code>fetch</code> 收到 <code>404</code> 或 <code>500</code> 通常仍会返回 Response，需要检查 <code>response.ok</code>；网络等错误才会使 Promise 拒绝。JSON 解析是另一步，也可能失败。<a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch">MDN：使用 Fetch</a></p>
+<h3 id="topic-6-3" tabindex="-1">6.3 数据格式的共同规则</h3>
+<ul>
+<li>日期时间明确时区，跨系统一般使用带偏移的 ISO 8601；用户界面再按需要转换。</li>
+<li>区分 <code>null</code>、字段缺失、空字符串和数值 <code>0</code>。</li>
+<li>金额采用适合业务的十进制方案，或约定最小货币单位的整数；大整数跨 JSON/JavaScript 时可能需要字符串。</li>
+<li>列表约定稳定排序；大数据量或频繁变化的数据可考虑游标分页，普通后台列表可先用 offset 分页。</li>
+<li>错误信息包含稳定机器码和可读说明；不要把堆栈、SQL 或凭据直接返回给用户。</li>
+<li>增加可选字段通常比删除、重命名字段更容易兼容；前后端可能并非同时升级。</li>
+</ul>
+<h3 id="topic-6-4" tabindex="-1">6.4 状态码如何帮助判断</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>状态</th>
+<th>常见含义</th>
+<th>下一步证据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>200 / 201 / 204</td>
+<td>成功 / 已创建 / 无响应体</td>
+<td>仍核对业务数据；204 不应按 JSON 解析</td>
+</tr>
+<tr>
+<td>202</td>
+<td>已接受，处理未必完成</td>
+<td>查询任务状态</td>
+</tr>
+<tr>
+<td>304</td>
+<td>协商验证后复用已缓存的表示</td>
+<td>检查缓存与验证头，不是普通 JSON 返回</td>
+</tr>
+<tr>
+<td>400 / 422</td>
+<td>请求格式或语义无法接受，按 API 约定使用</td>
+<td>字段、类型、错误码</td>
+</tr>
+<tr>
+<td>401</td>
+<td>缺失或无效认证</td>
+<td>登录态、Cookie、Token 有效性</td>
+</tr>
+<tr>
+<td>403</td>
+<td>服务拒绝执行</td>
+<td>权限范围、资源归属、网关策略</td>
+</tr>
+<tr>
+<td>404 / 405</td>
+<td>资源或路由未找到 / 方法不被支持</td>
+<td>路径、方法、路由转发</td>
+</tr>
+<tr>
+<td>409</td>
+<td>与资源当前状态冲突</td>
+<td>唯一约束、版本冲突、状态机</td>
+</tr>
+<tr>
+<td>413 / 429</td>
+<td>请求过大 / 请求过多</td>
+<td>各层大小限制、配额、Retry-After</td>
+</tr>
+<tr>
+<td>500</td>
+<td>服务端未预期错误</td>
+<td>请求 ID 对应的错误日志</td>
+</tr>
+<tr>
+<td>502 / 503 / 504</td>
+<td>上游响应异常 / 暂时不可用 / 上游等待超时</td>
+<td>由哪个节点生成，再看上游健康和耗时</td>
+</tr>
+</tbody></table></div>
+<p>状态码描述响应语义，不自动判定某个团队有错。404 可能来自代理，403 可能来自 WAF，500 也可能由客户端触发了服务端未处理的边界条件。</p>
+<h3 id="topic-6-5" tabindex="-1">6.5 跨域：浏览器是否允许脚本读取响应</h3>
+<p>同源通常要求协议、主机名和端口都一致。<code>https://app.example.com</code> 与 <code>https://api.example.com</code> 跨源，但是否跨站是另一种判断；SameSite Cookie 使用的是“站”的概念。</p>
+<p>CORS 是浏览器对跨源访问的控制机制。部分请求会先发送 OPTIONS 预检，确认目标允许的方法和请求头。带凭据的跨源请求需要正确的客户端配置及服务端允许策略，不能用 <code>Access-Control-Allow-Origin: *</code> 随意放行凭据读取。<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS">MDN：CORS</a></p>
+<p>排查时依次看 Origin、OPTIONS 是否通过、响应头、Cookie 是否发送及服务端实际响应。CORS 不是接口认证，也不能替代 CSRF 防护；请求可能已经发出并产生副作用，只是响应不允许被脚本读取。<code>curl</code> 不执行浏览器的同源限制，因此 <code>curl</code> 成功不足以证明浏览器配置正确。</p>
+<p>跨源 Cookie 请求通常需要客户端设置 <code>credentials: &#39;include&#39;</code>，服务端允许精确 Origin 并返回 <code>Access-Control-Allow-Credentials: true</code>。Cookie 仍受 Domain、Path、SameSite、Secure 和浏览器第三方 Cookie 策略约束；允许跨源读取不会自动解除这些限制。</p>
+<p>开发代理通常只由开发服务器提供；构建后的静态文件不会自动包含它的转发能力。生产环境可配置同域 <code>/api</code> 反向代理，或正确配置跨源访问。</p>
+<h3 id="topic-6-6" tabindex="-1">6.6 Cookie、Session 和 Token</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>概念</th>
+<th>是什么</th>
+<th>设计关注点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Cookie</td>
+<td>浏览器按规则保存和随请求携带的数据</td>
+<td>域、路径、过期、Secure、HttpOnly、SameSite</td>
+</tr>
+<tr>
+<td>Session</td>
+<td>服务端维护的会话状态，常由 Cookie 中的随机 ID 关联</td>
+<td>过期、撤销、跨实例共享</td>
+</tr>
+<tr>
+<td>Token</td>
+<td>代表访问资格的凭据，可是不透明字符串或 JWT</td>
+<td>泄露风险、有效期、受众、权限与撤销</td>
+</tr>
+<tr>
+<td>JWT</td>
+<td>一种声明编码格式，常见为签名令牌</td>
+<td>签名不等于加密；必须验证签名和相关声明</td>
+</tr>
+</tbody></table></div>
+<p><code>HttpOnly</code> 限制脚本读取 Cookie，不保证站点免于 XSS；<code>Secure</code> 约束安全连接发送，不负责权限校验。SameSite 的选择还会影响跨站登录、嵌入和回调行为。<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie">MDN：Set-Cookie</a></p>
+<p>Token 也可以放 Cookie；Session 和 JWT 的差别不能简单归结为“一个放 Cookie、一个放 localStorage”。选择要结合应用结构、撤销需求和威胁模型。</p>
+<h3 id="topic-6-7" tabindex="-1">6.7 轮询、SSE、WebSocket、Webhook</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>方式</th>
+<th>交互方向与方式</th>
+<th>擅长的问题</th>
+<th>主要成本或边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>普通 HTTP 请求</td>
+<td>客户端发起，一次请求得到结果</td>
+<td>查询、提交、普通业务 API</td>
+<td>需要客户端再次请求才能获得后续更新</td>
+</tr>
+<tr>
+<td>短轮询</td>
+<td>客户端定期请求</td>
+<td>秒级以上状态刷新、简单任务进度</td>
+<td>无变化也产生请求，需控制间隔与重叠</td>
+</tr>
+<tr>
+<td>长轮询</td>
+<td>服务端等待事件后再返回，客户端继续请求</td>
+<td>低频事件与兼容方案</td>
+<td>连接超时、重新发起与资源占用</td>
+</tr>
+<tr>
+<td>SSE</td>
+<td>一个 HTTP 流持续由服务端发送事件</td>
+<td>通知、任务进度、逐步输出</td>
+<td>需处理代理缓冲、断线续传和连接管理</td>
+</tr>
+<tr>
+<td>WebSocket</td>
+<td>建立连接后双向交换消息</td>
+<td>聊天、协作、实时控制</td>
+<td>心跳、重连、背压、鉴权和扩容</td>
+</tr>
+<tr>
+<td>Webhook</td>
+<td>服务端向另一服务回调 HTTP</td>
+<td>支付结果、外部系统事件</td>
+<td>验签、防重放、重复/乱序与重试</td>
+</tr>
+</tbody></table></div>
+<p>SSE 的事件格式与 <code>EventSource</code> 有专门约定；它不等于任意分块响应，原生 EventSource 的请求能力也不等同于 fetch。<a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events">MDN：使用 SSE</a></p>
+<p>REST 是接口设计风格，GraphQL 是查询语言及执行方式，SSE/WebSocket 解决通信方式问题，它们不处在同一个分类维度。客户端可能组合使用多种方式。</p>
+</section>
+<section class="chapter" id="section-7" aria-labelledby="chapter-heading-7"><p class="chapter-label">CHAPTER 07</p><h2 id="chapter-heading-7" tabindex="-1">7. 后端、认证与权限：把请求变成可信业务结果</h2>
+<h3 id="topic-7-1" tabindex="-1">7.1 后端内部的职责分工</h3>
+<pre><code class="language-text">HTTP 请求
+  → 中间件：请求 ID、解析、限流、身份验证等
+  → 路由 / Controller：提取参数、协调响应
+  → Service / 用例：授权、业务规则、事务与流程
+  → Repository / 数据访问：SQL 或 ORM
+  → 数据库 / 缓存 / 外部服务
+  → 输出映射、错误处理、响应
+</code></pre>
+<p>名称随语言和框架变化，关键是职责清晰。资源归属检查可能需要先读取资源，不能机械认为所有授权都在一个最前面的中间件完成。</p>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>职责</th>
+<th>例子</th>
+<th>常见错误</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>输入校验</td>
+<td>页大小范围、字段类型、日期格式</td>
+<td>只校验前端、不限制超大请求</td>
+</tr>
+<tr>
+<td>认证 Authentication</td>
+<td>识别登录用户或服务身份</td>
+<td>接受未经验证的 Token 声明</td>
+</tr>
+<tr>
+<td>授权 Authorization</td>
+<td>用户能否访问这份订单</td>
+<td>已登录就可访问任意订单 ID</td>
+</tr>
+<tr>
+<td>业务规则</td>
+<td>订单状态能否取消、价格如何计算</td>
+<td>相同规则散落多处而互相矛盾</td>
+</tr>
+<tr>
+<td>事务边界</td>
+<td>订单和订单项一起成功或失败</td>
+<td>部分写入后才发现错误</td>
+</tr>
+<tr>
+<td>输出映射</td>
+<td>选择允许返回的字段</td>
+<td>直接返回数据库整行，包括敏感字段</td>
+</tr>
+</tbody></table></div>
+<h3 id="topic-7-2" tabindex="-1">7.2 运行时与并发基础</h3>
+<p>JavaScript/TypeScript、Java、Go、Python 等语言都能实现后端。差异包括并发模型、运行时、生态和团队维护方式；不要把语言选择当作业务正确性的保证。</p>
+<p>必须理解的基础：</p>
+<ul>
+<li><strong>进程与线程</strong>：代码在哪里运行，哪些资源被共享，崩溃会影响什么。</li>
+<li><strong>I/O 与 CPU</strong>：等数据库属于 I/O 等待；大规模计算可能消耗 CPU，两者优化手段不同。</li>
+<li><strong>同步与异步</strong>：异步接口不意味着内部所有工作都不阻塞，也不意味着一定并行。</li>
+<li><strong>连接池与并发上限</strong>：增加请求并发可能只是把等待转移到数据库连接池。</li>
+<li><strong>内存与生命周期</strong>：请求结束后对象、监听器、缓冲区是否被释放。</li>
+</ul>
+<p>例如 Node.js 中长时间同步计算会阻塞事件循环，影响其他请求；CPU 密集工作可按需要拆分、交给 Worker 或独立计算服务。<a href="https://nodejs.org/en/learn/asynchronous-work/dont-block-the-event-loop">Node.js：不要阻塞事件循环</a></p>
+<h3 id="topic-7-3" tabindex="-1">7.3 外部依赖的可靠调用</h3>
+<p>调用支付、地图、邮件或模型 API 时，应用需要设置超时、并发限制、错误分类，并记录依赖耗时。重试只适用于可安全重复且可能恢复的情况，并设次数和总体时间预算。</p>
+<p>断路器用于依赖持续失败时暂缓调用；降级提供较少但可接受的能力。降级结果应明确标识，例如“历史数据”不能无提示地呈现为“最新数据”。这些机制应由实际故障模式驱动。</p>
+<h3 id="topic-7-4" tabindex="-1">7.4 常见安全问题归属在哪里</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>问题</th>
+<th>本质</th>
+<th>主要控制位置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SQL 注入</td>
+<td>输入被当作 SQL 语法</td>
+<td>数据访问层参数化；动态标识符使用允许列表</td>
+</tr>
+<tr>
+<td>XSS</td>
+<td>不可信内容变为可执行脚本</td>
+<td>输出编码、可信渲染、内容处理；CSP 等纵深措施</td>
+</tr>
+<tr>
+<td>CSRF</td>
+<td>浏览器自动携带凭据，导致跨站非预期操作</td>
+<td>合适的 Cookie 策略、CSRF Token、来源验证</td>
+</tr>
+<tr>
+<td>越权 / IDOR</td>
+<td>修改资源 ID 就访问他人数据</td>
+<td>服务端每次资源访问的授权检查</td>
+</tr>
+<tr>
+<td>SSRF</td>
+<td>服务端按恶意输入访问不应访问的地址</td>
+<td>URL 校验、目标限制和出站网络控制</td>
+</tr>
+<tr>
+<td>文件上传滥用</td>
+<td>文件类型、大小、位置或内容失控</td>
+<td>服务端检查、存储隔离、受控下载</td>
+</tr>
+<tr>
+<td>凭据泄露</td>
+<td>密钥进入前端、仓库或日志</td>
+<td>密钥管理、构建边界、日志脱敏与轮换</td>
+</tr>
+<tr>
+<td>资源耗尽</td>
+<td>请求、解析、查询或任务无限制</td>
+<td>大小、频率、时间、并发和工作量限制</td>
+</tr>
+</tbody></table></div>
+<p>安全控制需要覆盖浏览器、应用、数据库权限和部署环境。可用 <a href="https://owasp.org/www-project-top-ten/">OWASP Top 10</a> 作为风险类别索引，再针对具体功能落实验证。</p>
+<h3 id="topic-7-5" tabindex="-1">7.5 后端故障先问四个问题</h3>
+<ol>
+<li>请求是否到达应用，当前运行的是哪一版本？</li>
+<li>失败发生在解析、认证、授权、业务计算还是依赖调用？</li>
+<li>请求在执行工作，还是排队等连接、锁或线程？</li>
+<li>即使响应失败，是否已经发生数据库写入或外部副作用？</li>
+</ol>
+<h3 id="topic-7-6" tabindex="-1">7.6 登录与第三方身份的完整生命周期</h3>
+<p>自有账号的典型流程是：提交凭据 → 服务端验证密码哈希 → 建立或轮换会话、签发凭据 → 后续请求验证身份 → 资源授权 → 过期、注销或撤销。密码应使用包含独立盐值的专门密码哈希方案，不使用明文、可逆加密或普通快速哈希替代。限制登录尝试，并由成熟身份库处理相关细节。</p>
+<p>第三方登录还涉及 OAuth 2.0 和 OpenID Connect（OIDC）：OAuth 主要解决授权访问，OIDC 在其上增加身份认证层。接入时使用成熟库，正确校验返回结果与请求关联、签名、签发者、受众及有效期等适用条件，不把任意访问令牌当作登录身份证明。<a href="https://openid.net/developers/how-connect-works/">OpenID Foundation：OIDC 如何工作</a></p>
+<p>刷新、注销和撤销要明确服务端行为：删除浏览器里的凭据，不一定使已经泄露的凭据立即失效。采用服务端会话、短期访问令牌或撤销机制时，要理解各自的状态与运维成本。</p>
+<h3 id="topic-7-7" tabindex="-1">7.7 文件上传与对象存储的完整流程</h3>
+<pre><code class="language-text">用户选择文件
+  → 应用校验上传资格和限制
+  → 小文件可经应用上传，较大文件可使用受限的短期授权直传对象存储
+  → 服务端确认上传结果，验证大小、类型和必要的内容检查
+  → 数据库记录文件归属、对象键、状态和元信息
+  → 后续下载先校验权限，再返回文件或短期授权地址
+</code></pre>
+<p>文件内容适合放对象存储，数据库保存可查询的元信息与关联。上传成功不代表数据库登记一定成功，应处理未登记文件的清理；删除业务记录与删除对象也可能需要异步协调。原始文件名不能直接当作可信服务器路径。</p>
+</section>
+<section class="chapter" id="section-8" aria-labelledby="chapter-heading-8"><p class="chapter-label">CHAPTER 08</p><h2 id="chapter-heading-8" tabindex="-1">8. 数据库：保存业务事实并保证数据正确</h2>
+<h3 id="topic-8-1" tabindex="-1">8.1 这一层处理什么</h3>
+<p>数据库把业务事实保存下来，并通过约束、事务和查询能力，使多个用户、多个应用进程能够安全地读写这些事实。</p>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>能力</th>
+<th>擅长解决的问题</th>
+<th>通用业务例子</th>
+<th>边界与代价</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>持久化</td>
+<td>应用重启后仍能读取数据</td>
+<td>保存用户、订单、报表任务</td>
+<td>持久化不能替代备份，也不能阻止业务误删</td>
+</tr>
+<tr>
+<td>关系与约束</td>
+<td>保证关联有效、字段合法、记录不重复</td>
+<td>订单必须关联有效用户；同一业务请求不重复创建</td>
+<td>复杂的指标口径仍需要业务规则</td>
+</tr>
+<tr>
+<td>SQL 查询</td>
+<td>筛选、关联、分组、聚合</td>
+<td>查询用户近 30 天订单</td>
+<td>查询范围与数据规模影响成本</td>
+</tr>
+<tr>
+<td>事务与并发控制</td>
+<td>多个修改共同成功或失败，协调竞争</td>
+<td>导入一批数据，同时记录批次状态</td>
+<td>不自动覆盖数据库以外的 HTTP 请求或文件上传</td>
+</tr>
+<tr>
+<td>索引</td>
+<td>缩小检索范围、支持特定排序</td>
+<td>按用户和时间查询订单</td>
+<td>消耗空间，增加写入维护成本</td>
+</tr>
+</tbody></table></div>
+<p>SQLite 是嵌入式数据库，部署简单，适合本地应用、单机服务及写入竞争可控的业务；PostgreSQL 是独立数据库服务，适合多连接、多实例访问和更复杂的并发管理。SQLite 并非只能做玩具项目；其 WAL 模式支持读写并发，但同一数据库同时仍只有一个写入者。选型取决于部署形态、写入竞争、恢复要求与运维能力。<a href="https://www.sqlite.org/wal.html">SQLite WAL 与并发</a></p>
+<h3 id="topic-8-2" tabindex="-1">8.2 先定义业务含义，再定义字段</h3>
+<p>建表前明确以下问题：</p>
+<ol>
+<li>一条记录代表什么？一笔订单、一个订单明细、一次状态变更应有清楚的边界。</li>
+<li>什么组成唯一标识？内部主键、外部业务编号、请求幂等键各自有什么用途？</li>
+<li>空值和默认值如何区分？<code>NULL</code> 可表示未提供，<code>0</code> 表示有效的零，二者不能随意替换。</li>
+<li>时间是哪一种？创建、支付、取消、更新时间应分别保存，不能混为一个“时间”。</li>
+<li>数值用什么单位和精度？金额要明确币种及精度；可以选定点十进制或按最小货币单位存整数，避免随意用浮点数累计金额。</li>
+<li>修改是否需要历史？用户资料可以覆盖更新，订单金额、审核和状态变化可能需要审计记录。</li>
+</ol>
+<p>例如“月销售额”必须先明确按下单还是支付时间计算、是否扣退款、跨币种如何处理。数据库能够准确执行错误的 SQL，所以先定义业务口径，再设计查询。</p>
+<p>以下 SQL 使用 PostgreSQL 方言，仅用于理解结构，不应直接在现有业务数据库执行：</p>
+<pre><code class="language-sql">CREATE TABLE users (
+  id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  email text NOT NULL UNIQUE,
+  name text NOT NULL
+);
+
+CREATE TABLE orders (
+  id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  user_id bigint NOT NULL REFERENCES users(id),
+  request_key text NOT NULL,
+  status text NOT NULL CHECK (status IN (&#39;created&#39;, &#39;paid&#39;, &#39;cancelled&#39;)),
+  total_amount numeric(14, 2) NOT NULL CHECK (total_amount &gt;= 0),
+  currency char(3) NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (user_id, request_key)
+);
+
+CREATE INDEX orders_user_created_idx ON orders (user_id, created_at DESC, id DESC);
+
+-- $1、$2 等由数据库驱动绑定参数，不使用字符串拼接。
+SELECT id, status, total_amount, currency, created_at
+FROM orders
+WHERE user_id = $1
+  AND created_at &gt;= $2
+  AND created_at &lt; $3
+ORDER BY created_at DESC, id DESC
+LIMIT $4;
+</code></pre>
+<p>这里的唯一约束防止同一用户重复创建同一业务请求，复合索引面向“固定用户、时间范围”的查询，唯一的 <code>id</code> 用于确定相同时间记录的顺序。若采用此排序的游标分页，游标及过滤条件也应包含时间和 ID。若经常跨用户统计或按订单状态筛选，需要根据实际查询计划重新评估索引。不能简单认为“加了索引就一定使用”。该示例省略了订单明细和状态流转规则；真实系统还需校验幂等键对应的参数一致。</p>
+<p><code>timestamptz</code> 表达一个时间点，显示结果受会话时区影响，不保留原始输入的时区名称。接口传递带 <code>Z</code> 或明确偏移量的时间；报表按指定业务时区计算日界线。<code>[开始, 结束)</code> 的半开区间便于相邻时间段拼接。</p>
+<h3 id="topic-8-3" tabindex="-1">8.3 一次查询与一次写入经过什么</h3>
+<pre><code class="language-text">查询：API 完成权限检查
+  → 从连接池借连接 → 执行带参数的 SQL
+  → 数据库生成执行计划 → 扫描/关联/排序 → 返回行
+  → 应用转换字段与业务单位 → 归还连接 → 返回响应
+
+导入：接收业务文件 → 校验结构、字段、单位、归属与重复记录
+  → 从连接池借连接 → BEGIN → 写入业务数据和批次结果
+  → COMMIT 或 ROLLBACK → 归还连接 → 更新任务状态/触发后续工作
+</code></pre>
+<p>如果事务必须跨多条 SQL，通常要让这些 SQL 使用同一个连接。每条语句分别借连接会破坏事务边界。应用应在异常路径也释放连接，通常通过框架事务封装或 <code>try/finally</code> 实现。</p>
+<p>重复导入可以依靠唯一键及 <code>INSERT ... ON CONFLICT</code> 处理。但“冲突时忽略”会丢掉有效修订，“冲突时覆盖”可能让较旧的数据覆盖较新的数据；需要结合版本和审计要求决定策略。</p>
+<h3 id="topic-8-4" tabindex="-1">8.4 事务、隔离级别与并发</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>概念</th>
+<th>需要理解的实际含义</th>
+<th>常见误解</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>原子性</td>
+<td>同一事务内的相关修改共同提交或撤销</td>
+<td>把 HTTP 调用放在事务函数里，远端修改就能随数据库回滚</td>
+</tr>
+<tr>
+<td>一致性</td>
+<td>通过约束与正确的业务操作维护数据规则</td>
+<td>数据库自动知道退款或销售额该怎么算</td>
+</tr>
+<tr>
+<td>隔离性</td>
+<td>规定并发事务之间可以观察到什么</td>
+<td>只要有事务，多人同时修改就一定没有问题</td>
+</tr>
+<tr>
+<td>持久性</td>
+<td>提交后的数据在约定的持久化配置下保存</td>
+<td>有持久性就无需异地备份和恢复演练</td>
+</tr>
+</tbody></table></div>
+<p>PostgreSQL 默认 <code>READ COMMITTED</code>：普通查询读取该语句开始时已经提交的数据；同一事务的两次查询可能看到其他事务的新提交。<code>REPEATABLE READ</code> 提供更稳定的事务快照；<code>SERIALIZABLE</code> 对成功提交的事务提供可串行化保证，但应用要能重试整个因并发冲突而失败的事务。不同数据库对同名隔离级别的实现细节可能不同。<a href="https://www.postgresql.org/docs/current/transaction-iso.html">PostgreSQL 事务隔离</a></p>
+<p>处理并发时，根据规则选择最简单的可靠方法：</p>
+<ul>
+<li>防止重复记录：使用数据库唯一约束，不能只做“先查不存在，再插入”。两次请求可能同时查到不存在。</li>
+<li>防止计数覆盖：使用 <code>UPDATE ... SET count = count + 1</code> 这类原子更新，避免应用先读旧值再加一写回。</li>
+<li>防止编辑互相覆盖：增加版本号，使用 <code>WHERE id = ? AND version = ?</code> 更新；影响行数为零时提示冲突。</li>
+<li>协调同一资源的复杂修改：评估行锁或更高隔离级别，并设置锁等待与事务超时。</li>
+<li>多次查询需要一致快照的报表：评估只读事务的隔离级别、数据版本或固定统计截止时间。</li>
+</ul>
+<p>事务保持短小。不要持有数据库连接和锁等待耗时的远端调用、模型生成或文件上传。死锁、序列化失败可以按明确条件有限重试；外部副作用要另行处理。</p>
+<h3 id="topic-8-5" tabindex="-1">8.5 连接池、ORM、索引与 N+1</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>组件/问题</th>
+<th>作用或形成原因</th>
+<th>首先观察什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>连接池</td>
+<td>重用数据库连接，并限制同时进入数据库的工作量</td>
+<td>获取连接等待时间、使用中/空闲连接、超时次数</td>
+</tr>
+<tr>
+<td>ORM</td>
+<td>映射对象与表，辅助查询、类型和事务管理</td>
+<td>实际生成的 SQL、参数、查询次数与耗时</td>
+</tr>
+<tr>
+<td>N+1 查询</td>
+<td>先查 N 个订单，再逐个查询每个订单明细</td>
+<td>一次 API 是否发出数十/数百条相似 SQL</td>
+</tr>
+<tr>
+<td>索引不合适</td>
+<td>条件、排序、字段转换与索引不匹配，或范围太大</td>
+<td>扫描行数、返回行数、排序、执行计划</td>
+</tr>
+<tr>
+<td>大结果集</td>
+<td>数据库查询快，但传输、JSON 转换、浏览器渲染慢</td>
+<td>结果行数、响应体大小、应用序列化耗时</td>
+</tr>
+</tbody></table></div>
+<p>ORM 不替代 SQL 知识。解决 N+1 可以使用批量查询、合理关联、预加载或数据库聚合，但也要防止关联造成行数膨胀。</p>
+<p>连接池不是越大越好：<code>应用实例数 × 每实例池上限 + 后台任务连接 + 运维预留</code> 必须与数据库能力匹配。连接耗尽也可能源于慢查询、长事务和未释放连接，不能只扩大池上限。</p>
+<p>用 <code>EXPLAIN</code> 查看预计计划；<code>EXPLAIN ANALYZE</code> 会实际执行语句，并报告实际执行信息。先在测试环境对有代表性的数据验证，注意它对写入语句具有实际副作用。顺序扫描不一定错误，小表或大范围查询本就可能更适合顺序扫描。<a href="https://www.postgresql.org/docs/current/using-explain.html">PostgreSQL 查询计划</a></p>
+<h3 id="topic-8-6" tabindex="-1">8.6 迁移、备份与存储分工</h3>
+<ul>
+<li><strong>迁移</strong>：把表结构变更记录为版本，保证开发、测试、生产的结构可追踪。发布时检查新旧应用是否都兼容变更。</li>
+<li><strong>兼容变更</strong>：先新增可选字段 → 发布兼容代码 → 回填历史数据 → 验证 → 后续再收紧约束或移除旧字段。</li>
+<li><strong>备份</strong>：明确备份对象、频率、保留期和存储位置；按业务需要评估逻辑备份、物理备份、时间点恢复。</li>
+<li><strong>恢复</strong>：在隔离环境恢复，并验证数量、关联和关键查询；“备份任务成功”不等于“数据能恢复”。</li>
+<li><strong>RPO</strong>：最多能接受丢失多长时间的数据。<strong>RTO</strong>：发生故障后多久恢复服务。二者决定方案和演练要求。</li>
+<li><strong>存储分工</strong>：业务记录放数据库；大型报表、原始文件通常放对象存储，数据库保存归属、地址、校验值与状态。文件访问同样需要权限控制。</li>
+</ul>
+<p>数据库副本可以帮助高可用或分担读取，但异步复制可能有延迟，写完立即读副本可能读到旧值。副本也会复制误删，不能替代备份。学习项目先掌握单数据库的正确性与恢复，再按负载引入副本、分区或其他系统。</p>
+<h3 id="topic-8-7" tabindex="-1">8.7 常见症状如何定位</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>症状</th>
+<th>先收集的证据</th>
+<th>优先检查方向</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>API 慢，但 SQL 执行很快</td>
+<td>获取连接等待、SQL 次数、结果量、序列化耗时</td>
+<td>连接池排队、N+1、返回数据过多、应用计算</td>
+</tr>
+<tr>
+<td>某查询突然变慢</td>
+<td>实际参数、执行计划、数据量、锁等待、资源指标</td>
+<td>查询范围、统计信息、索引、竞争事务、磁盘 I/O</td>
+</tr>
+<tr>
+<td>报表缺失或重复记录</td>
+<td>原始数据、唯一键、时区、过滤条件、导入日志</td>
+<td>统计口径、时间转换、重复导入、关联查询导致行数膨胀</td>
+</tr>
+<tr>
+<td>偶发更新丢失</td>
+<td>同一记录的并发请求、版本号、更新 SQL</td>
+<td>先读后写竞争、缺少条件更新、前端提交旧数据</td>
+</tr>
+<tr>
+<td>部署后提示字段不存在</td>
+<td>应用版本、连接目标、迁移版本</td>
+<td>未运行迁移、连错数据库、发布顺序不兼容</td>
+</tr>
+<tr>
+<td>数据库 CPU 不高但写入卡住</td>
+<td>锁等待、活动事务、连接池等待</td>
+<td>长事务、行锁竞争、连接泄漏；不能仅凭 CPU 排除数据库</td>
+</tr>
+</tbody></table></div>
+</section>
+<section class="chapter" id="section-9" aria-labelledby="chapter-heading-9"><p class="chapter-label">CHAPTER 09</p><h2 id="chapter-heading-9" tabindex="-1">9. 缓存：复用结果，交换速度与新鲜度</h2>
+<h3 id="topic-9-1" tabindex="-1">9.1 先区分缓存在哪里</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>缓存位置</th>
+<th>存什么、解决什么</th>
+<th>典型风险</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>浏览器 HTTP 缓存</td>
+<td>图片、脚本、可缓存响应；减少网络传输</td>
+<td>资源版本策略错误，用户仍加载旧文件</td>
+</tr>
+<tr>
+<td>前端查询缓存</td>
+<td>某页面已获取的业务数据；减少重复请求</td>
+<td>查询键缺条件、切换账号后未清理、更新后未失效</td>
+</tr>
+<tr>
+<td>CDN/反向代理缓存</td>
+<td>多用户共享的公开内容；靠近访问者提供响应</td>
+<td>错误缓存私有数据、缓存键遗漏影响响应的字段</td>
+</tr>
+<tr>
+<td>服务端进程内缓存</td>
+<td>当前实例常用的小型数据；访问开销低</td>
+<td>多实例各自保存副本，内容和生命周期不一致</td>
+</tr>
+<tr>
+<td>Redis 等共享缓存</td>
+<td>多实例复用热点查询结果</td>
+<td>新的网络依赖、失效一致性、内存容量与淘汰</td>
+</tr>
+<tr>
+<td>数据库缓冲区</td>
+<td>数据库内部复用数据页</td>
+<td>它与应用层“缓存一份 JSON”是不同层次</td>
+</tr>
+</tbody></table></div>
+<p>Redis 是可选组件。先测量数据库查询与请求负载：若查询已满足目标、业务读量不大，加入缓存可能只增加排错和一致性成本。</p>
+<p>HTTP 缓存的 <code>no-cache</code> 表示使用前需重新验证，不等于禁止存储；<code>no-store</code> 才是要求不存储。用户专属响应应采用合适的私有/禁止存储策略，并检查实际 CDN 和代理行为。304 响应通常是缓存验证成功，不是业务出错。</p>
+<p>HTTP 缓存常见的判断顺序：</p>
+<ol>
+<li>已存响应仍满足新鲜度要求时，可以直接复用；<code>Cache-Control: max-age=...</code> 常用于定义新鲜度期限，仍受请求策略等条件影响。</li>
+<li>需要验证且有 <code>ETag</code> 时，客户端可发送 <code>If-None-Match</code>；也可按 <code>Last-Modified</code> 使用相应时间条件。</li>
+<li>资源未变时，服务端返回 <code>304</code>，客户端使用已有响应体；变更时返回新内容。</li>
+</ol>
+<p>内容哈希命名的 JS/CSS 适合较长缓存，但 HTML 的更新策略应保证能指向正确资源。<code>Vary</code> 用于声明哪些请求头影响响应选择，配置错误可能复用不合适的内容。<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching">MDN：HTTP 缓存</a></p>
+<p><code>private</code> 用于限制共享缓存存储，<code>public</code> 可允许共享缓存存储；<code>s-maxage</code> 为共享缓存指定新鲜度。它们都不是身份授权机制，需结合完整响应头和部署平台的缓存规则判断。</p>
+<h3 id="topic-9-2" tabindex="-1">9.2 常见读写流程：Cache Aside</h3>
+<pre><code class="language-text">读：先验证身份与资源权限 → 计算完整缓存键 → 查缓存
+    → 命中：返回缓存结果与数据时间
+    → 未命中：查数据库 → 写入缓存并设置 TTL → 返回结果
+
+写：验证权限和参数 → 提交数据库事务 → 使相关缓存失效
+    → 下次读取重新生成缓存；失效失败要记录并补偿
+</code></pre>
+<p>缓存键示例：<code>orders:v2:tenant-7:user-42:status-paid:2026-10-01:2026-10-02:page-1</code>。它应包含所有会影响结果的条件，例如租户、用户、状态、时段、排序、分页和结构版本；权限相关的过滤条件也不能遗漏。</p>
+<p>TTL 表示缓存项存活多久，是兜底刷新机制。写后失效能缩短旧值存在的时间，但“先更新数据库再删除缓存”本身不提供强一致性：并发读可能在失效后把旧快照重新写回。严格新鲜的读操作可以直接读权威数据源；更复杂系统再考虑版本校验、事件驱动失效等方案。<a href="https://redis.io/docs/latest/develop/use-cases/cache-aside/">Redis Cache Aside</a></p>
+<p>按业务定义可接受的陈旧窗口，例如公开商品介绍允许短时间滞后，下单库存校验读取权威状态，正式报告固定数据版本和统计截止时间。具体 TTL 要结合更新频率和业务目标制定，不能照抄某个数字。</p>
+<p>TTL 到期、主动失效、内存不足淘汰是三件事。缓存项可能在 TTL 到期前就因容量策略被移除；程序必须能处理未命中。会话和任务状态等不可随意丢失的数据，不应未经规划就与可淘汰缓存混用容量策略。</p>
+<h3 id="topic-9-3" tabindex="-1">9.3 三类常见压力问题</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>问题</th>
+<th>发生过程</th>
+<th>处理方向</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>缓存穿透</td>
+<td>大量请求不存在的商品，每次未命中后都查数据库</td>
+<td>参数校验、短时缓存不存在结果、限流；大规模场景再评估布隆过滤器</td>
+</tr>
+<tr>
+<td>缓存击穿</td>
+<td>一个热门商品的缓存失效，许多请求同时回源</td>
+<td>合并同键并发请求、适当提前刷新、允许时短暂返回旧值</td>
+</tr>
+<tr>
+<td>缓存雪崩</td>
+<td>大量键同时失效或整个缓存不可用，流量集中到数据库</td>
+<td>TTL 加扰动、限制回源并发、降级、容量规划与故障演练</td>
+</tr>
+</tbody></table></div>
+<p>缓存不可用时“全部直接查数据库”可能把数据库压垮。先明确哪些查询可回源、回源并发上限、哪些页面可以暂时展示带时间标记的旧数据。</p>
+<p>缓存保存的内容同样需要权限隔离。命中缓存不能跳过授权；切换账号、租户或权限变化时，要检查浏览器状态与服务端缓存是否仍暴露旧数据。</p>
+<h3 id="topic-9-4" tabindex="-1">9.4 常见症状如何定位</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>症状</th>
+<th>先收集的证据</th>
+<th>优先检查方向</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数据库正确，但页面显示旧值</td>
+<td>网络响应、响应头、服务端缓存命中、前端查询键</td>
+<td>从页面状态 → 浏览器/CDN → 服务端缓存逐层比较</td>
+</tr>
+<tr>
+<td>某账号看到其他账号的数据</td>
+<td>缓存键、租户范围、权限检查日志</td>
+<td>缓存隔离、接口授权、账号切换后的状态清理</td>
+</tr>
+<tr>
+<td>每隔一段时间延迟尖峰</td>
+<td>TTL 分布、未命中率、数据库请求量</td>
+<td>集中过期、热点键击穿、定时任务集中运行</td>
+</tr>
+<tr>
+<td>命中率下降且内存很满</td>
+<td>键数量、淘汰数、TTL、热点分布</td>
+<td>容量和淘汰策略、缓存了低复用数据</td>
+</tr>
+<tr>
+<td>清缓存后暂时恢复</td>
+<td>被清理层、数据版本、失效事件</td>
+<td>失效逻辑或键设计；清缓存是诊断线索，不能当作最终修复</td>
+</tr>
+</tbody></table></div>
+</section>
+<section class="chapter" id="section-10" aria-labelledby="chapter-heading-10"><p class="chapter-label">CHAPTER 10</p><h2 id="chapter-heading-10" tabindex="-1">10. 异步任务与可靠性：让耗时工作可以追踪和恢复</h2>
+<h3 id="topic-10-1" tabindex="-1">10.1 哪些工作应该移出请求</h3>
+<p>查询少量订单通常可以同步返回。批量导入、生成报表、转码、调用耗时模型等工作，更适合后台执行，避免浏览器和代理一直等待。</p>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>部件</th>
+<th>做什么</th>
+<th>不保证什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>调度器</td>
+<td>按时间创建对账或统计任务</td>
+<td>不保证上一次任务已经结束</td>
+</tr>
+<tr>
+<td>任务队列</td>
+<td>保存待处理工作，协调生产者与消费者</td>
+<td>不自动解决副作用重复和业务正确性</td>
+</tr>
+<tr>
+<td>Worker</td>
+<td>领取并执行任务、记录结果</td>
+<td>进程可能中断，任务可能再次被领取</td>
+</tr>
+<tr>
+<td>任务状态表</td>
+<td>记录状态、进度、错误、归属与结果</td>
+<td>状态需要与真实执行过程一致更新</td>
+</tr>
+<tr>
+<td>前端轮询/SSE</td>
+<td>把任务状态呈现给用户</td>
+<td>前端断开连接不代表任务已停止</td>
+</tr>
+</tbody></table></div>
+<p>小项目可以先使用数据库任务表与独立 Worker，或已有平台的后台任务能力。需要可靠重试、并发控制和调度时，再根据现有基础设施选择队列；不必同时引入多套消息系统。</p>
+<h3 id="topic-10-2" tabindex="-1">10.2 一份报表的完整生命周期</h3>
+<pre><code class="language-text">POST /reports → 身份与权限校验 → 创建持久任务 → 返回 202 + taskId
+  → Worker 领取 → running → 读取明确版本/截止时间的数据
+  → 计算指标 → 生成文件 → 保存结果地址 → succeeded
+  → 前端查询任务状态 → 用户获取经过授权的下载地址
+
+失败分支：临时故障 → retry_wait → 再次执行
+          永久错误/重试耗尽 → failed → 人工处理或修复后重跑
+取消分支：cancel_requested → Worker 到安全检查点 → cancelled
+</code></pre>
+<p><code>202 Accepted</code> 只说明请求被接纳，不表示报告生成成功。应在任务已经可靠保存或入队后才返回接纳结果。任务查询接口也要校验所属用户/租户。</p>
+<p>任务记录至少包括：<code>id</code>、任务类型、参数版本、发起人/租户、状态、创建/开始/结束时间、尝试次数、进度、错误分类、结果地址和关联请求标识。敏感原始数据与凭据不要直接堆进任务日志。</p>
+<h3 id="topic-10-3" tabindex="-1">10.3 重试、幂等、死信与背压</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>机制</th>
+<th>实现的效果</th>
+<th>设计要点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>有限重试</td>
+<td>应对瞬时断网、部分临时服务故障</td>
+<td>分类错误；参数非法和权限失败通常需要修复原因</td>
+</tr>
+<tr>
+<td>退避与抖动</td>
+<td>避免失败后所有任务一起立即重试</td>
+<td>指数/固定退避，加入随机扰动，适用时遵守 <code>Retry-After</code></td>
+</tr>
+<tr>
+<td>幂等</td>
+<td>同一业务操作重复执行仍得到约定结果</td>
+<td>唯一业务键、条件更新、结果复用；不能只防按钮双击</td>
+</tr>
+<tr>
+<td>失败集合/死信队列</td>
+<td>留下无法自动完成的任务供检查</td>
+<td>保留原因、告警、可控重放；具体名称和能力依实现而定</td>
+</tr>
+<tr>
+<td>并发与速率限制</td>
+<td>让消费者吞吐不超过数据库或外部服务能力</td>
+<td>观察积压、任务年龄、资源与下游限额</td>
+</tr>
+</tbody></table></div>
+<p>重试配置应根据故障类型、下游服务能力和任务时限决定。选定队列后，实际验证进程中断、下游超时、重复投递和重试耗尽时的行为，不能只验证正常执行。</p>
+<p>重试前先设计幂等：订单创建可以使用“用户 + 请求幂等键”防重，文件导入可以使用“租户 + 文件内容校验值 + 导入规则版本”识别重复批次。报表任务的键还要覆盖报告参数、数据版本和归属。同一个幂等键携带不同参数时应拒绝或明确处理，不能静默复用错误结果。<a href="https://docs.bullmq.io/patterns/idempotent-jobs">BullMQ 幂等任务</a></p>
+<p>“只执行一次”不能仅靠队列去重承诺。Worker 可能完成写入后在确认完成前中断，后续重试会再次执行。外部服务若支持幂等键，应贯穿传递；若不支持，必须记录调用结果，处理结果未知的情况，避免盲目重复产生副作用。</p>
+<h3 id="topic-10-4" tabindex="-1">10.4 数据库提交了，任务却没发出去：Outbox 的意义</h3>
+<p>如果代码依次执行“提交报表请求到数据库”和“发送消息到队列”，进程可能在两步之间崩溃。此时业务记录存在，队列里却没有任务；反过来先发消息也会有不一致窗口。</p>
+<p>事务 Outbox 的基本做法：在同一数据库事务内，写入业务记录和一条待发送事件；后台发送器读取事件、发送到队列并标记处理结果。这样业务记录与“需要发送”这件事一起提交。</p>
+<p>发送成功后、标记之前仍可能崩溃，所以消息可能重复，消费者仍要幂等。Outbox 解决数据库与外部消息之间的一类双写可靠性问题，不自动实现跨系统事务。若任务本就保存在同一数据库并由 Worker 直接领取，可以先维持这个简单边界。</p>
+<h3 id="topic-10-5" tabindex="-1">10.5 超时、取消、租约与资源管理</h3>
+<ul>
+<li><strong>超时有层次</strong>：单次网络调用超时、一次尝试超时、整个任务截止时间分别设置；多次重试不能无限延长业务等待。</li>
+<li><strong>取消需要配合</strong>：浏览器 <code>AbortController</code> 主要中断当前请求；后台任务需要独立取消接口、权限检查和 Worker 检查点。</li>
+<li><strong>取消不等于回滚</strong>：已经提交的数据或已完成的远端操作不会自动撤销；需要根据阶段定义保留、清理或补偿规则。</li>
+<li><strong>领取需要恢复机制</strong>：任务领取使用原子操作；Worker 中断后，通过租约/心跳识别失联并允许重新领取，避免永久卡在运行中。</li>
+<li><strong>避免重叠运行</strong>：定时对账可能超过调度周期，要明确跳过、排队、合并还是允许并行，并保留防重规则。</li>
+<li><strong>限制资源</strong>：大文件按批处理，CPU 密集计算移到合适的 Worker/线程/进程；增加异步函数数量不会自动增加 CPU 算力。</li>
+</ul>
+<h3 id="topic-10-6" tabindex="-1">10.6 常见症状如何定位</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>症状</th>
+<th>先收集的证据</th>
+<th>优先检查方向</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>点击后显示成功，却没有报告</td>
+<td>API 返回、任务记录、入队记录、结果状态</td>
+<td>是否把接纳当完成、双写遗漏、Worker 未启动</td>
+</tr>
+<tr>
+<td>任务长时间排队</td>
+<td>最老任务等待时间、消费者数量、消费速率</td>
+<td>Worker 故障、下游限流、吞吐不足、优先级饥饿</td>
+</tr>
+<tr>
+<td>同一数据被重复写入</td>
+<td>任务业务键、尝试记录、数据库约束</td>
+<td>重复调度、失败重试、副作用幂等缺失</td>
+</tr>
+<tr>
+<td>一直显示运行中</td>
+<td>Worker 心跳、租约、开始时间、网络调用超时</td>
+<td>进程中断、无超时调用、状态更新失败</td>
+</tr>
+<tr>
+<td>重试后系统更慢</td>
+<td>重试比例、调用次数、下游错误率</td>
+<td>重试风暴、并发过高、永久错误被当作临时错误</td>
+</tr>
+<tr>
+<td>用户取消后仍产生结果</td>
+<td>取消标记、Worker 检查点、提交时间线</td>
+<td>取消协议未实现，或操作已越过可取消阶段</td>
+</tr>
+</tbody></table></div>
+<p>数据库、缓存、队列都会受上游请求模式和下游依赖影响。这里列的是取证方向，最终结论需要同一请求/任务的时间线和实际指标支持。</p>
+</section>
+<section class="chapter" id="section-11" aria-labelledby="chapter-heading-11"><p class="chapter-label">CHAPTER 11</p><h2 id="chapter-heading-11" tabindex="-1">11. 测试与质量验证</h2>
+<p>测试回答“系统在指定条件下是否满足约定”。类型检查、代码审查、自动测试、线上监控互相补充；测试通过仅说明已经覆盖的条件成立。</p>
+<h3 id="topic-11-1" tabindex="-1">11.1 按验证范围选测试</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>实际做什么</th>
+<th>通用订单与报表应用中的例子</th>
+<th>擅长发现什么</th>
+<th>主要边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>类型检查</td>
+<td>在运行前检查类型关系</td>
+<td>可选的 <code>discountAmount</code> 被当作必填数值使用</td>
+<td>类型使用错误、重构遗漏</td>
+<td>TypeScript 类型不会自动校验网络响应或数据库中的真实数据</td>
+</tr>
+<tr>
+<td>单元测试</td>
+<td>隔离验证小范围逻辑</td>
+<td>给定商品价格与优惠规则，验证最终金额</td>
+<td>边界条件、计算规则、状态转换</td>
+<td>全部依赖都模拟时，无法证明真实系统能连通</td>
+</tr>
+<tr>
+<td>组件测试</td>
+<td>渲染组件并模拟用户操作</td>
+<td>点击查询后出现 loading；没有订单时显示“暂无数据”</td>
+<td>交互、展示状态、可访问名称</td>
+<td>通常不能覆盖完整网络与服务端行为</td>
+</tr>
+<tr>
+<td>集成测试</td>
+<td>验证模块与真实依赖协作</td>
+<td>启动测试数据库，调用入库逻辑并验证唯一约束</td>
+<td>SQL、事务、连接、迁移、模块协作问题</td>
+<td>环境与生产差异仍可能造成遗漏</td>
+</tr>
+<tr>
+<td>契约测试</td>
+<td>核对接口双方约定</td>
+<td>API 仍返回 <code>createdAt</code>、<code>totalAmount</code>、<code>currency</code>，且金额单位不变</td>
+<td>前后端独立发布引起的不兼容</td>
+<td>字段结构正确不代表计算口径正确；需补业务断言</td>
+</tr>
+<tr>
+<td>端到端测试（E2E）</td>
+<td>通过浏览器操作完整系统</td>
+<td>登录→选择时间→查询订单→看到预期列表</td>
+<td>路由、认证、接口、渲染之间的断裂</td>
+<td>较慢且定位范围大，不宜用它穷举所有业务规则</td>
+</tr>
+<tr>
+<td>负载测试</td>
+<td>在明确负载模型下观察响应与资源</td>
+<td>模拟多个用户查询一个月历史数据</td>
+<td>容量瓶颈、排队、连接池耗尽</td>
+<td>结果依赖数据规模、流量分布、机器配置和冷热缓存</td>
+</tr>
+<tr>
+<td>故障演练</td>
+<td>主动制造受控失败</td>
+<td>测试环境停止外部服务响应，观察超时与重试</td>
+<td>恢复能力、错误提示、重试失控</td>
+<td>必须限定环境与影响范围，不能随意对生产压测</td>
+</tr>
+</tbody></table></div>
+<p>不要用测试数量判断质量。优先覆盖出错成本高的规则，以及跨边界最容易断裂的位置。</p>
+<h3 id="topic-11-2" tabindex="-1">11.2 一个功能应该怎样验证</h3>
+<p>以“查询某账户某时间段的订单”为例：</p>
+<ol>
+<li>**定义可观察结果：**返回按时间排序的记录，金额单位明确，无结果返回空列表；结束时间是否包含在内必须事先约定。</li>
+<li>**写规则测试：**空区间、跨日、时区边界、重复提交、取消或退款订单分别应该怎样处理。</li>
+<li>**写接口集成测试：**使用测试数据库，验证参数校验、查询结果、访问权限以及数据库约束。</li>
+<li>**写少量关键 E2E：**验证一次成功查询、一次无数据提示、一次登录失效后的处理。</li>
+<li>**做容量验证：**在有代表性的数据量下检查分页、查询时间和响应体大小。</li>
+<li>**保留回归用例：**真实故障修复后，为根因加入能重现问题的测试。</li>
+</ol>
+<p>输入数据应当具有区分力：零元订单、没有订单、币种不同、时间相同但订单 ID 不同，不能全部用“正常的一条数据”代替。</p>
+<h3 id="topic-11-3" tabindex="-1">11.3 测试环境与数据怎么管理</h3>
+<ul>
+<li>使用独立测试数据库、独立账号和可识别的测试数据，不把测试指向生产数据库。</li>
+<li>测试开始前应用正式迁移脚本，避免“测试库结构是手工维护的”造成假通过。</li>
+<li>每个测试隔离数据；事务回滚、独立 schema 或定向清理可按测试方式选择。</li>
+<li>时间、随机数和外部 HTTP 响应在规则测试中保持可控，减少偶发失败。</li>
+<li>依赖模拟应覆盖成功、超时、拒绝和格式错误；另外安排真实依赖的集成验证。</li>
+<li>外部服务波动不应让每次提交都随机失败；将录制样本测试与实际连通检查分开。</li>
+</ul>
+<p>“本地通过，CI 失败”时，先对比运行时版本、锁文件、时区、环境变量、文件名大小写和测试执行顺序。</p>
+<h3 id="topic-11-4" tabindex="-1">11.4 性能测试需要说明前提</h3>
+<p>写下负载模型，例如：“固定数据集、10 分钟、每秒 20 次查询、80% 单日查询、20% 月查询、包含冷热缓存两轮”。数字只是教学示例，应根据真实使用方式调整。</p>
+<p>记录以下结果：</p>
+<ul>
+<li>完成请求数、成功率、超时数，以及请求是否在客户端或服务端排队。</li>
+<li>延迟分布：p50、p95、p99；不要只记录平均值。</li>
+<li>CPU、内存、运行时特有指标（如 Node 事件循环延迟）、连接池等待、数据库查询与锁等待。</li>
+<li>同一查询的数据量和响应字节数，防止因为结果被截断而出现“性能提升”。</li>
+</ul>
+<p>压测工具自身也可能成为瓶颈。固定并发数与固定请求到达速率是不同的负载模型，应明确使用哪一种。</p>
+<h3 id="topic-11-5" tabindex="-1">11.5 这一层的学习产物</h3>
+<p>完成一份“需求→风险→测试”的对应表，并交付一个可重复运行的测试命令。
+练习目标是：修改金额计算后，相关测试能发现错误；修复后，单元、集成和关键用户流程都能通过。</p>
+</section>
+<section class="chapter" id="section-12" aria-labelledby="chapter-heading-12"><p class="chapter-label">CHAPTER 12</p><h2 id="chapter-heading-12" tabindex="-1">12. 部署与运行环境</h2>
+<p>部署是把可执行构件放入目标环境，并让用户流量可靠地到达它。它涉及文件、进程、网络、配置、数据和版本的配合。</p>
+<h3 id="topic-12-1" tabindex="-1">12.1 理解运行拓扑</h3>
+<p>以下是通用 Web 应用的一种常见部署结构。组件名称说明职责，不要求采用某个语言或框架。</p>
+<figure class="diagram"><figcaption>部署环境中的访问路径</figcaption><div class="flow-row"><div class="flow-node">浏览器</div><span class="flow-arrow" aria-hidden="true">→</span><div class="flow-node">HTTPS 入口</div><span class="flow-arrow" aria-hidden="true">→</span><div class="flow-node">应用进程或容器</div><span class="flow-arrow" aria-hidden="true">→</span><div class="flow-node">关系数据库</div></div><div class="flow-branches"><div><strong>建立连接之前</strong><span>浏览器查询 DNS，获得目标地址</span></div><div><strong>入口分流</strong><span>页面和资源 → 静态站点；API / SSR → 应用</span></div><div><strong>可选共享缓存</strong><span>应用 → 缓存服务</span></div><div><strong>后台 Worker</strong><span>从外部数据源同步，并访问数据库</span></div></div><p>入口可包含 CDN、代理与负载均衡。DNS 通常不转发后续 HTTP 内容。</p></figure><details class="diagram-source"><summary>查看 Mermaid 图示源代码</summary><pre><code>flowchart LR
+    B[用户浏览器] --&gt;|查询域名地址| D[DNS 解析]
+    B --&gt;|HTTPS 请求| E[入口：可选 CDN / 代理 / 负载均衡]
+    E --&gt;|页面及静态资源| S[静态资源站点]
+    E --&gt;|API 或 SSR 请求| A[应用容器或应用进程]
+    A --&gt;|SQL| DB[(关系型数据库)]
+    A --&gt;|可选| R[(缓存服务)]
+    W[导入与报表 Worker] --&gt; DB
+    W --&gt;|同步数据| X[外部数据源]
+</code></pre></details>
+<p>DNS 箭头表示查询过程；DNS 返回地址后，通常不参与后续 HTTP 内容转发。浏览器可能使用已有 DNS 缓存、连接或 TLS 会话，未必每次都重新执行全部步骤。</p>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>组件</th>
+<th>处理的问题</th>
+<th>不应误认为</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DNS</td>
+<td>将域名解析到相应地址；可能经过 CNAME 等记录</td>
+<td>DNS 记录能够配置 <code>/api</code> 路由或修复业务接口</td>
+</tr>
+<tr>
+<td>TLS</td>
+<td>对传输加密并验证证书对应的服务器身份</td>
+<td>HTTPS 自动完成用户登录、权限控制或数据库加密</td>
+</tr>
+<tr>
+<td>CDN / 静态服务</td>
+<td>就近分发 JS、CSS、图片、HTML 等可缓存内容</td>
+<td>所有用户的个性化接口都可以共享缓存</td>
+</tr>
+<tr>
+<td>反向代理</td>
+<td>接收用户请求，按域名/路径转发，处理 TLS、限流等</td>
+<td>应用代码监听端口后就已配置好全部外网入口</td>
+</tr>
+<tr>
+<td>容器运行时</td>
+<td>用镜像运行应用进程，隔离环境与资源</td>
+<td>容器天然具有备份、高可用或自动扩容能力</td>
+</tr>
+<tr>
+<td>应用进程</td>
+<td>处理 API、SSR、权限和业务规则</td>
+<td>它可以把需要持久保存的数据仅放内存里</td>
+</tr>
+<tr>
+<td>数据库与持久存储</td>
+<td>跨进程重启保留业务状态</td>
+<td>容器重建会自动保留容器可写层中的文件</td>
+</tr>
+</tbody></table></div>
+<h3 id="topic-12-2" tabindex="-1">12.2 构建与运行是两个阶段</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>输入</th>
+<th>输出 / 行为</th>
+<th>常见失败</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>安装依赖</td>
+<td>包清单、锁文件、包仓库</td>
+<td>确定版本的依赖</td>
+<td>网络失败、运行时版本不匹配、原生依赖编译失败</td>
+</tr>
+<tr>
+<td>构建前端</td>
+<td>源码、构建配置、构建时变量</td>
+<td>HTML / JS / CSS 等静态构件</td>
+<td>类型错误、资源路径错误、错误的 API 地址被写入构件</td>
+</tr>
+<tr>
+<td>构建后端</td>
+<td>服务端源码、依赖、构建工具</td>
+<td>可运行程序或打包产物；具体形式取决于语言</td>
+<td>缺失模块、运行时不兼容、遗漏配置或资源文件</td>
+</tr>
+<tr>
+<td>构建镜像</td>
+<td>构件、运行时、镜像定义</td>
+<td>可按版本定位的容器镜像</td>
+<td>架构不匹配、复制路径错误、缺少运行依赖</td>
+</tr>
+<tr>
+<td>运行</td>
+<td>构件、运行时配置、网络和存储</td>
+<td>服务进程启动并监听端口</td>
+<td>缺少密钥、数据库不可达、端口冲突、权限不足</td>
+</tr>
+</tbody></table></div>
+<p>构建成功只能证明构件生成成功。程序是否能启动、访问数据库以及正确处理请求，还需要运行验证。</p>
+<h3 id="topic-12-3" tabindex="-1">12.3 静态前端、SSR 与开发服务器</h3>
+<ul>
+<li>**静态前端：**页面交互主要在浏览器执行，JS/CSS 构件由静态服务或 CDN 分发；浏览器另外请求 API。</li>
+<li>**SSR：**服务器在请求期间执行渲染逻辑，需要持续运行相应服务；服务端的数据获取和浏览器的数据获取处于不同网络环境。</li>
+<li>**混合模式：**部分页面预生成，部分请求时渲染，部分在客户端查询；逐条路由确认实际执行位置。</li>
+<li>**开发服务器：**方便热更新和调试；线上应使用框架或构建工具规定的生产运行方式。</li>
+</ul>
+<p>常见问题：“SSR 页面能取到数据，浏览器却取不到。”先检查两者使用的地址、网络可达性、Cookie 和跨域条件，而不是假设同一段代码处在同一台机器。很多前端工具的开发代理仅在开发服务器中生效，上线后需要相应的生产 API 路由。</p>
+<h3 id="topic-12-4" tabindex="-1">12.4 <code>localhost</code>、监听地址与容器端口</h3>
+<p><code>localhost</code> 指向当前网络环境自身：浏览器里的它通常是用户电脑；API 容器里的它通常是该容器自身；数据库容器有自己的网络环境。</p>
+<p>假设应用在容器内使用 3000 端口：</p>
+<ul>
+<li>应用需要监听适合容器外部访问的地址，常见为 <code>0.0.0.0:3000</code>；只监听容器内 <code>127.0.0.1</code> 可能无法通过端口转发访问。</li>
+<li><code>0.0.0.0</code> 是监听所有 IPv4 网卡的通配地址，不是提供给用户的域名，也不表示自动开放防火墙。</li>
+<li><code>8080:3000</code> 表示宿主机的 8080 转发到容器的 3000；应用进程仍监听容器内 3000。</li>
+<li><code>EXPOSE 3000</code> 是镜像元数据声明，本身不发布宿主机端口。</li>
+<li>同一容器网络中，应用通常用数据库服务名如 <code>db:5432</code> 连接数据库，不使用自己的 <code>localhost:5432</code>。</li>
+<li>端口发布默认可能监听宿主机所有网卡；仅让宿主机代理访问时，可以明确绑定宿主机回环地址。</li>
+</ul>
+<p>端口发布与绑定行为可对照 <a href="https://docs.docker.com/get-started/docker-concepts/running-containers/publishing-ports/">Docker 官方端口文档</a>。</p>
+<h3 id="topic-12-5" tabindex="-1">12.5 配置与密钥</h3>
+<p>配置包括端口、域名、数据库地址、任务间隔；密钥包括数据库密码、签名密钥、第三方凭证。它们的生命周期与代码不同。</p>
+<ul>
+<li>用环境变量或部署平台配置注入运行时配置，启动时校验必填项和格式，避免运行到一半才发现缺失。</li>
+<li>提供不含秘密的 <code>.env.example</code> 描述需要哪些配置；真实密钥不要写入 Git、日志、报错响应或容器镜像。</li>
+<li>浏览器能够获取的配置均应视为公开。构建工具允许注入前端的环境变量，最终可能写入可下载的 JS。</li>
+<li>静态前端的变量若在构建时替换，修改服务器环境变量通常不会改变已经生成的 JS；需要重新构建，或设计公开的运行时配置加载机制。</li>
+<li>区分开发、测试、预发布、生产的数据库和账号，限制每个账号拥有的权限。</li>
+<li>记录密钥轮换方式，保证轮换后相关服务能够重新加载配置或重启。</li>
+</ul>
+<h3 id="topic-12-6" tabindex="-1">12.6 健康检查与优雅退出</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>机制</th>
+<th>要回答的问题</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>启动检查</td>
+<td>应用是否已完成初始化</td>
+<td>配置校验、必要连接初始化完成后才开始接收流量</td>
+</tr>
+<tr>
+<td>存活检查</td>
+<td>进程是否仍能响应、是否需要重启</td>
+<td>轻量检查应用事件循环能够返回响应</td>
+</tr>
+<tr>
+<td>就绪检查</td>
+<td>当前实例能否接收新的业务请求</td>
+<td>应用准备完毕，必要依赖满足服务要求</td>
+</tr>
+<tr>
+<td>业务探测</td>
+<td>核心用户路径是否真正可用</td>
+<td>用受控账号查询测试订单并验证响应结构</td>
+</tr>
+</tbody></table></div>
+<p>健康检查需要部署平台实际使用才会产生流量摘除或重启效果。容器被标为 unhealthy，并不意味着任何环境都会自动恢复它。</p>
+<p>不要因为所有实例共同依赖的数据库短暂不可用，就让所有应用实例反复重启；应区分进程故障与依赖故障，并设计降级和恢复策略。</p>
+<p>优雅退出通常是：接收退出信号→停止接收新任务/摘除流量→在期限内完成已有请求→关闭连接池→退出。超过期限的任务必须能识别中断并安全重试。</p>
+<h3 id="topic-12-7" tabindex="-1">12.7 数据、迁移与备份</h3>
+<p>容器镜像保存程序；数据库存储业务数据。容器镜像回到旧版本，不会自动把已经修改的数据和表结构恢复成旧状态。</p>
+<p>安全修改数据库时，常用 <strong>expand–contract（先扩展兼容，再收缩旧结构）</strong>：</p>
+<ol>
+<li>增加可兼容的新字段或新表，旧应用仍能工作。</li>
+<li>发布兼容新旧结构的代码；如需双写，明确处理失败和一致性。</li>
+<li>分批回填历史数据，验证记录数、空值、业务约束；评估锁与负载。</li>
+<li>切换读取到新结构，观察线上结果，保留回退窗口。</li>
+<li>确认没有旧版本依赖后，再移除旧字段和过渡逻辑。</li>
+</ol>
+<p>例如将含义模糊的 <code>time</code> 拆为 <code>created_at</code> 和 <code>paid_at</code>，需要明确历史数据如何解释，不能仅重命名字段就假设语义正确。</p>
+<p>迁移脚本应版本化、审查并由受控步骤执行。多副本应用同时启动时，不应无协调地重复执行同一迁移。</p>
+<p>备份方案应明确：允许最多丢失多久的数据（RPO），以及必须多久恢复服务（RTO）。它们来自业务需求，不是默认值。</p>
+<ul>
+<li>逻辑备份、文件系统备份、持续归档与时间点恢复解决不同恢复需求，选择应匹配数据库部署方式。</li>
+<li>备份需要访问控制、保留策略以及与原数据故障域适当分离的存放位置。</li>
+<li>定期恢复到独立环境，核对数据、约束、业务查询与恢复耗时；“存在备份文件”不等于“可以恢复”。</li>
+</ul>
+<p>备份方式及适用边界见 <a href="https://www.postgresql.org/docs/current/backup.html">PostgreSQL 官方备份与恢复文档</a>。</p>
+</section>
+<section class="chapter" id="section-13" aria-labelledby="chapter-heading-13"><p class="chapter-label">CHAPTER 13</p><h2 id="chapter-heading-13" tabindex="-1">13. CI/CD 与变更交付</h2>
+<p>CI/CD 把“从修改到上线”的重复流程变得可追踪、可重复。它自动执行检查与操作，不能代替对业务影响的判断。</p>
+<h3 id="topic-13-1" tabindex="-1">13.1 三个概念分别解决什么</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>概念</th>
+<th>核心问题</th>
+<th>典型完成标志</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CI：持续集成</td>
+<td>新代码与现有系统合并后是否仍然成立</td>
+<td>每次提交或 PR 自动完成构建、类型检查和必要测试</td>
+</tr>
+<tr>
+<td>Continuous Delivery：持续交付</td>
+<td>代码是否始终处于可以发布的状态</td>
+<td>产出已验证构件，具备可执行的发布步骤，生产发布可以需要人工批准</td>
+</tr>
+<tr>
+<td>Continuous Deployment：持续部署</td>
+<td>通过规则的变更能否自动进入生产</td>
+<td>满足门禁的变更自动上线，并执行部署后检查</td>
+</tr>
+</tbody></table></div>
+<p>“CD”可能表示后两个术语，团队内需要说清楚。自动执行一段服务器更新命令，不等于已经具备完整交付能力。</p>
+<h3 id="topic-13-2" tabindex="-1">13.2 建立最小流水线</h3>
+<p>下表是教学流程，可以映射为 GitHub Actions 或其他平台配置；实际命令和权限需按部署目标确定。</p>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>做了什么</th>
+<th>输入 / 输出</th>
+<th>失败时去哪里查</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1. 拉取源码</td>
+<td>获取确定的提交</td>
+<td>提交 SHA → 工作区</td>
+<td>分支、权限、子模块或依赖源码</td>
+</tr>
+<tr>
+<td>2. 准备环境</td>
+<td>固定运行时，按锁文件安装依赖</td>
+<td>运行时与锁文件 → 依赖环境</td>
+<td>运行时版本、包仓库、锁文件一致性</td>
+</tr>
+<tr>
+<td>3. 快速检查</td>
+<td>类型检查、静态检查、单元测试</td>
+<td>源码 → 检查报告</td>
+<td>编译错误、规则变化、失败用例</td>
+</tr>
+<tr>
+<td>4. 集成验证</td>
+<td>启动测试依赖，应用迁移并测试 API</td>
+<td>测试数据库 → 测试结果</td>
+<td>服务就绪、SQL、连接、迁移</td>
+</tr>
+<tr>
+<td>5. 构建构件</td>
+<td>构建页面、服务或镜像</td>
+<td>已检查源码 → 唯一版本构件</td>
+<td>构建参数、文件路径、依赖</td>
+</tr>
+<tr>
+<td>6. 部署预发布</td>
+<td>使用目标配置运行构件</td>
+<td>构件 + 配置 → 预发布实例</td>
+<td>部署日志、启动日志、网络</td>
+</tr>
+<tr>
+<td>7. 冒烟与验收</td>
+<td>验证登录、查询与关键页面</td>
+<td>实际实例 → 验证结果</td>
+<td>真实入口、认证、资源加载</td>
+</tr>
+<tr>
+<td>8. 发布生产</td>
+<td>晋级同一构件，按策略切流量</td>
+<td>已验证构件 → 生产版本</td>
+<td>版本、流量、配置、迁移兼容性</td>
+</tr>
+<tr>
+<td>9. 发布后观察</td>
+<td>对比错误率、延迟和业务指标</td>
+<td>线上信号 → 保持/暂停/回退</td>
+<td>版本维度的日志、指标与追踪</td>
+</tr>
+</tbody></table></div>
+<p>GitHub Actions 中，事件触发 workflow，workflow 包含 jobs，job 由 runner 执行多个 steps；job 可通过依赖关系组织顺序。可从 <a href="https://docs.github.com/en/actions/get-started/understand-github-actions">GitHub Actions 官方概念文档</a> 学习这些对应关系。</p>
+<h3 id="topic-13-3" tabindex="-1">13.3 同一构件晋级为什么重要</h3>
+<p>尽量让预发布验证过的同一镜像或文件包进入生产，使用提交 SHA、镜像 digest 等定位版本。
+如果测试环境构建一次，生产环境再构建一次，即使提交相同，依赖下载、构建参数或资源变化也可能产生不同构件。</p>
+<p>对静态前端，如果 API 地址等环境信息被编译进 JS，就要提前决定：使用同源相对路径、加载公开运行时配置，还是接受按环境生成不同构件并分别验证。</p>
+<p>运行时机密在部署时注入，不能为了复用构件而把生产机密写进镜像。</p>
+<h3 id="topic-13-4" tabindex="-1">13.4 发布策略与回退</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>策略</th>
+<th>做法</th>
+<th>适合解决的问题</th>
+<th>需要考虑的代价</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>直接替换</td>
+<td>停旧版本、启动新版本</td>
+<td>简单服务、可接受维护窗口</td>
+<td>可能短暂停机，失败后需重新拉起旧版本</td>
+</tr>
+<tr>
+<td>滚动发布</td>
+<td>分批更新实例</td>
+<td>保持一定服务容量</td>
+<td>新旧版本共存，API、会话和数据库需兼容</td>
+</tr>
+<tr>
+<td>蓝绿发布</td>
+<td>准备两套环境，切换流量</td>
+<td>快速切换应用版本</td>
+<td>额外容量、共享数据兼容以及切流验证</td>
+</tr>
+<tr>
+<td>灰度发布</td>
+<td>先让少量流量进入新版本</td>
+<td>降低未知问题的影响范围</td>
+<td>需要分流能力与按版本对比指标</td>
+</tr>
+</tbody></table></div>
+<p>发布前至少记录：构件版本、配置差异、迁移内容、验证步骤、回退版本与数据兼容性。
+发布后检查“容器启动”之外的结果：页面可加载、静态资源版本匹配、登录正常、核心查询正确、后台任务持续运行。</p>
+<p>回退应用通常是切回上一构件；数据修复可能需要单独的前向修复、补偿或恢复方案。
+已经发生的删除、外部发送或第三方操作，也不会因为代码回退自动撤销。</p>
+<h3 id="topic-13-5" tabindex="-1">13.5 容易忽略的交付问题</h3>
+<ul>
+<li>前端新 HTML 引用了新 JS，但 CDN 或资源同步顺序不当，导致资源 404；使用内容哈希并保留过渡期资源。API 的 404 应返回约定的错误响应，避免被 SPA 回退路由返回 HTML，造成 JSON 解析错误。</li>
+<li>旧浏览器页面仍调用旧 API；接口兼容策略需要覆盖客户端更新滞后。</li>
+<li>环境变量只在某台机器手工修改；配置差异没有版本记录，重建时无法复现。</li>
+<li>CI 将机密写入完整命令或日志；使用平台的秘密管理，并限制工作流权限。</li>
+<li>多次发布并发覆盖；给同一环境设置并发与顺序控制，记录当前部署的版本。</li>
+</ul>
+<p>本阶段练习：制造一次测试失败，确认流水线拒绝晋级；完成一次正常发布，再演练切回上一个兼容版本。</p>
+</section>
+<section class="chapter" id="section-14" aria-labelledby="chapter-heading-14"><p class="chapter-label">CHAPTER 14</p><h2 id="chapter-heading-14" tabindex="-1">14. 可观测性与线上排障</h2>
+<p>可观测性让你根据系统输出判断内部发生了什么。排障的目标是逐步缩小范围，用证据验证假设。</p>
+<h3 id="topic-14-1" tabindex="-1">14.1 日志、指标与追踪分别回答什么</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>信号</th>
+<th>回答的问题</th>
+<th>通用 Web 应用例子</th>
+<th>使用边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>日志 Logs</td>
+<td>某个事件具体发生了什么</td>
+<td>哪个报表任务失败，错误码与重试次数是什么</td>
+<td>大量无结构文本难检索，也不能直接替代整体趋势</td>
+</tr>
+<tr>
+<td>指标 Metrics</td>
+<td>某段时间内整体情况怎样</td>
+<td>请求速率、错误率、p95 延迟、连接池等待</td>
+<td>标签过多会增加成本，避免把每个用户 ID 当普通指标标签</td>
+</tr>
+<tr>
+<td>追踪 Traces</td>
+<td>一次操作跨组件经过哪里、耗时在哪里</td>
+<td>API→缓存→数据库→外部请求的各段耗时</td>
+<td>可能经过采样；缺少 trace 不等于请求没有发生</td>
+</tr>
+</tbody></table></div>
+<p>OpenTelemetry 用统一机制采集和传递多种观测信号，并不等于已经为你存储、展示、告警所有数据；仍需相应后端或观测平台。<a href="https://opentelemetry.io/docs/concepts/signals/">OpenTelemetry 官方信号说明</a></p>
+<h3 id="topic-14-2" tabindex="-1">14.2 从第一天就保留哪些信息</h3>
+<p>结构化请求日志至少包括：时间、服务名、环境、版本、请求 ID、路由模板、状态码、总耗时和安全的错误分类。
+业务日志补充任务 ID、订单 ID、数据来源、查询时间范围、记录数；避免记录与排障无关的个人信息。</p>
+<ul>
+<li>在入口生成或验证请求 ID，并向后续组件传递；响应中返回可供用户报障的关联 ID。</li>
+<li>请求 ID 用于检索关联；trace ID 用于追踪上下文关联，两者可以配合，不能假设天然相同。</li>
+<li>对 <code>Authorization</code>、Cookie、密码、访问令牌、数据库连接串等做脱敏；不要默认记录完整请求体。</li>
+<li>日志中记录内部细节，客户端获得适当的错误信息；不要把堆栈和密钥直接返回浏览器。</li>
+<li>统一使用带时区的时间；比较多台机器日志时考虑时钟同步，耗时测量优先使用合适的单调时钟。</li>
+</ul>
+<h3 id="topic-14-3" tabindex="-1">14.3 指标、SLO 与 p95 应该怎样理解</h3>
+<p><strong>SLI</strong> 是测量指标；<strong>SLO</strong> 是你承诺达到的目标。例如教学目标可以设为：“滚动 30 天内，符合条件的查询请求至少 99.9% 成功”。实际目标应依据业务需要与成本制定。</p>
+<p>必须先定义分母：哪些接口算查询、客户端主动取消如何处理、哪些 4xx 被视为预期拒绝、监控探针是否纳入。否则不同报表的“成功率”无法比较。</p>
+<p>p95 是特定样本集合的第 95 百分位：按所用统计方法，大约 95% 的样本不高于该值。
+它不是“95% 的用户体验”，也不是“最慢的 5 个请求”。需要同时声明时间窗口、接口、测量位置、样本数以及是否包含失败/超时。</p>
+<ul>
+<li>浏览器端测量包含网络与前端阶段；服务端请求耗时通常不包含用户到入口前的全部时间。</li>
+<li>低流量下 p95 容易波动；请求数太少时，结合原始样本看问题。</li>
+<li>聚合直方图通常给出近似分位数；不要将不同实例的 p95 简单平均成“全站 p95”。</li>
+<li>慢请求被超时提前终止后，如果统计只保留成功请求，结果可能显得变快，实际体验却恶化。</li>
+</ul>
+<p>报表应用还应关注业务新鲜度，例如“当前时间与最近一次数据成功更新时间的间隔”。HTTP 全部成功，也可能持续返回陈旧数据。</p>
+<h3 id="topic-14-4" tabindex="-1">14.4 按浏览器到数据库逐层定位</h3>
+<p>先选取一次具体失败：记下时间、页面地址、操作、请求 ID、当前版本、用户可见结果和可重复步骤。</p>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>层次</th>
+<th>观察什么</th>
+<th>证据与工具</th>
+<th>下一步如何缩小范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>浏览器交互</td>
+<td>点击是否触发预期请求，界面是否被旧状态覆盖</td>
+<td>Console、Network、组件状态</td>
+<td>无请求先看事件、校验、状态与前端异常</td>
+</tr>
+<tr>
+<td>浏览器策略</td>
+<td>请求是否被拦截，是否存在预检或凭证问题</td>
+<td>Network 的 OPTIONS、Console、Cookie 与响应头</td>
+<td>按浏览器给出的具体原因检查 CORS、Cookie、混合内容或 CSP</td>
+</tr>
+<tr>
+<td>DNS / TLS</td>
+<td>域名是否解析，证书与连接是否成立</td>
+<td>浏览器安全信息、<code>dig</code>、<code>curl -v</code></td>
+<td>失败发生在 HTTP 之前时，先看解析、网络、证书与时间</td>
+</tr>
+<tr>
+<td>入口与代理</td>
+<td>请求是否到入口、路由到哪个上游</td>
+<td>访问日志、代理错误日志、配置</td>
+<td>核对路径重写、目标端口、超时及上游可达性</td>
+</tr>
+<tr>
+<td>应用进程</td>
+<td>请求是否到达处理器、卡在哪一段</td>
+<td>请求 ID、追踪、运行日志、资源指标</td>
+<td>区分参数校验、权限、业务异常、CPU 或事件循环阻塞</td>
+</tr>
+<tr>
+<td>缓存与外部依赖</td>
+<td>是否命中旧值、外部调用是否等待</td>
+<td>缓存键/TTL、依赖 span、超时记录</td>
+<td>对比数据源，检查失效策略、调用限制与重试</td>
+</tr>
+<tr>
+<td>数据库连接池</td>
+<td>时间耗在等连接还是执行 SQL</td>
+<td>池大小、等待数、连接数</td>
+<td>先区分连接泄漏、请求过多与数据库查询慢</td>
+</tr>
+<tr>
+<td>SQL 与数据库</td>
+<td>查询量、执行计划、锁等待和 I/O</td>
+<td>慢查询、活动会话、查询计划</td>
+<td>检查索引、过滤条件、扫描行数、事务与锁</td>
+</tr>
+<tr>
+<td>返回与渲染</td>
+<td>响应是否正确，是否下载/解析/渲染过慢</td>
+<td>响应体、Timing、Performance</td>
+<td>正确响应后才出现错误，继续看格式转换、竞态与渲染</td>
+</tr>
+</tbody></table></div>
+<p><code>curl</code> 成功而浏览器失败，说明两种客户端行为有差异；它不能单独证明“就是 CORS”，还要对比 URL、请求头、Cookie、重定向和运行位置。</p>
+<h3 id="topic-14-5" tabindex="-1">14.5 状态码是线索，不是责任归属</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>现象</th>
+<th>常见调查方向</th>
+<th>不能直接下的结论</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>400 / 422</td>
+<td>参数格式、校验规则、接口契约</td>
+<td>一定是用户输错；前后端契约不一致也会触发</td>
+</tr>
+<tr>
+<td>401 / 403</td>
+<td>凭证、会话有效性、权限、入口安全策略</td>
+<td>一定是后端权限代码；代理或身份服务也可能生成响应</td>
+</tr>
+<tr>
+<td>404</td>
+<td>域名、代理路由、API 路径、资源是否存在</td>
+<td>一定是文件不存在；请求可能到了错误服务</td>
+</tr>
+<tr>
+<td>429</td>
+<td>应用、网关或第三方的限流规则</td>
+<td>增加应用服务器就一定解决</td>
+</tr>
+<tr>
+<td>500</td>
+<td>生成响应的服务内部异常、依赖失败映射</td>
+<td>数据库一定宕机</td>
+</tr>
+<tr>
+<td>502 / 503 / 504</td>
+<td>上游连接、就绪状态、超时、容量以及响应来源</td>
+<td>只凭状态码就能确定某一组件的根因</td>
+</tr>
+<tr>
+<td>200 但页面不对</td>
+<td>业务数据、响应 schema、缓存、前端转换与渲染</td>
+<td>HTTP 成功就等于业务成功</td>
+</tr>
+</tbody></table></div>
+<p>HTTP 状态码语义可查 <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status">MDN HTTP 状态码参考</a>。实际责任归属仍要结合响应来源和服务日志。</p>
+<h3 id="topic-14-6" tabindex="-1">14.6 建立排障闭环</h3>
+<ol>
+<li>**确认影响：**哪些用户、接口、时间范围受影响；是完全失败、变慢还是结果错误。</li>
+<li>**找到变化：**最近是否发布、修改配置、迁移数据、流量增加或第三方异常。</li>
+<li>**提出可验证假设：**例如“等待数据库连接导致变慢”，应能从连接池等待指标与 trace 验证。</li>
+<li>**一次改变一个因素：**先做最小复现和对照，避免同时清缓存、重启、改代码后失去根因证据。</li>
+<li>**缓解与修复分开记录：**重启可能恢复服务，但连接泄漏仍需要定位；必要时先按预案恢复业务。</li>
+<li>**验证并留下预防措施：**补回归测试、指标、告警或文档，确认没有引入新的数据错误。</li>
+</ol>
+<p>一份有效的故障记录应包含：现象、影响、时间线、证据、根因、缓解方式、正式修复和验证结果。
+本阶段的验收是：给你一次“订单列表加载很慢”的报障，你能用证据将耗时定位到网络、代理、应用、缓存、数据库或前端渲染中的具体阶段。</p>
+</section>
+<section class="chapter" id="section-15" aria-labelledby="chapter-heading-15"><p class="chapter-label">CHAPTER 15</p><h2 id="chapter-heading-15" tabindex="-1">15. AI 应用在全栈体系中的位置</h2>
+<p>这一章是扩展方向：先用前面的知识把普通业务系统做完整，再理解 AI 增加了哪些新的边界。</p>
+<h3 id="topic-15-1" tabindex="-1">15.1 各个能力分别承担什么</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>能力</th>
+<th>输入 → 输出</th>
+<th>主要作用</th>
+<th>需要额外验证</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>模型调用</td>
+<td>指令与上下文 → 文本或结构化内容</td>
+<td>摘要、分类、提取、生成</td>
+<td>内容正确性、格式、成本、超时</td>
+</tr>
+<tr>
+<td>检索增强 RAG</td>
+<td>问题 → 检索片段 → 有依据的回答</td>
+<td>给模型提供相关且可追溯的知识</td>
+<td>检索相关性、权限过滤、引用是否支持结论</td>
+</tr>
+<tr>
+<td>工具调用</td>
+<td>模型提出工具名与参数 → 服务端执行 → 结果</td>
+<td>查询业务数据、调用已有能力</td>
+<td>参数校验、身份、授权、幂等与副作用</td>
+</tr>
+<tr>
+<td>固定工作流</td>
+<td>已定义步骤 → 可追踪的执行结果</td>
+<td>有确定步骤的分类、审核、报告生成</td>
+<td>每步输入输出、失败恢复、人工确认</td>
+</tr>
+<tr>
+<td>Agent</td>
+<td>目标与反馈 → 动态选择后续步骤</td>
+<td>路径不固定、需要探索和多轮工具使用的任务</td>
+<td>停止条件、预算、循环、越权和最终结果</td>
+</tr>
+</tbody></table></div>
+<p>固定流程先用可预测的工作流；动态路径确有价值时再增加 Agent。复杂度应通过结果评估证明价值。<a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic：构建有效 Agent</a></p>
+<h3 id="topic-15-2" tabindex="-1">15.2 它仍然依赖普通全栈能力</h3>
+<pre><code class="language-text">用户提问
+  → 后端验证身份并确定允许访问的数据
+  → 按需要检索资料或查询数据库
+  → 调用模型
+  → 校验模型提出的工具参数和授权范围
+  → 执行业务工具，必要时等待用户确认
+  → 保存任务状态与结果
+  → 前端展示进度、依据、可编辑结果与错误
+</code></pre>
+<p>模型提出动作不代表动作已获授权。权限在应用与工具层执行；网页、上传文件和检索内容中的文本应作为数据处理，不应自行变成更高权限的操作指令。</p>
+<p>SQL 聚合、金额计算和状态约束交给可验证代码；模型擅长把信息组织为用户可理解的内容。检索和向量相似度也不直接证明答案正确。</p>
+<h3 id="topic-15-3" tabindex="-1">15.3 AI 特有的故障定位</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>症状</th>
+<th>先看什么</th>
+<th>可能的问题层</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>回答没有事实依据</td>
+<td>提供的上下文、检索结果、来源</td>
+<td>数据准备、检索、生成与校验</td>
+</tr>
+<tr>
+<td>调错工具或参数非法</td>
+<td>工具描述、参数 schema、真实工具调用记录</td>
+<td>工具设计、模型选择、运行时校验</td>
+</tr>
+<tr>
+<td>一直执行不结束</td>
+<td>循环步骤、重复错误、预算和终止条件</td>
+<td>编排状态机、失败恢复</td>
+</tr>
+<tr>
+<td>流式内容最后才一起出现</td>
+<td>上游是否分块、代理是否缓冲、客户端是否逐段读取</td>
+<td>模型服务、网络入口、前端消费</td>
+</tr>
+<tr>
+<td>成本升高</td>
+<td>输入长度、检索片段数量、循环与重试次数</td>
+<td>上下文管理、任务拆分、编排</td>
+</tr>
+<tr>
+<td>回复说成功但任务没完成</td>
+<td>真实数据库状态、外部工具结果、提交记录</td>
+<td>结果验证和工具执行</td>
+</tr>
+</tbody></table></div>
+<p>建立固定评估集，覆盖正常、缺数据、权限拒绝、工具失败和歧义问题。记录任务成功率、依据质量、耗时和成本；关键事实使用程序检查与人工复核，模型评分应经过校准。<a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Anthropic：Agent 评估</a></p>
+</section>
+<section class="chapter" id="section-16" aria-labelledby="chapter-heading-16"><p class="chapter-label">CHAPTER 16</p><h2 id="chapter-heading-16" tabindex="-1">16. 故障定位速查：看到症状后从哪里开始</h2>
+<h3 id="topic-16-1" tabindex="-1">16.1 先问“错误最早出现在哪个边界”</h3>
+<pre><code class="language-text">用户操作是否触发请求？
+  否 → 前端事件、校验、状态、脚本错误
+  是 → 浏览器是否取得 HTTP 响应？
+       否 → 浏览器策略、DNS、连接、TLS、超时、取消
+       是 → 响应状态、内容是否符合接口约定？
+            否 → 找到生成响应的节点，沿代理、应用、依赖逐层检查
+            是 → 核对业务规则、客户端转换、缓存状态、竞态和渲染
+</code></pre>
+<p>“没看到应用日志”只是线索：也可能是采样、日志丢失、查错环境或请求发到别的实例。使用同一时间窗口、同一请求和明确的版本对照。</p>
+<h3 id="topic-16-2" tabindex="-1">16.2 页面、通信与登录问题</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>症状</th>
+<th>首先检查的证据</th>
+<th>主要调查方向</th>
+<th>常见误区</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>页面白屏</td>
+<td>HTML 与 JS 状态、Console</td>
+<td>资源加载、脚本运行、渲染入口</td>
+<td>直接认定后端挂了</td>
+</tr>
+<tr>
+<td>点击后无反应且无请求</td>
+<td>事件绑定、前端校验、组件状态</td>
+<td>前端交互路径</td>
+<td>修改 API 无法修复未发出的请求</td>
+</tr>
+<tr>
+<td>输入不同条件，显示旧结果</td>
+<td>请求参数、返回顺序、查询键</td>
+<td>请求竞态、缓存键、状态覆盖</td>
+<td>只给接口增加随机参数</td>
+</tr>
+<tr>
+<td>返回 <code>Unexpected token &#39;&lt;&#39;</code></td>
+<td>响应体开头、Content-Type</td>
+<td>API 路径被返回 HTML、登录重定向、SPA fallback</td>
+<td>只修改 JSON 解析器</td>
+</tr>
+<tr>
+<td>本地成功、浏览器线上失败</td>
+<td>URL、Cookie、Origin、OPTIONS、CSP</td>
+<td>环境配置、跨域、混合内容、凭证策略</td>
+<td>先关掉所有安全控制</td>
+</tr>
+<tr>
+<td><code>curl</code> 成功、浏览器失败</td>
+<td>对比两者实际请求和运行位置</td>
+<td>请求差异、浏览器策略</td>
+<td>仅凭此现象断言一定是 CORS</td>
+</tr>
+<tr>
+<td>直接打开子路由 404</td>
+<td>请求路径、静态服务器配置</td>
+<td>SPA 回退或服务端页面路由</td>
+<td>把 API 404 也全部回退成 HTML</td>
+</tr>
+<tr>
+<td>登录成功，下一次请求 401</td>
+<td>Set-Cookie、后续 Cookie、会话存储</td>
+<td>域/路径/SameSite/Secure、过期、跨实例会话</td>
+<td>反复重新登录但不查 Cookie 是否携带</td>
+</tr>
+<tr>
+<td>偶发登录掉线</td>
+<td>命中实例、会话位置、密钥版本</td>
+<td>会话仅存某实例、签名配置不一致</td>
+<td>认为所有登录问题都在前端</td>
+</tr>
+<tr>
+<td>只有某些用户访问失败</td>
+<td>用户/租户/角色差异、资源 ID</td>
+<td>授权、数据隔离、缓存混用</td>
+<td>用管理员账号验证全部权限</td>
+</tr>
+</tbody></table></div>
+<h3 id="topic-16-3" tabindex="-1">16.3 数据、性能与任务问题</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>症状</th>
+<th>首先检查的证据</th>
+<th>主要调查方向</th>
+<th>常见误区</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>查询结果有误但 HTTP 200</td>
+<td>原始记录、过滤条件、聚合规则</td>
+<td>业务口径、SQL、时区、单位转换</td>
+<td>认为 200 就说明系统正确</td>
+</tr>
+<tr>
+<td>保存后刷新又回到旧值</td>
+<td>写入结果、连接目标、读节点、缓存</td>
+<td>未提交、写错环境、旧缓存、副本延迟</td>
+<td>先假定页面没有保存</td>
+</tr>
+<tr>
+<td>偶发重复订单或通知</td>
+<td>幂等键、任务尝试、事务和外部调用记录</td>
+<td>重试、重复调度、并发与防重</td>
+<td>只禁用提交按钮</td>
+</tr>
+<tr>
+<td>请求超时但订单已产生</td>
+<td>提交时间、响应时间、操作标识</td>
+<td>写成功后响应丢失或超时</td>
+<td>无幂等保护地立即重试写入</td>
+</tr>
+<tr>
+<td>所有接口同时变慢</td>
+<td>CPU、事件循环/线程、池等待、依赖耗时</td>
+<td>共享资源饱和、依赖故障、突发流量</td>
+<td>对每个接口单独加缓存</td>
+</tr>
+<tr>
+<td>单个接口慢</td>
+<td>参数、查询次数、锁、响应大小</td>
+<td>特定 SQL、N+1、数据量、业务计算</td>
+<td>盲目扩大所有连接池</td>
+</tr>
+<tr>
+<td>API 很快但界面卡</td>
+<td>Performance、响应体大小、渲染次数</td>
+<td>JSON 处理、大列表、布局与绘制</td>
+<td>只优化数据库</td>
+</tr>
+<tr>
+<td>固定时间发生延迟尖峰</td>
+<td>任务时间表、TTL 分布、流量曲线</td>
+<td>集中过期、批处理、备份或资源竞争</td>
+<td>仅根据“时间规律”猜根因</td>
+</tr>
+<tr>
+<td>任务一直排队</td>
+<td>消费速率、最老任务年龄、Worker 健康</td>
+<td>消费者停止、吞吐不足、下游限流</td>
+<td>只观察队列长度，不看任务年龄</td>
+</tr>
+<tr>
+<td>任务取消后仍发送通知</td>
+<td>取消时刻、检查点、副作用时刻</td>
+<td>取消协议与不可撤回边界</td>
+<td>把断开浏览器连接当作事务撤销</td>
+</tr>
+</tbody></table></div>
+<h3 id="topic-16-4" tabindex="-1">16.4 发布与基础设施问题</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>症状</th>
+<th>首先检查的证据</th>
+<th>主要调查方向</th>
+<th>常见误区</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>服务在主机内能访问，外部不能</td>
+<td>监听地址、端口映射、防火墙、入口路由</td>
+<td>网络暴露路径</td>
+<td>认为监听 <code>0.0.0.0</code> 就自动外网可达</td>
+</tr>
+<tr>
+<td>容器能启动但接口失败</td>
+<td>启动日志、数据库地址、运行时配置</td>
+<td>容器网络、缺配置、依赖未就绪</td>
+<td>把容器 running 当作业务健康</td>
+</tr>
+<tr>
+<td>发布后才出现字段不存在</td>
+<td>应用版本、迁移版本、数据库目标</td>
+<td>迁移顺序、连接环境、兼容性</td>
+<td>直接删表重建</td>
+</tr>
+<tr>
+<td>新 HTML 找不到 JS 文件</td>
+<td>构件清单、资源 URL、缓存与发布顺序</td>
+<td>资源版本不一致、旧构件被过早删除</td>
+<td>只清浏览器缓存</td>
+</tr>
+<tr>
+<td>应用回退后仍异常</td>
+<td>数据变更、配置版本、外部副作用</td>
+<td>代码以外的状态不兼容</td>
+<td>认为回退镜像会回退数据库</td>
+</tr>
+<tr>
+<td>CI 失败而本地成功</td>
+<td>运行时、锁文件、时区、大小写、配置</td>
+<td>环境不可复现或测试相互依赖</td>
+<td>关闭失败检查让发布继续</td>
+</tr>
+<tr>
+<td>502 / 504</td>
+<td>代理上游地址、错误日志、应用健康、耗时</td>
+<td>上游连接或超时链路</td>
+<td>无限增加超时掩盖排队和容量问题</td>
+</tr>
+</tbody></table></div>
+<h3 id="topic-16-5" tabindex="-1">16.5 用“时间分解”定位慢在哪里</h3>
+<pre><code class="language-text">用户可见耗时
+  ≈ 前端发起前的等待
+  + 网络与入口等待
+  + 服务端排队与执行
+  + 响应传输
+  + 客户端处理与渲染
+
+服务端内部
+  = 获取资源的等待 + 实际工作
+  = 连接池/锁/队列等待 + 查询/计算/外部调用等阶段
+</code></pre>
+<p>这是定位用的分解方式，不是任意采集指标都能直接相加；并行请求、重叠 span、缓存和流式处理会改变计算关系。</p>
+<p>优化前先确定主要耗时和业务目标。SQL 已只占总耗时很小一部分时，进一步压缩 SQL 往往无法明显改善用户体验。</p>
+</section>
+<section class="chapter" id="section-17" aria-labelledby="chapter-heading-17"><p class="chapter-label">CHAPTER 17</p><h2 id="chapter-heading-17" tabindex="-1">17. 技术选型：何时引入，何时暂缓</h2>
+<h3 id="topic-17-1" tabindex="-1">17.1 用问题选择工具</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>技术或模式</th>
+<th>出现什么需求时考虑</th>
+<th>优先检查的更简单方案</th>
+<th>新增维护成本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>服务端框架</td>
+<td>统一路由、校验、依赖和工程约定</td>
+<td>选一种团队能维护的成熟框架</td>
+<td>升级、抽象与框架约束</td>
+</tr>
+<tr>
+<td>ORM</td>
+<td>大量数据映射、类型协作、迁移管理</td>
+<td>简单业务可直接使用参数化 SQL</td>
+<td>生成 SQL、复杂查询和性能诊断</td>
+</tr>
+<tr>
+<td>Redis 缓存</td>
+<td>重复热点查询确实造成延迟或负载</td>
+<td>优化 SQL、索引、返回量和客户端重复请求</td>
+<td>数据陈旧、失效、容量与新的依赖</td>
+</tr>
+<tr>
+<td>专用任务队列</td>
+<td>长任务、可靠重试、吞吐控制成为常态</td>
+<td>平台后台任务、数据库任务表</td>
+<td>消费者、积压、去重与恢复</td>
+</tr>
+<tr>
+<td>搜索引擎</td>
+<td>复杂全文检索、相关性和分面需求</td>
+<td>数据库索引与全文搜索</td>
+<td>索引同步、重建、最终一致性</td>
+</tr>
+<tr>
+<td>对象存储</td>
+<td>文件、媒体、导出结果需要独立保存与分发</td>
+<td>小规模本地存储加明确备份策略</td>
+<td>权限、生命周期、下载成本</td>
+</tr>
+<tr>
+<td>CDN</td>
+<td>用户地理分散、静态资源和公共内容访问量大</td>
+<td>合理资源压缩与 HTTP 缓存</td>
+<td>失效、缓存键、发布一致性</td>
+</tr>
+<tr>
+<td>WebSocket</td>
+<td>持续双向实时消息</td>
+<td>HTTP、轮询或 SSE</td>
+<td>连接状态、重连、背压与扩容</td>
+</tr>
+<tr>
+<td>读副本</td>
+<td>经测量，读取成为瓶颈或有可用性要求</td>
+<td>单库优化、缓存、查询分级</td>
+<td>复制延迟、路由和故障切换</td>
+</tr>
+<tr>
+<td>微服务</td>
+<td>团队和业务边界明确，需要独立交付或隔离</td>
+<td>模块化单体</td>
+<td>网络故障、数据一致性、观测与发布协调</td>
+</tr>
+<tr>
+<td>Kubernetes</td>
+<td>多服务多实例调度、平台化治理需求</td>
+<td>托管应用平台或简单容器部署</td>
+<td>集群、网络、权限和运维复杂度</td>
+</tr>
+</tbody></table></div>
+<p>这些是判断起点，不是固定门槛。选择前写下当前问题、证据、目标、替代方案、迁移成本和失败后的恢复方式。</p>
+<h3 id="topic-17-2" tabindex="-1">17.2 常见混淆对照</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>容易混淆的概念</th>
+<th>正确区分</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数据库与缓存</td>
+<td>权威业务状态与可重建副本；某些产品可承担多种角色，要看实际配置和契约</td>
+</tr>
+<tr>
+<td>数据库与搜索引擎</td>
+<td>数据正确性与关系操作，和面向检索的索引能力；搜索索引常由业务数据派生</td>
+</tr>
+<tr>
+<td>Git 与 CI/CD</td>
+<td>版本历史和协作机制，和自动验证、发布流程</td>
+</tr>
+<tr>
+<td>Docker 与虚拟机</td>
+<td>容器通常共享宿主机内核并隔离进程；虚拟机运行独立客户机系统，边界与成本不同</td>
+</tr>
+<tr>
+<td>镜像与容器</td>
+<td>程序与依赖的构件，和由该构件启动的运行实例</td>
+</tr>
+<tr>
+<td>API 网关与业务服务</td>
+<td>公共入口能力，和资源权限、业务规则与数据操作</td>
+</tr>
+<tr>
+<td>水平扩容与垂直扩容</td>
+<td>增加实例数量，和提高单实例资源；前者要求处理共享状态</td>
+</tr>
+<tr>
+<td>高可用与备份</td>
+<td>故障时继续提供服务，和恢复历史数据；二者互补</td>
+</tr>
+<tr>
+<td>认证与授权</td>
+<td>你是谁，和你能对哪个资源做什么</td>
+</tr>
+<tr>
+<td>异步与并行</td>
+<td>不阻塞等待的控制方式，和多个工作同时执行；不能互相等同</td>
+</tr>
+<tr>
+<td>超时与取消</td>
+<td>不再等待，和实际停止执行；后者需要执行方配合</td>
+</tr>
+<tr>
+<td>重试与幂等</td>
+<td>再执行一次，和重复执行仍符合业务约定；重试前要判断后者</td>
+</tr>
+</tbody></table></div>
+</section>
+<section class="chapter" id="section-18" aria-labelledby="chapter-heading-18"><p class="chapter-label">CHAPTER 18</p><h2 id="chapter-heading-18" tabindex="-1">18. 建立体系的实践路径</h2>
+<h3 id="topic-18-1" tabindex="-1">18.1 学习优先级</h3>
+<p>**第一轮必须打通：**HTTP、前后端通信、服务端校验与权限、SQL 与约束、测试、基础部署、日志排障。</p>
+<p>**第二轮按场景加入：**事务并发、连接池、缓存、后台任务、CI/CD、备份恢复、性能测量。</p>
+<p>**后续按目标深入：**高可用、分布式系统、搜索、复杂实时通信、平台工程、AI 应用。不要为了“学全栈”同时学习多门后端语言或多种数据库。</p>
+<h3 id="topic-18-2" tabindex="-1">18.2 用一个通用练习系统贯穿学习</h3>
+<p>可以选择“带登录、权限、查询、文件导入和报表导出的管理系统”。业务主题自行选择，重点是每一阶段都有可验证结果。</p>
+<p>以下安排适用于有前端经验、每周约 8–10 小时的第一轮实践。约 16–20 周是计划参考，不是就业能力保证；达到验收条件后再推进，复杂功能可以缩小范围。</p>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>学习与实现</th>
+<th>必须留下的产物</th>
+<th>验收与故障演练</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1：建立请求链路，约 1–2 周</td>
+<td>页面发请求，服务端返回约定 JSON，处理失败和空结果</td>
+<td>请求时序图、接口契约</td>
+<td>能区分未发请求、404、返回 HTML、渲染错误</td>
+</tr>
+<tr>
+<td>2：持久化与查询，约 2–3 周</td>
+<td>建表、外键、唯一约束、CRUD、分页和索引</td>
+<td>ER 图、迁移脚本、代表性 SQL</td>
+<td>重启后数据保留；重复数据被拒；解释一次查询计划</td>
+</tr>
+<tr>
+<td>3：登录、权限与业务规则，约 2–3 周</td>
+<td>会话、角色、资源归属、状态转换、事务</td>
+<td>权限矩阵、规则和集成测试</td>
+<td>直接请求他人资源被拒；并发修改符合约定</td>
+</tr>
+<tr>
+<td>4：部署与诊断，约 2 周</td>
+<td>构建、入口路由、HTTPS、运行配置和日志</td>
+<td>部署说明、环境清单、请求 ID</td>
+<td>能定位端口、域名、缺配置、错误 API 地址</td>
+</tr>
+<tr>
+<td>5：可靠任务与缓存，约 3 周</td>
+<td>长任务状态、重试、幂等；测量后缓存一个热点读取</td>
+<td>任务状态图、缓存策略、负载记录</td>
+<td>停止 Worker 后恢复；重复投递不重复写；旧数据问题可定位</td>
+</tr>
+<tr>
+<td>6：交付与恢复，约 2–3 周</td>
+<td>CI 检查、构件发布、冒烟验证、迁移和备份</td>
+<td>流水线、回退步骤、恢复记录</td>
+<td>测试失败阻止发布；回退兼容版本；实际恢复备份</td>
+</tr>
+<tr>
+<td>7：综合故障演练，约 2–4 周</td>
+<td>慢查询、缓存陈旧、依赖超时、权限边界</td>
+<td>至少三份故障复盘</td>
+<td>用证据说明根因、修复与防回归方案</td>
+</tr>
+</tbody></table></div>
+<p>AI 可在普通系统具备权限和可靠调用后，作为额外阶段加入；不影响前面全栈主线的成立。</p>
+<h3 id="topic-18-3" tabindex="-1">18.3 每学一个组件，都填写同一张卡片</h3>
+<pre><code class="language-text">名称：
+它解决的问题：
+输入是什么，输出是什么：
+它拥有或缓存什么状态：
+上游是谁，下游是谁：
+成功、失败、超时、重复执行分别会怎样：
+需要的配置、权限与资源：
+最常见的三个故障：
+从哪些日志、指标或命令获取证据：
+何时不需要它，有什么简单替代方案：
+我做过的最小实现与故障演练：
+</code></pre>
+<p>这能把“听说过一个技术”转化为“知道它在系统中承担什么责任”。</p>
+<h3 id="topic-18-4" tabindex="-1">18.4 每周学习循环</h3>
+<ol>
+<li>选一个真实问题，如“写入成功后列表为什么还是旧的”。</li>
+<li>画数据经过的层，列出可能保存旧状态的位置。</li>
+<li>阅读解决当前问题所需的文档，构建最小复现。</li>
+<li>先实现正确行为，再用测试和测量验证。</li>
+<li>主动制造失败，记录症状、证据与根因。</li>
+<li>把结论写回知识卡片，并标明适用条件。</li>
+</ol>
+<p>AI 可以帮助解释概念、生成样板和列出假设。关键验收是你能否解释数据流、识别危险假设，并通过实际证据确认行为。</p>
+<h3 id="topic-18-5" tabindex="-1">18.5 自测问题</h3>
+<ul>
+<li>页面能打开，是否说明 API、数据库和后台任务都正常？如何分别验证？</li>
+<li>同一个查询参数放在路径、Query、Body 中，各自有什么含义？</li>
+<li>为什么已经登录，仍然要检查订单归属？</li>
+<li>为什么前端类型检查不能替代服务端输入校验？</li>
+<li>为什么请求超时后不能直接认定写入失败？</li>
+<li>两个请求同时“查不存在再插入”，如何防止重复？</li>
+<li>慢请求的时间在等连接，和在执行 SQL，有什么区别？</li>
+<li>数据库已经更新，页面还可能在哪些位置拿到旧值？</li>
+<li>Worker 执行成功但确认前崩溃，会发生什么？</li>
+<li>开发代理为什么不能自动承担生产反向代理的职责？</li>
+<li>构建时变量与运行时变量如何影响线上行为？</li>
+<li>回退应用后，数据库结构为什么可能仍然不兼容？</li>
+<li>哪些证据能证明备份可恢复，而不仅是备份文件存在？</li>
+<li>为什么不同实例的 p95 不能直接取平均？</li>
+<li>新增一个组件后，如何确认它减少的问题多于引入的问题？</li>
+</ul>
+<h3 id="topic-18-6" tabindex="-1">18.6 新增章节如何穿插学习</h3>
+<p>这些章节用于解释实践中遇到的现象。可以先读相关小节，再回到正在实现的功能，不必等读完全书才开始动手。</p>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>实践阶段</th>
+<th>配合阅读</th>
+<th>需要额外交付的证据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>建立请求链路与第一次部署</td>
+<td><a href="#section-20">20. 操作系统</a>、<a href="#section-23">23. 构建原理</a></td>
+<td>进程与端口图；源码、构件和实际运行版本的对应关系</td>
+</tr>
+<tr>
+<td>每次提交与协作</td>
+<td><a href="#section-24">24. Git 与变更</a></td>
+<td>清晰的提交、差异、验证记录；能解释撤销范围</td>
+</tr>
+<tr>
+<td>数据量或并发开始增长</td>
+<td><a href="#section-21">21. 容量与性能</a></td>
+<td>负载模型、耗时分解、优化前后同条件测量</td>
+</tr>
+<tr>
+<td>引入第二个实例、队列或读副本</td>
+<td><a href="#section-22">22. 分布式一致性</a></td>
+<td>共享状态地图、允许陈旧的边界、超时与重复执行策略</td>
+</tr>
+<tr>
+<td>增加上传、导入、搜索或历史回填</td>
+<td><a href="#section-25">25. 数据生命周期</a></td>
+<td>从原始输入到派生结果的版本记录、失败恢复与清理流程</td>
+</tr>
+<tr>
+<td>每一阶段验收</td>
+<td><a href="#section-26">26. 调试与演练</a>、<a href="#state-index">状态索引</a></td>
+<td>至少一次受控失败，能用证据找到状态或处理首次偏离的位置</td>
+</tr>
+</tbody></table></div>
+<p>补充自测：为什么 <code>async</code> 代码仍会阻塞？为什么增加实例后登录偶发失败？为什么退出码 137 不等于已经确认 OOM？为什么同一提交可能产生不同构件？为什么文件上传 100% 后仍不可用？</p>
+</section>
+<section class="chapter" id="section-19" aria-labelledby="chapter-heading-19"><p class="chapter-label">CHAPTER 19</p><h2 id="chapter-heading-19" tabindex="-1">19. 术语、资料与排障记录模板</h2>
+<h3 id="topic-19-1" tabindex="-1">19.1 高频术语速记</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>术语</th>
+<th>一句话理解</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>API</td>
+<td>系统对外提供能力的调用约定</td>
+</tr>
+<tr>
+<td>Schema</td>
+<td>对数据结构或数据库组织方式的定义</td>
+</tr>
+<tr>
+<td>DTO</td>
+<td>跨接口或层之间传递的数据形状，不一定等同于数据库实体</td>
+</tr>
+<tr>
+<td>BFF</td>
+<td>为特定客户端聚合或适配后端能力的服务层</td>
+</tr>
+<tr>
+<td>Middleware</td>
+<td>请求处理中可组合的公共处理环节</td>
+</tr>
+<tr>
+<td>ORM</td>
+<td>在应用对象与关系数据库之间提供映射及访问能力的工具</td>
+</tr>
+<tr>
+<td>Migration</td>
+<td>可追踪的数据库结构或数据变更版本</td>
+</tr>
+<tr>
+<td>Transaction</td>
+<td>将相关数据操作作为受约束的提交单元</td>
+</tr>
+<tr>
+<td>Idempotency</td>
+<td>重复同一操作仍得到符合约定的业务效果</td>
+</tr>
+<tr>
+<td>TTL</td>
+<td>某份缓存或记录的存活时间限制</td>
+</tr>
+<tr>
+<td>Invalidation</td>
+<td>让已有缓存不再被当作有效结果使用</td>
+</tr>
+<tr>
+<td>Backpressure</td>
+<td>下游处理能力不足时，限制上游继续增加工作</td>
+</tr>
+<tr>
+<td>Retry / Backoff</td>
+<td>重试，以及重试之间的等待策略</td>
+</tr>
+<tr>
+<td>Outbox</td>
+<td>将业务变更和待发送事件在同一数据库事务中记录的模式</td>
+</tr>
+<tr>
+<td>Artifact</td>
+<td>构建产生、可以发布和追踪版本的文件包或镜像</td>
+</tr>
+<tr>
+<td>CI</td>
+<td>持续集成，自动验证提交是否可与现有系统协作</td>
+</tr>
+<tr>
+<td>CD</td>
+<td>持续交付或持续部署，需结合团队语境区分</td>
+</tr>
+<tr>
+<td>Rollback</td>
+<td>回到之前可用的版本或状态，数据通常需单独考虑</td>
+</tr>
+<tr>
+<td>RPO / RTO</td>
+<td>可接受的数据丢失时间范围 / 恢复服务的时间目标</td>
+</tr>
+<tr>
+<td>SLI / SLO</td>
+<td>实际测量的服务指标 / 为指标设定的目标</td>
+</tr>
+<tr>
+<td>Trace / Span</td>
+<td>一次操作的链路 / 链路中的一个工作单元</td>
+</tr>
+<tr>
+<td>p95</td>
+<td>指定样本和统计方法下的第 95 百分位</td>
+</tr>
+<tr>
+<td>RSS / Heap</td>
+<td>进程驻留物理内存 / 运行时对象堆；两个口径不能互相替代</td>
+</tr>
+<tr>
+<td>FD</td>
+<td>进程引用文件、套接字等资源的文件描述符</td>
+</tr>
+<tr>
+<td>Lease / Fencing</td>
+<td>有时限的执行资格 / 由资源端拒绝旧持有者写入的机制</td>
+</tr>
+<tr>
+<td>Read-your-writes</td>
+<td>读己之写：后续读能观察到自己的已确认写入或更新版本</td>
+</tr>
+<tr>
+<td>Source Map</td>
+<td>生成代码的位置到原始源码位置的映射，需要匹配构件版本</td>
+</tr>
+<tr>
+<td>Lockfile</td>
+<td>记录具体依赖解析结果的文件；仍需配套运行时和安装配置</td>
+</tr>
+<tr>
+<td>Backfill</td>
+<td>按受控规则补算或补充历史数据，需要断点、幂等和并发保护</td>
+</tr>
+<tr>
+<td>Git bisect</td>
+<td>用好坏版本和可重复的判定步骤逐步缩小回归变更范围</td>
+</tr>
+</tbody></table></div>
+<h3 id="topic-19-2" tabindex="-1">19.2 建议阅读顺序</h3>
+<p>正文中的链接用于核对具体概念；系统学习可按以下顺序选择材料，不要求从头读完所有文档。</p>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>顺序</th>
+<th>材料</th>
+<th>建议使用方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Overview">MDN：HTTP 概述</a></td>
+<td>配合浏览器 Network 面板观察真实请求</td>
+</tr>
+<tr>
+<td>2</td>
+<td><a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch">MDN：Fetch</a>、<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS">CORS</a></td>
+<td>验证状态码、跨源和凭证行为</td>
+</tr>
+<tr>
+<td>3</td>
+<td><a href="https://fullstackopen.com/en/">Full Stack Open</a></td>
+<td>作为贯穿式实践课程，已有前端基础部分可快速通过</td>
+</tr>
+<tr>
+<td>4</td>
+<td><a href="https://www.postgresql.org/docs/current/tutorial.html">PostgreSQL 官方教程</a></td>
+<td>先练查询、关联、约束和事务，再深入执行计划</td>
+</tr>
+<tr>
+<td>5</td>
+<td><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching">MDN：HTTP 缓存</a></td>
+<td>用响应头和浏览器缓存状态验证理解</td>
+</tr>
+<tr>
+<td>6</td>
+<td><a href="https://docs.docker.com/get-started/docker-concepts/running-containers/publishing-ports/">Docker：端口发布</a></td>
+<td>画出容器、宿主机、入口之间的网络关系</td>
+</tr>
+<tr>
+<td>7</td>
+<td><a href="https://docs.github.com/en/actions/get-started/understand-github-actions">GitHub Actions 概念</a></td>
+<td>把第 13 章各阶段映射成自己的流水线</td>
+</tr>
+<tr>
+<td>8</td>
+<td><a href="https://opentelemetry.io/docs/concepts/signals/">OpenTelemetry：信号</a></td>
+<td>区分日志、指标、追踪，再接入适当观测工具</td>
+</tr>
+<tr>
+<td>9</td>
+<td><a href="https://owasp.org/www-project-top-ten/">OWASP Top 10</a></td>
+<td>按已有功能检查权限、输入、机密和资源边界</td>
+</tr>
+</tbody></table></div>
+<h3 id="topic-19-3" tabindex="-1">19.3 一份可重复使用的故障记录</h3>
+<pre><code class="language-text">问题名称：
+发现时间、环境、应用版本：
+影响范围与严重程度：
+用户操作与预期结果：
+实际结果与复现步骤：
+请求 ID / 任务 ID / 关联记录：
+
+已收集证据：
+- 浏览器：
+- 入口/代理：
+- 应用：
+- 缓存/队列/外部服务：
+- 数据库：
+
+假设 1、验证方法、结果：
+假设 2、验证方法、结果：
+根因与证据链：
+临时缓解措施：
+正式修复：
+回归与线上验证：
+需要补充的测试、监控或文档：
+</code></pre>
+<p>掌握一个环节的标志是：能说明它解决的问题、清楚它的边界、知道它如何失败，并能够拿出验证行为的证据。</p>
+</section>
+<section class="chapter" id="section-20" aria-labelledby="chapter-heading-20"><p class="chapter-label">CHAPTER 20</p><h2 id="chapter-heading-20" tabindex="-1">20. 计算机基础与操作系统</h2>
+<p>这一章把“接口慢、进程挂、内存高、文件打不开”对应到机器和运行时机制。先判断资源是在执行、等待还是被限制，再决定优化代码、调整配置或增加容量。</p>
+<h3 id="topic-20-1" tabindex="-1">20.1 进程、线程、调度与隔离</h3>
+<p><strong>进程</strong>是运行中的程序及其资源环境，通常有独立的虚拟地址空间；<strong>线程</strong>是进程内可被调度的执行单位，同一进程的线程通常共享内存和打开的资源。
+操作系统调度器把可运行的线程分配给 CPU。一个 CPU 核心可以快速切换多个线程，但切换不等于这些线程在同一时刻并行执行。</p>
+<p>以 Web 服务为例：</p>
+<pre><code class="language-text">浏览器请求到达
+  → 应用线程获得执行机会
+  → 解析请求、执行计算
+  → 等待数据库或网络时，可能阻塞线程，也可能注册异步等待
+  → 依赖完成、线程再次获得执行机会
+  → 处理结果并返回
+</code></pre>
+<ul>
+<li>进程内变量通常只属于当前实例；开两个应用进程，不会自动共享登录会话或内存缓存。</li>
+<li>多线程共享可变状态时需要同步规则，否则可能出现竞争、可见性问题或死锁。</li>
+<li>多进程通信依靠管道、套接字、共享内存等机制；跨机器调用还增加网络失败和序列化成本。</li>
+<li>线程数增加会占用栈空间，并可能增加调度与锁竞争。连接数、线程数、并发请求数不是同一个指标。</li>
+<li>Linux 的 load average 包含可运行和部分不可中断等待任务，不等于 CPU 使用率；不能只凭 load 高就断定 CPU 不够。</li>
+</ul>
+<p>学习产物：画出一个应用进程、一个后台 Worker、一个数据库进程的资源边界，标出哪些状态共享、哪些不共享。</p>
+<h3 id="topic-20-2" tabindex="-1">20.2 CPU、I/O 与事件循环</h3>
+<p><strong>CPU 密集</strong>表示时间主要花在计算，例如压缩、加密、图像处理、大量排序。<strong>I/O 密集</strong>表示时间主要花在等待外部读写，例如网络、数据库或磁盘；同一个请求可能先后经过两种阶段。</p>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>观察到的组合</th>
+<th>优先验证的假设</th>
+<th>通常有帮助的措施</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CPU 高，CPU profile 集中在同一函数</td>
+<td>算法、重复计算、序列化等消耗执行时间</td>
+<td>减少工作量、改善算法、合理并行或隔离计算</td>
+</tr>
+<tr>
+<td>CPU 低，请求耗时长，连接池等待高</td>
+<td>请求在排队，尚未执行 SQL</td>
+<td>缩短连接持有时间，限制并发，调查慢事务</td>
+</tr>
+<tr>
+<td>CPU 低，外部请求 span 很长</td>
+<td>等待远端响应或连接资源</td>
+<td>超时、依赖治理、连接复用及下游诊断</td>
+</tr>
+<tr>
+<td>应用 CPU 未占满主机，但容器频繁限流</td>
+<td>达到分配给容器的 CPU 配额</td>
+<td>核对配额和 throttling，而非只看整机空闲率</td>
+</tr>
+</tbody></table></div>
+<p>事件循环让单个执行线程在等待 I/O 时处理其他已就绪工作。以 Node.js 为例，JavaScript 默认在一个主线程执行；I/O 可由系统或运行时协作完成，回调仍需获得执行机会。<a href="https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick">Node.js 事件循环说明</a></p>
+<ul>
+<li><code>async</code> 不会把函数里的同步计算自动移动到另一个线程；<code>await</code> 也不会使计算凭空并行。</li>
+<li><code>Promise.all</code> 可以发起多个异步操作，但其执行成本仍受连接数、限流、线程池或 CPU 约束。</li>
+<li>长时间同步循环、大对象 JSON 处理可能阻塞事件循环，使简单健康接口也延迟。</li>
+<li>定时器表示达到时间条件后可以调度，不保证精确在指定毫秒执行。</li>
+<li>CPU 密集任务可以使用工作线程、独立进程或计算服务；需计入数据复制、序列化和调度开销。</li>
+</ul>
+<p>练习：在独立示例程序中比较“等待 200 ms 的异步定时器”和“执行约 200 ms 的有限计算”，同时观察一个轻量接口的延迟。完成后移除演示代码，不编写无限循环。</p>
+<h3 id="topic-20-3" tabindex="-1">20.3 内存：堆、RSS、GC 与泄漏</h3>
+<p>虚拟内存是进程看到的地址空间，不等于实际占用的物理内存。排查时应区分测量口径，不能把不同指标混成一个“内存值”。</p>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>指标或区域</th>
+<th>表示什么</th>
+<th>解释时注意</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>堆 Heap</td>
+<td>运行时管理对象等动态分配的区域</td>
+<td>已分配堆容量与正在使用的堆内存不同</td>
+</tr>
+<tr>
+<td>栈 Stack</td>
+<td>函数调用帧、局部执行状态等</td>
+<td>递归过深可能栈溢出；线程增加也有空间成本</td>
+</tr>
+<tr>
+<td>RSS</td>
+<td>当前驻留物理内存中的进程页面</td>
+<td>包含堆、代码、栈、原生分配等；共享页面使简单累加不精确</td>
+</tr>
+<tr>
+<td>外部/原生内存</td>
+<td>由原生库、缓冲区等占用的内存</td>
+<td>JavaScript 堆稳定不代表整个进程内存稳定</td>
+</tr>
+<tr>
+<td>GC</td>
+<td>回收不再可达的运行时对象</td>
+<td>仍被引用的无用对象不会仅因“不再需要”而自动回收</td>
+</tr>
+</tbody></table></div>
+<p>Node.js 的 <code>process.memoryUsage()</code> 区分 <code>rss</code>、<code>heapUsed</code>、<code>heapTotal</code>、<code>external</code>、<code>arrayBuffers</code>；其中 <code>arrayBuffers</code> 已包含在 <code>external</code> 内，不能再次相加当作总量。<a href="https://nodejs.org/api/process.html#processmemoryusage">Node.js 内存指标定义</a></p>
+<p>判断泄漏时，记录“预热后→固定负载→空闲→相同负载”的多轮趋势：</p>
+<ol>
+<li>工作量相近，但回收后的基线持续抬升，检查不断增长的集合、监听器、定时器和闭包引用。</li>
+<li>缓存增长到明确上限后稳定，可能是合理预热；仍需检查上限、过期与淘汰是否符合容量预算。</li>
+<li>堆下降但 RSS 不立即下降，可能与内存分配器保留、碎片或原生内存有关，不能仅凭这一点判定泄漏。</li>
+<li>GC 频繁且每次释放很少，可能有大量长期存活对象，也可能是容量不足；结合分配速率与快照分析。</li>
+</ol>
+<p>堆快照能帮助查找“哪个引用让对象活着”，但抓取本身可能暂停进程并消耗额外内存。先在隔离练习环境操作；快照中也可能含业务内容和凭据，不应随意上传。</p>
+<h3 id="topic-20-4" tabindex="-1">20.4 文件描述符、套接字与连接耗尽</h3>
+<p>文件描述符（FD）是进程引用打开资源的编号，可能指向文件、套接字、管道等。HTTP 与数据库连接通常也会占用相关内核资源。</p>
+<ul>
+<li>文件或连接使用完后没有释放，可能逐渐达到进程上限；典型线索包括 <code>EMFILE</code>。</li>
+<li><code>ENFILE</code> 与系统级打开文件表限制有关；应核对具体系统、日志及限制，而非套用同一修复。</li>
+<li>数据库池耗尽、系统 FD 耗尽、外部服务连接上限、临时端口耗尽是不同问题，表现都可能是“新请求连不上”。</li>
+<li>大量 <code>TIME_WAIT</code> 可能只是短连接负载的结果；先看趋势与连接复用，不要直接关闭协议保护机制。</li>
+<li>大量 <code>CLOSE_WAIT</code> 表示对端已关闭而本端尚未完成关闭，应结合持续时间和代码路径调查。</li>
+<li>调高上限只能缓解某些容量问题，不能修复资源泄漏；关键是找出谁申请、谁释放以及失败路径是否释放。</li>
+</ul>
+<p>取证时同时记录：进程 FD 数量、实际限制、连接状态分布、请求速率、连接池等待与异常时间点。<code>lsof</code> 中的 <code>cwd</code>、<code>txt</code> 等条目不是普通数字 FD，不能把输出总行数直接当成 FD 数量。</p>
+<h3 id="topic-20-5" tabindex="-1">20.5 磁盘容量、inode 与 I/O</h3>
+<p>磁盘问题至少分成“空间不够”“对象数量限制”“读写太慢”“没有权限”几类，其修复方式不同。</p>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>现象</th>
+<th>要观察的证据</th>
+<th>可能的原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>无法创建文件，空间看似尚有剩余</td>
+<td>挂载点、inode、配额、实际错误码</td>
+<td>某些 Linux 文件系统 inode 耗尽，或用户/容器配额限制</td>
+</tr>
+<tr>
+<td>删除日志后空间未回收</td>
+<td>打开但已删除的文件、进程状态</td>
+<td>进程仍持有文件；需按日志轮换方式释放句柄</td>
+</tr>
+<tr>
+<td>数据库提交和日志写入一起变慢</td>
+<td>I/O 延迟、吞吐、队列、同步写等待</td>
+<td>存储竞争、吞吐/IOPS 限额、持久化等待</td>
+</tr>
+<tr>
+<td>主机空间足够但容器写失败</td>
+<td>容器写层、卷、临时目录所在文件系统</td>
+<td>实际写入目标与预期不同</td>
+</tr>
+</tbody></table></div>
+<p>inode 是文件系统记录文件元数据的机制；固定 inode 额度耗尽的解释适用于相应文件系统，不能直接照搬到 APFS 等不同实现。
+I/O 吞吐低也可能因为大量小随机读写或等待持久化；吞吐高不必然说明性能好。<code>%util</code> 也应结合设备类型、并行能力与延迟解释。
+清理前先确认具体目录、数据归属和保留规则；数据库目录、WAL、容器卷不能因为占空间就直接删除。</p>
+<h3 id="topic-20-6" tabindex="-1">20.6 容器资源限制与退出原因</h3>
+<p>Linux 容器通常通过命名空间隔离视图，通过 cgroups 等机制限制或统计资源。macOS 上运行 Linux 容器时，还存在承载它们的 Linux 虚拟机及其总资源上限。</p>
+<ul>
+<li>CPU 配额限制可使用的 CPU 时间，不等于给应用独占某个物理核心；达到配额可能被节流。</li>
+<li>内存硬限制与运行时堆上限是两层限制；除堆外，缓冲区、线程栈和其他进程内存也需要空间。</li>
+<li>容器的限制不应只看配置文件，还应核对实际生效配置、运行指标和宿主机/虚拟机容量。</li>
+<li>Docker 内存与 swap 参数存在组合语义，不能把两个数都当作可独立相加的物理内存额度。<a href="https://docs.docker.com/engine/containers/resource_constraints/">Docker 资源约束说明</a></li>
+</ul>
+<p><strong>退出码 137 不能单独证明 OOM。</strong> 在常见 Unix 约定下它对应 <code>128 + SIGKILL(9)</code>，内存不足、人工强制终止、停止超时后的强杀等都可能相关；程序也可能显式返回该退出码。
+结合容器 <code>OOMKilled</code>、退出时间、平台事件和宿主机 OOM 记录判断。运行时自身的“堆耗尽”报错，也不等同于内核因为容器限额实施 OOM kill。</p>
+<h3 id="topic-20-7" tabindex="-1">20.7 数据结构与复杂度为什么影响系统性能</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>结构或方法</th>
+<th>擅长的问题</th>
+<th>成本与限制</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数组</td>
+<td>顺序处理、按下标访问、紧凑存储</td>
+<td>中间插删常需移动元素；遍历通常为 O(n)</td>
+</tr>
+<tr>
+<td>哈希表 / Map</td>
+<td>按键查找、去重、计数</td>
+<td>常见实现平均查找接近 O(1)，不保证所有输入和实现都如此；需额外内存</td>
+</tr>
+<tr>
+<td>队列</td>
+<td>按到达顺序处理任务</td>
+<td>用环形缓冲或头指针可避免频繁移动数组；内存队列不提供持久可靠投递</td>
+</tr>
+<tr>
+<td>平衡搜索树</td>
+<td>有序查找、范围查询</td>
+<td>常见操作 O(log n)；数据库 B 树还考虑页和磁盘访问</td>
+</tr>
+<tr>
+<td>堆 / 优先队列</td>
+<td>取最小/最大优先级任务</td>
+<td>典型插入、取出 O(log n)，不适合任意条件查询</td>
+</tr>
+<tr>
+<td>排序与批处理</td>
+<td>建立顺序、减少重复扫描或 I/O 次数</td>
+<td>常见比较排序 O(n log n)；批次过大又会增加内存和等待</td>
+</tr>
+</tbody></table></div>
+<p>例如用两层循环把订单与用户列表关联，最坏需要 O(n×m) 次比较；先按用户 ID 建 Map，再匹配订单，常见平均工作量可降到 O(n+m)，代价是额外索引内存。
+复杂度描述规模增长趋势，不直接给出毫秒数。数据规模、常数、缓存局部性、分配与跨网络次数都影响实际结果。
+验收：在小、中、大三组固定数据上测量同一功能，说明耗时增长、峰值内存和正确性，再决定优化是否值得。</p>
+</section>
+<section class="chapter" id="section-21" aria-labelledby="chapter-heading-21"><p class="chapter-label">CHAPTER 21</p><h2 id="chapter-heading-21" tabindex="-1">21. 系统设计、容量与性能工程</h2>
+<p>第 3 章讨论需求与模块边界，第 14 章讨论观测信号。本章把它们连成“提出目标 → 建立负载模型 → 测量 → 判断瓶颈 → 选择方案 → 验证”的设计过程。</p>
+<h3 id="topic-21-1" tabindex="-1">21.1 设计前先把问题量化</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>需要明确什么</th>
+<th>会影响哪些设计</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>用户与地域</td>
+<td>活跃用户、访问时间、主要地区</td>
+<td>入口位置、静态资源分发、时区</td>
+</tr>
+<tr>
+<td>业务动作</td>
+<td>查询、写入、上传、搜索、导出的比例</td>
+<td>读写负载、任务分离、数据库与存储</td>
+</tr>
+<tr>
+<td>数据规模</td>
+<td>每条记录大小、每天新增量、保留期</td>
+<td>索引、分区、存储和备份时间</td>
+</tr>
+<tr>
+<td>流量分布</td>
+<td>平均、峰值、突发、热点是否集中</td>
+<td>余量、限流、扩容速度和缓存策略</td>
+</tr>
+<tr>
+<td>用户体验</td>
+<td>首屏、查询、交互与任务完成的目标</td>
+<td>响应预算、同步/异步边界</td>
+</tr>
+<tr>
+<td>正确性</td>
+<td>哪些读必须新鲜，哪些动作不能重复</td>
+<td>事务、幂等、主库读与异步同步</td>
+</tr>
+<tr>
+<td>故障要求</td>
+<td>能接受的中断、数据丢失和恢复时间</td>
+<td>冗余、备份、恢复和降级</td>
+</tr>
+</tbody></table></div>
+<p>“支持 1 万用户”本身不构成容量要求：1 万个注册用户与 1 万个人同时执行大范围查询，是完全不同的负载。</p>
+<h3 id="topic-21-2" tabindex="-1">21.2 请求量、并发量、吞吐量与延迟</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>指标</th>
+<th>含义</th>
+<th>必须说明的条件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>到达速率</td>
+<td>单位时间进入系统的请求数</td>
+<td>包含哪些接口、突发还是稳定流量</td>
+</tr>
+<tr>
+<td>吞吐量</td>
+<td>单位时间完成的工作量</td>
+<td>请求、记录、文件还是任务；成功和失败分别统计</td>
+</tr>
+<tr>
+<td>在途并发</td>
+<td>同时处于处理或等待中的请求数</td>
+<td>测量边界是否包括队列、代理与客户端</td>
+</tr>
+<tr>
+<td>延迟</td>
+<td>从选定开始点到完成点的耗时</td>
+<td>测量位置、分布、失败/超时是否计入</td>
+</tr>
+<tr>
+<td>利用率与饱和度</td>
+<td>资源忙碌程度，以及工作开始排队的程度</td>
+<td>单核/总 CPU、连接池、磁盘或外部配额</td>
+</tr>
+</tbody></table></div>
+<p>在系统长期稳定、统计口径一致等条件下，可以用平均关系做粗估：</p>
+<pre><code class="language-text">平均在途请求数 ≈ 平均到达速率 × 平均停留时间
+
+示例：300 请求/秒 × 0.2 秒 ≈ 60 个在途请求
+</code></pre>
+<p>这里的 60 不是线程数、在线用户数或数据库连接池推荐值，也不能把 p95 替代平均停留时间套进公式。系统持续积压时，要分析队列增长，不能假定它已有稳定平均值。</p>
+<h3 id="topic-21-3" tabindex="-1">21.3 从业务动作估算依赖负载</h3>
+<pre><code class="language-text">教学例子：每秒 100 次列表请求
+  每次请求发出 3 次 SQL → 约 300 次 SQL/秒
+  每次返回 50 KB → 响应体约 5 MB/秒
+
+若改成逐条查询 20 个订单的明细：
+  1 次列表 SQL + 20 次明细 SQL → 约 2100 次 SQL/秒
+</code></pre>
+<p>这只估算次数与字节量，不证明数据库能承受多少请求；简单索引查询和大范围聚合消耗不同。应结合 CPU 时间、I/O、锁、连接等待与实际数据分布测量。QPS 不能单独代表请求成本。<a href="https://sre.google/sre-book/handling-overload/">Google SRE：处理过载</a></p>
+<p>存储估算也应拆开：业务数据增长、索引、文件、日志、备份、副本和临时作业空间。例如每天新增 100 万条、每条逻辑数据约 1 KB，仅逻辑数据就是约 1 GB/天；实际磁盘量还受布局、索引、压缩和保留策略影响。</p>
+<h3 id="topic-21-4" tabindex="-1">21.4 用关键路径定位瓶颈</h3>
+<p>假设一次请求的证据如下：</p>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>实测耗时示例</th>
+<th>首先判断</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>等待数据库连接</td>
+<td>180 ms</td>
+<td>是否连接长期被占用、并发过高或连接泄漏</td>
+</tr>
+<tr>
+<td>SQL 执行</td>
+<td>25 ms</td>
+<td>单条查询不是主要耗时，但要看总次数和锁</td>
+</tr>
+<tr>
+<td>应用映射与序列化</td>
+<td>10 ms</td>
+<td>是否随结果量增长</td>
+</tr>
+<tr>
+<td>响应传输和页面处理</td>
+<td>85 ms</td>
+<td>响应大小、客户端算力和网络</td>
+</tr>
+</tbody></table></div>
+<p>如果各阶段在该次操作中顺序执行，合计约 300 ms。只把 SQL 从 25 ms 降到 10 ms，改善上限约为 15 ms；应优先解释 180 ms 的等待。若各调用并行，则按关键路径分析，不能把所有 span 耗时简单相加。</p>
+<p>优化循环：固定基准条件 → 收集证据 → 提出单个假设 → 修改 → 对比正确性、延迟分布与资源消耗 → 保留或撤回。避免同时改索引、增加缓存、调整连接池后无法判断收益来源。</p>
+<h3 id="topic-21-5" tabindex="-1">21.5 扩容与过载保护分别解决什么</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>手段</th>
+<th>适合处理</th>
+<th>生效边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>优化算法与查询</td>
+<td>单次工作消耗过大</td>
+<td>需要可验证瓶颈；复杂度和数据规模要一起看</td>
+</tr>
+<tr>
+<td>垂直扩容</td>
+<td>单实例 CPU、内存或 I/O 不足</td>
+<td>存在单机上限；锁竞争和串行代码可能不随资源改善</td>
+</tr>
+<tr>
+<td>水平扩容</td>
+<td>可分摊的请求或任务负载</td>
+<td>共享状态、下游容量和实例启动时间可能限制收益</td>
+</tr>
+<tr>
+<td>缓存与批量处理</td>
+<td>热点重复工作、细碎调用</td>
+<td>缓存新鲜度与批次延迟要符合业务要求</td>
+</tr>
+<tr>
+<td>异步化与队列</td>
+<td>耗时任务不应阻塞交互</td>
+<td>转移等待位置，不会自动增加处理能力</td>
+</tr>
+<tr>
+<td>限流与并发上限</td>
+<td>保护有限资源、隔离过量调用</td>
+<td>需要明确拒绝、排队或降级策略</td>
+</tr>
+<tr>
+<td>超时与有限重试</td>
+<td>控制等待、恢复临时故障</td>
+<td>无预算重试会放大故障；写入需幂等</td>
+</tr>
+</tbody></table></div>
+<p>例如任务每秒到达 8 个、只能完成 5 个，理想化计算下积压每分钟增加约 180 个。队列只能暂存这部分工作；长期要降低到达量、减少每项成本或提高实际处理能力。</p>
+<p>自动扩容也有观察窗口、启动、预热和连接建立时间。突发高峰可能先把数据库或外部配额压满，因此需要余量和过载保护。</p>
+<h3 id="topic-21-6" tabindex="-1">21.6 可用性、成本和复杂度一起评估</h3>
+<p>多实例能覆盖部分应用实例故障；如果全部依赖一台数据库或同一故障域，系统仍存在公共失效点。备份用于恢复数据，高可用用于减少中断，不能互相替代。</p>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>成本项</th>
+<th>容易漏算的内容</th>
+<th>可以观察的业务单位成本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>计算</td>
+<td>空闲余量、峰值扩容、后台任务</td>
+<td>每千次成功操作的计算消耗</td>
+</tr>
+<tr>
+<td>存储</td>
+<td>索引、副本、备份、临时文件</td>
+<td>每个活跃用户或每份报告的存储量</td>
+</tr>
+<tr>
+<td>网络</td>
+<td>下载、跨区、反复拉取大数据</td>
+<td>每次操作传输字节数</td>
+</tr>
+<tr>
+<td>外部服务</td>
+<td>调用失败、重试、模型 token</td>
+<td>每次成功完成业务的调用成本</td>
+</tr>
+<tr>
+<td>工程维护</td>
+<td>发布、值班、升级、数据修复</td>
+<td>运维时间、故障频率和恢复时间</td>
+</tr>
+</tbody></table></div>
+<p>性能与可靠性指标至少一起看延迟、流量、错误和饱和度；延迟降低但错误率增加，不一定是优化。<a href="https://sre.google/sre-book/monitoring-distributed-systems/">Google SRE：监控分布式系统</a></p>
+<h3 id="topic-21-7" tabindex="-1">21.7 写一页设计决策，而不是先画复杂架构</h3>
+<pre><code class="language-text">业务问题与验收目标：
+现有数据量、流量模型及测量证据：
+当前瓶颈和一致性要求：
+方案 A / B / 保持现状：
+各方案的性能收益、成本和维护代价：
+采用方案与未解决的问题：
+上线验证、容量边界与过载行为：
+回退方式及何时重新评估：
+</code></pre>
+<p>练习：在隔离环境为列表接口建立小型基准，分别测试分页、一次批量关联、逐条查询的差异。记录返回数据正确性、SQL 次数、连接等待、响应大小和延迟分布；只在有证据时选择索引、缓存或扩容。</p>
+</section>
+<section class="chapter" id="section-22" aria-labelledby="chapter-heading-22"><p class="chapter-label">CHAPTER 22</p><h2 id="chapter-heading-22" tabindex="-1">22. 分布式系统与数据一致性</h2>
+<h3 id="topic-22-1" tabindex="-1">22.1 从单个进程走向多个独立失败的部分</h3>
+<p>当应用有两个实例、读副本、队列或外部服务时，就需要考虑分布式问题。关键变化是：各部分有自己的状态和执行时间，一个部分成功不代表其他部分成功。</p>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>边界</th>
+<th>单实例时容易成立的假设</th>
+<th>多实例后需要什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>内存状态</td>
+<td>当前进程记住登录、限流和任务进度即可</td>
+<td>明确共享存储或可验证凭据，区分本地优化与权威状态</td>
+</tr>
+<tr>
+<td>本地文件</td>
+<td>生成的报告下次请求还能读到</td>
+<td>共享持久存储，或按对象地址访问</td>
+</tr>
+<tr>
+<td>定时器</td>
+<td>一个定时任务只启动一次</td>
+<td>明确调度权、业务去重和并发策略</td>
+</tr>
+<tr>
+<td>配置</td>
+<td>所有请求运行同一版本</td>
+<td>发布版本标识、配置版本与兼容窗口</td>
+</tr>
+<tr>
+<td>失败判断</td>
+<td>函数抛错就知道没有结果</td>
+<td>处理网络超时后的未知结果</td>
+</tr>
+</tbody></table></div>
+<p>“无状态应用”通常指业务请求不依赖某台实例的私有状态，并不代表系统没有状态。登录会话、任务和订单只是放到了有明确管理边界的地方。</p>
+<p>粘性会话让某用户较常落到同一实例，可以改善某些局部体验，但不能替代共享状态设计；实例退出、重新部署或路由变化仍会暴露问题。</p>
+<h3 id="topic-22-2" tabindex="-1">22.2 把“一致性要求”写成可验证的承诺</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>承诺</th>
+<th>实际含义</th>
+<th>不自动保证什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>强一致，需说明具体模型</td>
+<td>若指线性一致：一次操作仿佛在调用与返回之间某点生效，遵守已完成操作的先后关系</td>
+<td>多个键或多个系统自动组成一个事务</td>
+</tr>
+<tr>
+<td>读己之写</td>
+<td>用户后续读取能看到自己的已确认写入，或更新的版本</td>
+<td>所有其他用户、所有入口立即看到同一结果</td>
+</tr>
+<tr>
+<td>最终一致</td>
+<td>在更新停止、通信恢复并完成传播/冲突处理等条件下，各副本最终收敛</td>
+<td>固定几秒内完成、过程不倒退、每次读取都新鲜</td>
+</tr>
+<tr>
+<td>有界陈旧</td>
+<td>约定读取最多落后某个时间或版本范围</td>
+<td>超出界限仍继续正常返回；需要等待、回源或明确降级</td>
+</tr>
+</tbody></table></div>
+<p>例如订单支付确认应依赖权威支付/订单状态；销售趋势图可以允许短时滞后。把要求写为“确认后详情不得显示旧状态”“报表标明截止时间”，比笼统写“保证一致性”更容易实现和测试。</p>
+<p>这些承诺属于具体 API 和配置。一个服务可以同时提供不同读模式。etcd 的文档区分默认 KV 操作与允许读到旧值的读模式，也说明观察变更的 Watch 与直接读取并非同一种保证。<a href="https://etcd.io/docs/v3.6/learning/api_guarantees/">etcd API 保证</a></p>
+<h3 id="topic-22-3" tabindex="-1">22.3 复制延迟与“刚保存就消失”</h3>
+<pre><code class="language-text">写请求 → 主库提交版本 18 → 返回成功
+                         → 复制传输 → 副本重放版本 18
+紧接着的读请求 → 副本尚在版本 17 → 读到旧结果
+</code></pre>
+<p>要分别观察“日志是否发出、是否接收、是否持久化、是否重放”，不要把网络传输完成等同于查询已可见。PostgreSQL 的同步复制也分确认层次，等待远端持久化与 <code>remote_apply</code> 等待重放可见的含义不同。<a href="https://www.postgresql.org/docs/current/warm-standby.html">PostgreSQL 复制与确认</a></p>
+<p>处理读己之写的常见方法：</p>
+<ol>
+<li>写后关键查询路由到当前权威主库，并确认读取的是已提交状态。</li>
+<li>写响应携带可验证的数据版本；读取端等待副本追到所需位置，超时则回源或明确告知同步中。具体版本/位置机制依数据库而定。</li>
+<li>前端使用写响应更新本地展示，并拒绝用更旧版本覆盖它；这改善界面，但服务端的后续业务判断仍须满足一致性要求。</li>
+</ol>
+<p>“写后固定几秒读主库”属于经验性策略，并非复制延迟任意增大时的严格保证。故障切换还要检查新主库是否保留已确认写入、旧主库是否被隔离；读路由不能弥补已丢失的提交。</p>
+<h3 id="topic-22-4" tabindex="-1">22.4 部分失败与未知结果</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>客户端观察</th>
+<th>可能的真实状态</th>
+<th>正确处理方向</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>请求在连接建立前失败</td>
+<td>服务通常尚未收到请求</td>
+<td>确认具体错误阶段后按策略重试</td>
+</tr>
+<tr>
+<td>请求发送后超时</td>
+<td>未执行、执行中、已成功但响应丢失都有可能</td>
+<td>使用原业务键查询结果，或按幂等协议重试</td>
+</tr>
+<tr>
+<td>本地事务回滚</td>
+<td>外部服务可能已经成功</td>
+<td>查询远端状态，执行适用的补偿或人工处理</td>
+</tr>
+<tr>
+<td>收到某步骤成功</td>
+<td>之后的落库、消息和文件步骤仍可能失败</td>
+<td>记录各阶段结果，继续恢复未完成部分</td>
+</tr>
+</tbody></table></div>
+<p>超时描述的是等待结束。不能把“我没收到成功”直接记成“对方执行失败”。任务记录可保留 <code>pending_confirmation</code> 等待核对状态，避免用户在未知结果期间反复创建新操作。</p>
+<p>以提交订单为例：客户端生成稳定请求键 → 服务端记录键与参数摘要 → 创建订单 → 保存结果 → 返回。响应丢失后再次携带相同键，应查询或复用原结果；同键不同参数应报冲突。</p>
+<h3 id="topic-22-5" tabindex="-1">22.5 消息传递与业务效果要分别验证</h3>
+<p>至少一次投递允许消息再次出现。若消费者提交了业务修改，但确认消息前中断，重新投递是正常恢复路径。第 10 章的重试和 Outbox 解决的是部分环节，本章关注整个效果边界。</p>
+<pre><code class="language-text">收到事件 event-91
+  → 开启本地事务
+  → 尝试登记唯一处理键（消费者名称 + event-91）
+  → 已登记：复用处理结果；未登记：修改业务数据并登记结果
+  → 提交事务 → 确认消息
+</code></pre>
+<p>去重记录与业务修改必须有共同的原子边界；先登记“已处理”再单独修改业务，会在中途崩溃时丢掉业务操作。不同消费者的去重范围也要分开。</p>
+<p>若副作用是外部通知、退款或文件操作，数据库事务无法包住它。需要外部幂等协议、结果核对或另一个持久化执行步骤。消息系统宣称的“恰好一次”必须核实适用范围，不能直接扩展到所有外部副作用。</p>
+<h3 id="topic-22-6" tabindex="-1">22.6 乐观锁、租约与 fencing 分别保护什么</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>机制</th>
+<th>保护对象</th>
+<th>主要边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>乐观锁/版本条件更新</td>
+<td>防止基于旧数据覆盖新数据</td>
+<td>所有相关写入都必须遵守版本条件</td>
+</tr>
+<tr>
+<td>租约</td>
+<td>一段有效时间内的执行资格，便于失联后恢复</td>
+<td>过期不会让旧进程立刻停止运行</td>
+</tr>
+<tr>
+<td>Fencing token</td>
+<td>在受保护资源处拒绝过期持有者的写入</td>
+<td>资源端必须持久记录并原子校验令牌顺序</td>
+</tr>
+</tbody></table></div>
+<p>典型故障：Worker A 获得令牌 41 后暂停；租约过期；Worker B 获得令牌 42 并写入；A 恢复后仍尝试写入。只检查“A 曾经获取过锁”无法阻止旧写入。</p>
+<p>Fencing 让每次新持有者得到递增令牌，资源端记住已经接受的最大令牌，拒绝更旧的请求。令牌只是请求参数而资源端不检查，就没有保护效果；同一令牌下的重复操作仍需幂等。<a href="https://docs.hazelcast.com/hazelcast/5.6/data-structures/fencedlock">Hazelcast FencedLock 与 fencing token</a></p>
+<p>如果只需保护单数据库的一条订单，唯一约束、事务和版本条件更新通常更直接。分布式锁只在确有跨进程协调需要时考虑，并写清锁失效后的资源保护方式。</p>
+<h3 id="topic-22-7" tabindex="-1">22.7 时钟、顺序与补偿</h3>
+<p>不同机器的墙上时钟可能有偏差，也可能被校时调整。日志时间适合辅助观察，不能仅凭两个时间戳判断跨节点操作的因果顺序。</p>
+<ul>
+<li>计算同一进程内耗时优先使用单调时钟；记录业务发生时间仍使用有明确时区的时间戳。</li>
+<li>对同一订单的事件，用业务版本或实体序号表达顺序，并明确旧事件是忽略、缓冲还是核对；全局 ID 不天然代表业务因果关系。</li>
+<li>网络可能重排、重复或延迟事件，“先发出”不保证“先处理完成”。消费者需要检查状态流转是否合法。</li>
+<li>补偿是一个新的业务操作：释放预留库存、撤销尚未生效的任务、发起退款。它不是跨系统的时间倒流，也可能失败。</li>
+<li>已发送通知无法收回；已执行的部分外部动作可能只能更正或人工处理。补偿流程要记录进度、失败原因和负责人。</li>
+</ul>
+<p>订单流程可以写成“预留库存 → 确认付款 → 确认订单”，并逐步定义失败后的核对和补偿。采用何种顺序取决于业务协议，不能套用一个流程就认为所有阶段都可撤销。</p>
+<h3 id="topic-22-8" tabindex="-1">22.8 CAP 的正确使用范围</h3>
+<p>CAP 讨论网络分区存在时，不能同时保证线性一致性与所有非故障节点持续完成请求。它不是日常选型时可以随意“三选二”的菜单；网络分区也不是靠勾选配置就能排除的现实风险。</p>
+<p>分区期间，保一致性的操作可能等待或拒绝部分请求；选择继续响应的操作可能返回旧状态或接收需要后续协调的写入。实际系统应按操作定义策略，例如库存确认与公开浏览可以采用不同要求。</p>
+<p>CAP 也不能代替正常网络下的延迟、吞吐、故障恢复和事务分析。不要只把某产品贴成“CP/AP”，就推导它所有接口和配置的保证。</p>
+<h3 id="topic-22-9" tabindex="-1">22.9 症状、证据与验证练习</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>症状</th>
+<th>先收集的证据</th>
+<th>优先检查方向</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>扩为两台实例后偶发退出登录</td>
+<td>实例 ID、会话位置、路由、配置版本</td>
+<td>进程私有会话、签名配置不同、未共享状态</td>
+</tr>
+<tr>
+<td>保存成功后读到旧值</td>
+<td>写入版本、读取节点、复制进度、缓存版本</td>
+<td>读副本延迟、旧缓存、旧前端响应覆盖</td>
+</tr>
+<tr>
+<td>超时重试后多出订单</td>
+<td>请求键、参数摘要、业务唯一键、执行记录</td>
+<td>重试生成新键、去重与业务写入不原子</td>
+</tr>
+<tr>
+<td>锁已过期却出现旧结果覆盖</td>
+<td>领取令牌、租约、进程暂停和资源写入记录</td>
+<td>旧执行者恢复、资源端未执行 fencing</td>
+</tr>
+<tr>
+<td>事件状态倒退</td>
+<td>实体版本、事件 ID、处理顺序、失败重放</td>
+<td>乱序处理、条件更新遗漏、旧事件覆盖</td>
+</tr>
+</tbody></table></div>
+<p>练习：在本地测试中延迟读副本/替代读接口、丢弃写响应、重复投递事件、暂停 Worker 后恢复；每次写下“对用户承诺什么、靠什么约束、拿什么证据验证”。不要直接在真实业务上制造这些故障。</p>
+</section>
+<section class="chapter" id="section-23" aria-labelledby="chapter-heading-23"><p class="chapter-label">CHAPTER 23</p><h2 id="chapter-heading-23" tabindex="-1">23. 工程依赖、模块与构建原理</h2>
+<h3 id="topic-23-1" tabindex="-1">23.1 这一层负责什么</h3>
+<p>构建系统把开发者编写的源码及依赖转换成目标环境可执行的构件，并保存足够的信息用于追踪、发布与排错。它连接开发环境和运行环境；构建成功仅证明完成了配置的构建步骤。</p>
+<pre><code class="language-text">源码、配置、依赖清单与锁文件
+  → 安装依赖，确定模块图
+  → 解析模块路径、包入口与条件导出
+  → 转换 TypeScript / JSX / CSS 等源码
+  → 优化、拆分、压缩并生成资源
+  → 输出构件、资源清单和可选 Source Map
+  → 部署静态资源或服务端构件
+  → 浏览器 / 服务端运行时加载并执行
+</code></pre>
+<p>类型检查、代码规范检查和测试可以作为并行或独立阶段加入；具体顺序取决于工具链及检查之间的依赖关系。</p>
+<h3 id="topic-23-2" tabindex="-1">23.2 不同阶段分别解决什么问题</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>做什么</th>
+<th>成功后仍不能证明什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>依赖安装</td>
+<td>根据清单、锁文件和安装配置取得依赖</td>
+<td>当前平台一定支持、安装脚本一定正确</td>
+</tr>
+<tr>
+<td>模块解析</td>
+<td>将导入路径解析为文件或包入口</td>
+<td>模块运行时行为正确</td>
+</tr>
+<tr>
+<td>编译 / 转译</td>
+<td>将一种语法转为另一种可执行语法</td>
+<td>API 返回值符合声明类型</td>
+</tr>
+<tr>
+<td>类型检查</td>
+<td>检查类型关系、调用和赋值约束</td>
+<td>所有分支、网络和数据库行为正确</td>
+</tr>
+<tr>
+<td>打包</td>
+<td>收集模块和资源，生成可部署文件</td>
+<td>服务器会使用正确的路径和缓存头</td>
+</tr>
+<tr>
+<td>Tree shaking</td>
+<td>在可静态分析的条件下去除未使用代码</td>
+<td>所有未使用代码都会被删除</td>
+</tr>
+<tr>
+<td>代码分割</td>
+<td>将部分模块拆成按需加载的块</td>
+<td>用户后续操作时网络请求一定成功</td>
+</tr>
+<tr>
+<td>压缩与资源哈希</td>
+<td>减小传输量、区分不同内容的资源</td>
+<td>资源引用、CDN 和入口 HTML 已同步</td>
+</tr>
+</tbody></table></div>
+<p>例如，Vite 的 TypeScript 转换本身不执行类型检查，因此 CI 应根据项目需要另设类型检查步骤。<a href="https://vite.dev/guide/features.html#typescript">Vite：TypeScript 转换与检查</a></p>
+<p>Tree shaking 依赖模块结构和副作用信息。错误地声明模块没有副作用，可能让初始化代码或样式导入被移除；先确认语义，再追求包体积。</p>
+<h3 id="topic-23-3" tabindex="-1">23.3 模块与依赖图：为什么“能 import”有条件</h3>
+<p>ESM 使用 <code>import/export</code> 表达模块关系；CommonJS 常见于使用 <code>require/module.exports</code> 的 Node.js 代码。两者的加载、导出和互操作规则存在差异。</p>
+<p>不要把“ESM 和 CommonJS 完全不能混用”当作规则；能否互操作取决于运行时版本、加载方式、模块特性及工具转换。出现问题时，核对实际环境和包提供的入口。<a href="https://nodejs.org/api/packages.html">Node.js：包与模块入口</a></p>
+<p>重点检查以下内容：</p>
+<ul>
+<li><code>package.json</code> 中的 <code>type</code>、<code>exports</code>，以及文件扩展名对应的模块解释方式。</li>
+<li>包是否为浏览器和 Node.js 暴露了不同入口；浏览器没有 Node.js 的文件系统能力。</li>
+<li>源码里的路径别名是否同时被类型检查器、构建工具、测试工具和运行时理解。</li>
+<li>大小写、文件扩展名、符号链接、工作区依赖是否在目标操作系统上表现一致。</li>
+<li>是否形成循环依赖；模块初始化顺序是否暴露了尚未就绪的值。</li>
+</ul>
+<p>依赖图包含直接依赖和间接依赖。更新一个直接依赖，可能连带更新多个间接依赖；只查看业务源码差异，可能漏掉实际变化。</p>
+<h3 id="topic-23-4" tabindex="-1">23.4 可重复安装：锁住依赖，还要记录环境</h3>
+<p><code>package.json</code> 表达依赖意图，锁文件记录具体解析结果。语义版本表达发布者对兼容性的约定，不能替代实际验证；修订版本仍可能包含缺陷，版本范围也不等于固定版本。</p>
+<p>在使用 npm 的项目中，<code>npm ci</code> 适合按已有锁文件安装：清单与锁文件不一致时会报错，不会替你更新它们。它会重新安装依赖，使用前应了解其对现有安装目录的影响。<a href="https://docs.npmjs.com/cli/v11/commands/npm-ci/">npm ci 官方说明</a></p>
+<p>锁文件无法单独保证所有机器产生完全相同的构件，还需要关注：</p>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>影响因素</th>
+<th>为什么重要</th>
+<th>建议记录什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Node.js 与包管理器版本</td>
+<td>安装和执行行为可能不同</td>
+<td>项目声明、CI 日志中的实际版本</td>
+</tr>
+<tr>
+<td>安装配置</td>
+<td>peer dependency、可选依赖、安装脚本策略会影响结果</td>
+<td>相关项目配置及安装参数</td>
+</tr>
+<tr>
+<td>操作系统与 CPU 架构</td>
+<td>原生扩展及预编译二进制可能不同</td>
+<td>构建镜像、系统、架构</td>
+</tr>
+<tr>
+<td>系统库与编译工具</td>
+<td>本地编译的依赖可能需要特定系统库</td>
+<td>基础镜像版本、编译器及系统包</td>
+</tr>
+<tr>
+<td>外部下载与生成过程</td>
+<td>安装脚本可能下载文件或生成平台产物</td>
+<td>来源、版本、校验值与失败日志</td>
+</tr>
+<tr>
+<td>构建输入</td>
+<td>时间、环境变量、配置和资源会改变输出</td>
+<td>提交 SHA、配置版本、公开参数</td>
+</tr>
+</tbody></table></div>
+<p>不要把开发机的原生依赖目录直接复制到不同架构的服务器。安装失败时保留最早的实际错误，先判断是获取失败、解析冲突、脚本失败还是原生编译失败。</p>
+<h3 id="topic-23-5" tabindex="-1">23.5 构建缓存与浏览器缓存的区别</h3>
+<p>构建缓存复用计算结果；浏览器、CDN 缓存复用已经发布的响应。它们位于不同环节，清空其中一层不意味着其他层也更新了。</p>
+<p>构建缓存键必须覆盖影响结果的输入，例如源码、锁文件、构建配置、工具版本、目标平台和影响输出的环境变量。缓存键遗漏配置时，可能把旧环境构件误当成有效结果。</p>
+<p>静态资源使用内容哈希后，修改内容通常生成新 URL，可配合长期缓存。入口 HTML 仍需合适的更新策略，否则用户可能拿到引用旧资源的页面。</p>
+<p>发布时保留一段时间的旧资源，或使用版本目录，可以让已打开的页面继续加载旧版本分块。仅刷新 CDN 的 HTML，不一定能处理浏览器中已经运行的旧页面。</p>
+<h3 id="topic-23-6" tabindex="-1">23.6 环境变量和 Source Map：构建时的边界</h3>
+<p>被编译进浏览器 JavaScript 的值对用户可见。公开 API 地址、显示开关可以作为前端配置；数据库密码、服务端令牌不能放进前端构件。构建平台称为“环境变量”，不代表最终输出仍然保密。<a href="https://vite.dev/guide/env-and-mode.html">Vite：环境变量与安全注意事项</a></p>
+<p>区分构建时配置和运行时配置：如果地址在构建时已被写进 JavaScript，只修改容器启动变量通常不会改变该文件。使用运行时配置文件时，也要处理加载顺序、权限与缓存。</p>
+<p>Source Map 将生成代码的位置映射回源码，便于还原压缩后的错误堆栈。它需要与对应的构件和发布版本匹配，不能拿新版本映射去解释旧版本堆栈。</p>
+<p>可以把映射文件上传到有访问控制的错误监控服务，再按需求决定是否随站点公开发布。某些映射会包含源码内容；不在代码里声明映射地址，也不等于文件无法直接访问，应检查存储权限和公开路径。</p>
+<h3 id="topic-23-7" tabindex="-1">23.7 常见故障：从证据区分阶段</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>症状</th>
+<th>优先检查</th>
+<th>能缩小范围的证据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>本地可用，CI 安装失败</td>
+<td>锁文件、运行时、安装参数、平台</td>
+<td>第一条安装错误和两边版本对比</td>
+</tr>
+<tr>
+<td>类型检查成功，启动失败</td>
+<td>实际模块入口、环境变量、运行时依赖</td>
+<td>启动堆栈、缺失模块名、实际启动命令</td>
+</tr>
+<tr>
+<td>开发模式正常，生产白屏</td>
+<td>静态资源、构建参数、浏览器兼容</td>
+<td>Network 的资源响应、Console 首条异常</td>
+</tr>
+<tr>
+<td>首页正常，打开某页面失败</td>
+<td>动态分块 URL、旧资源保留、路径配置</td>
+<td>失败分块名称、请求发起页面的版本</td>
+</tr>
+<tr>
+<td>更新后功能仍是旧版本</td>
+<td>发布构件、入口缓存、Service Worker</td>
+<td>提交标识、响应头、加载的资源哈希</td>
+</tr>
+<tr>
+<td>包体积突然增大</td>
+<td>依赖引入方式、重复依赖、副作用标记</td>
+<td>构建分析报告和变更前后的模块组成</td>
+</tr>
+<tr>
+<td>只有线上堆栈不可读</td>
+<td>映射上传和构件版本匹配</td>
+<td>错误事件的版本、映射查找结果</td>
+</tr>
+</tbody></table></div>
+<p>排查时先确定“失败发生在安装、构建、发布还是运行”。不要同时升级所有依赖和清空所有缓存；一次改变一个变量，保留能复现的输入。</p>
+<h3 id="topic-23-8" tabindex="-1">23.8 最小练习与掌握标准</h3>
+<ol>
+<li>在独立练习工程中，将类型检查、构建和测试分成三个命令；观察各自能够发现的不同错误。</li>
+<li>将一个页面改为动态加载，查看构件清单与 Network，解释首屏请求和后续请求如何变化。</li>
+<li>对比本地与 CI 的运行时、包管理器和平台信息，使用同一锁文件完成一次干净安装与构建。</li>
+<li>用无敏感性的标记值测试构建时变量，检查生成文件，验证该值在哪里固定下来。</li>
+<li>制造一次可控异常，用对应 Source Map 还原位置，再观察版本不匹配时的结果。</li>
+</ol>
+<p>验收：能从一个浏览器报错追踪到资源文件、发布构件、提交和依赖版本；能解释“安装成功、类型检查成功、构建成功、运行正确”四者各自证明了什么。</p>
+</section>
+<section class="chapter" id="section-24" aria-labelledby="chapter-heading-24"><p class="chapter-label">CHAPTER 24</p><h2 id="chapter-heading-24" tabindex="-1">24. Git 协作与变更管理</h2>
+<h3 id="topic-24-1" tabindex="-1">24.1 这一层负责什么</h3>
+<p>Git 记录文件快照和变更关系，帮助团队理解、整合、追踪和撤销代码变化。完整的变更管理还包含需求、代码审查、验证、发布记录及数据兼容性。</p>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>概念</th>
+<th>保存或表示什么</th>
+<th>容易混淆的点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>工作区</td>
+<td>当前磁盘上正在编辑的文件</td>
+<td>保存文件不代表已经提交</td>
+</tr>
+<tr>
+<td>暂存区 / Index</td>
+<td>计划进入下一次提交的内容</td>
+<td>暂存后继续编辑，新增修改不会自动进入暂存区</td>
+</tr>
+<tr>
+<td>提交 / Commit</td>
+<td>文件快照、父提交及相关元信息</td>
+<td>本地提交不代表已经上传或发布</td>
+</tr>
+<tr>
+<td>分支</td>
+<td>通常随提交向前移动的引用</td>
+<td>分支不是一份独立复制的整个仓库</td>
+</tr>
+<tr>
+<td>HEAD</td>
+<td>当前检出的引用或提交</td>
+<td>分离 HEAD 时可能没有分支随新提交移动</td>
+</tr>
+<tr>
+<td>远端仓库</td>
+<td>用于共享历史的另一个仓库</td>
+<td>本地仓库与远端需要显式同步</td>
+</tr>
+<tr>
+<td>远端跟踪分支</td>
+<td>本地记录的某个远端分支状态</td>
+<td><code>origin/main</code> 不保证等于远端此刻的最新状态</td>
+</tr>
+<tr>
+<td>标签 / Tag</td>
+<td>为指定对象提供稳定名称，常用于版本</td>
+<td>标签名称与线上实际部署仍需核对</td>
+</tr>
+</tbody></table></div>
+<p>工作区、暂存区和最后一次提交可以同时保存同一文件的不同内容。理解这三者，才能准确判断下一次提交将包含什么。<a href="https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository">Git Book：记录更新</a></p>
+<h3 id="topic-24-2" tabindex="-1">24.2 一次团队变更如何完成</h3>
+<pre><code class="language-text">明确需求、验收和兼容性
+  → 基于约定分支开始小范围修改
+  → 检查差异、提交并执行相关验证
+  → 创建 PR，说明问题、方案、证据和风险
+  → Review、调整并重新验证受影响部分
+  → 合入目标分支，生成带提交标识的构件
+  → 发布、观察指标、记录结果
+</code></pre>
+<p>分支策略服务于团队发布节奏。小团队可采用短分支加频繁合并；维护多个发布版本时可能需要维护分支。长期不合并会增加差异和集成成本。</p>
+<p>PR 应围绕一个可解释的目标：行为如何变化、为什么需要、如何验证、影响哪些调用方。格式修改与业务修复大量混杂时，审查和故障定位都更困难。</p>
+<h3 id="topic-24-3" tabindex="-1">24.3 整合历史的方式与边界</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>操作</th>
+<th>主要用途</th>
+<th>要注意的边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Merge</td>
+<td>将分支历史整合，保留分叉关系</td>
+<td>根据历史形状可能快进，也可能产生合并提交</td>
+</tr>
+<tr>
+<td>Rebase</td>
+<td>将一串提交重新应用到新的基点</td>
+<td>通常产生新的提交标识，会影响依赖旧历史的协作者</td>
+</tr>
+<tr>
+<td>Squash</td>
+<td>将一组变更整理为较少提交</td>
+<td>简化主线记录，同时减少逐步追踪的粒度</td>
+</tr>
+<tr>
+<td>Cherry-pick</td>
+<td>将指定提交的改动应用到另一条历史</td>
+<td>所选改动可能依赖未带过去的其他提交</td>
+</tr>
+</tbody></table></div>
+<p>已共享的提交历史要遵循团队约定，不能为了“让历史好看”自行改写。个人未共享的分支更适合整理提交；操作前先确认目标、工作区状态和是否已有协作者基于它继续工作。<a href="https://git-scm.com/docs/git-rebase">Git：rebase</a></p>
+<p>解决冲突时，Git 只能帮助指出文本无法自动合并的位置。即使没有文本冲突，也可能出现语义冲突：一个提交改变返回字段，另一个提交仍使用旧字段。</p>
+<p>处理冲突的顺序是理解双方意图、确定最终行为、修改代码，然后验证受影响的调用链和业务规则。不能仅以“冲突标记已经清除”作为完成标准。</p>
+<h3 id="topic-24-4" tabindex="-1">24.4 撤销变更：先区分历史、构件和数据</h3>
+<p><code>revert</code> 通过新提交表达对既有改动的反向修改，保留可追踪的历史，通常适合处理共享分支上的撤销。反向修改也可能冲突，撤销合并提交还需要理解其父提交关系。<a href="https://git-scm.com/docs/git-revert">Git：revert</a></p>
+<p><code>reset</code> 调整引用，并根据模式影响暂存区或工作区，常用于整理本地状态；不同模式风险不同。它不能自动撤回别人已经取得的历史，更不能恢复外部业务状态。</p>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>想恢复的对象</th>
+<th>需要采取的措施</th>
+<th>仅撤销代码为什么不够</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>源码变更</td>
+<td>产生修复或撤销提交，验证后合入</td>
+<td>线上可能仍在运行旧构件</td>
+</tr>
+<tr>
+<td>已发布应用</td>
+<td>发布已验证的兼容构件</td>
+<td>配置、数据结构和依赖服务可能已经变化</td>
+</tr>
+<tr>
+<td>数据库结构</td>
+<td>执行验证过的兼容迁移或恢复方案</td>
+<td>删除的列或已转换的数据可能不可逆</td>
+</tr>
+<tr>
+<td>已写入业务数据</td>
+<td>按审计记录修复、补偿或恢复</td>
+<td>代码回退不会反向执行已有业务操作</td>
+</tr>
+<tr>
+<td>已发送通知 / 外部操作</td>
+<td>查询结果并按业务规则补偿</td>
+<td>外部效果未必可以撤回</td>
+</tr>
+</tbody></table></div>
+<p>例如，新版本已把金额数据转换到新单位，直接运行旧代码可能产生错误解释。回退前应确认旧代码是否还能理解当前数据，而非仅检查服务是否能启动。</p>
+<h3 id="topic-24-5" tabindex="-1">24.5 用只读命令建立变更证据</h3>
+<p>下面命令用于查看本地状态和历史；示例路径应换成实际文件，分支名也应以仓库已有名称为准。</p>
+<pre><code class="language-bash">git status --short --branch       # 当前分支、已暂存与未暂存修改
+git diff                         # 工作区相对暂存区的变化
+git diff --cached                # 暂存区相对 HEAD 的变化
+git log --oneline --decorate -15 # 最近提交及分支、标签引用
+git show --stat HEAD             # 当前提交涉及的文件和变更规模
+git show HEAD -- src/api.ts      # 当前提交对指定文件的修改
+git blame -L 10,30 -- src/api.ts  # 查看这些行最近关联的提交
+</code></pre>
+<p><code>blame</code> 提供追踪线索，不等于确定责任或根因。某行最近一次提交可能只是重命名或格式化；继续查看差异、历史上下文和原始需求。</p>
+<p>查看到的远端跟踪状态可能过期。需要同步远端信息时再按团队流程执行获取操作；读取本地 <code>origin/main</code> 本身不会访问远端。</p>
+<h3 id="topic-24-6" tabindex="-1">24.6 回归定位：从好坏版本缩小到一次变化</h3>
+<p>先建立稳定的复现条件：相同输入、明确预期，以及尽量一致的配置、依赖和数据。再选择一个确认正常的提交和一个确认异常的提交。</p>
+<p><code>git bisect</code> 在两者之间选择提交，让你重复构建、测试并标记结果，逐步缩小范围。无法判断或无法构建的版本应跳过，不能把构建失败随意标为目标业务故障。<a href="https://git-scm.com/docs/git-bisect">Git：bisect</a></p>
+<p>二分会切换检出的版本，适合在干净的隔离检出中执行。完成后退出二分状态，恢复原来的工作位置；不要在实验环境中连接会被旧代码修改的生产数据。</p>
+<p>定位结果表示：在这组测试条件下，某次变化让可观测结果从正常变为异常。它可能是根因，也可能触发了更早埋下的问题，或与运行环境变化发生交互。</p>
+<p>最后仍需查看差异、解释机制、编写有针对性的验证，并确认修复不会破坏其他场景。偶发失败和结果反复变化会降低二分结论的可靠性。</p>
+<h3 id="topic-24-7" tabindex="-1">24.7 把提交、构件和发布关联起来</h3>
+<p>建议让发布记录能回答五个问题：源自哪个提交、经过哪些检查、用了哪份构件、进入哪个环境、配套配置和迁移是什么。</p>
+<p>提交 SHA 标识代码历史；构件摘要标识实际发布文件。相同提交在不同依赖或配置下重新构建，未必得到相同构件，所以二者不能互相替代。</p>
+<p>审查的重点应包括行为正确性、权限与数据约束、错误处理、兼容性和验证证据。涉及依赖升级时要检查锁文件；涉及数据迁移时要检查新旧版本并存及恢复路径。</p>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>故障现象</th>
+<th>优先收集的证据</th>
+<th>下一步方向</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>合并后接口字段不一致</td>
+<td>两个分支的差异、契约、调用方测试</td>
+<td>检查语义冲突与版本兼容</td>
+</tr>
+<tr>
+<td>代码已修复但线上未变化</td>
+<td>提交 SHA、构件摘要、实例版本</td>
+<td>确认修复是否真正发布及流量是否进入新版本</td>
+</tr>
+<tr>
+<td>某次发布后出现回归</td>
+<td>最后正常与首次异常版本、稳定用例</td>
+<td>用差异和二分缩小触发变更</td>
+</tr>
+<tr>
+<td>撤销后数据仍异常</td>
+<td>迁移与业务写入记录、当前数据形态</td>
+<td>制定数据修复或补偿，核对代码兼容</td>
+</tr>
+<tr>
+<td>本地分支显示“已合入”但功能缺失</td>
+<td>合并提交、后续撤销、实际构件</td>
+<td>检查历史后续变化和交付记录</td>
+</tr>
+</tbody></table></div>
+<h3 id="topic-24-8" tabindex="-1">24.8 最小练习与掌握标准</h3>
+<ol>
+<li>在练习仓库中修改文件、暂存部分内容后继续编辑，用 <code>status</code> 和两种 <code>diff</code> 解释三个版本。</li>
+<li>模拟两个分支分别修改接口与调用方，解决文本冲突，并设计能够发现语义冲突的验证。</li>
+<li>制作一段包含已知回归的提交历史，在隔离检出中用二分找出触发提交，解释其机制。</li>
+<li>为一次练习发布记录提交、构件与配置标识，模拟代码回退并检查数据兼容性。</li>
+</ol>
+<p>验收：能清楚描述当前修改处于哪里、哪些变化已经共享、线上究竟运行哪一版，以及撤销后还需要处理哪些数据和外部效果。</p>
+</section>
+<section class="chapter" id="section-25" aria-labelledby="chapter-heading-25"><p class="chapter-label">CHAPTER 25</p><h2 id="chapter-heading-25" tabindex="-1">25. 文件、搜索与数据生命周期</h2>
+<h3 id="topic-25-1" tabindex="-1">25.1 从“能上传”扩展到“可管理的数据资产”</h3>
+<p>第 7.7 节介绍上传入口，本章关注文件进入系统之后，如何成为可信数据、可检索结果，以及最终如何清理。文件内容、数据库元信息和搜索索引通常位于不同系统，成功与失败都要按阶段记录。</p>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>对象</th>
+<th>主要用途</th>
+<th>应由谁提供权威判断</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>原始文件</td>
+<td>重放导入、核对来源、保留原貌</td>
+<td>对象版本、校验值与接收记录</td>
+</tr>
+<tr>
+<td>数据库元信息</td>
+<td>文件归属、状态、版本、业务关联</td>
+<td>应用数据库及授权规则</td>
+</tr>
+<tr>
+<td>正式业务数据</td>
+<td>订单、用户、统计口径所依据的记录</td>
+<td>业务数据库</td>
+</tr>
+<tr>
+<td>派生结果</td>
+<td>搜索索引、缩略图、导出报告、聚合</td>
+<td>可追溯到输入版本和转换规则</td>
+</tr>
+</tbody></table></div>
+<h3 id="topic-25-2" tabindex="-1">25.2 传输方案与真正的完成点</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>常见流程</th>
+<th>需要验证的边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>小文件</td>
+<td>浏览器 → 应用流式接收 → 存储</td>
+<td>网关大小限制、应用内存、读取超时、内容验证</td>
+</tr>
+<tr>
+<td>大文件直传</td>
+<td>应用先授权 → 浏览器直传对象存储 → 应用确认</td>
+<td>对象归属、授权范围、校验、正式登记</td>
+</tr>
+<tr>
+<td>分片上传</td>
+<td>创建上传会话 → 上传/重试分片 → 完成合并</td>
+<td>分片编号、校验、断点恢复、放弃会话清理</td>
+</tr>
+</tbody></table></div>
+<p>不要因为使用异步 API 就一次性把整个大文件读入内存。流式传输控制内存；分片让失败后可以重传部分数据，二者处理的问题不同。</p>
+<p>以 S3 分片为例，完成上传是独立步骤，已经上传的分片需要完成或中止才能结束生命周期。保存上传会话和分片结果，按支持的算法校验完整性；不要把所有对象的 ETag 都当作完整文件的 MD5。<a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/mpuoverview.html">S3 分片上传与校验</a></p>
+<p>建议把界面进度区分为“传输中、校验中、处理中、可用”。网络上传进度达到 100%，只代表对应传输阶段完成，不代表数据已被正式接纳。</p>
+<h3 id="topic-25-3" tabindex="-1">25.3 授权、对象键与登记状态</h3>
+<pre><code class="language-text">申请上传 → 校验用户/租户/额度 → 创建 pending 记录与服务端生成的临时对象键
+  → 下发短期且限定操作的上传授权 → 客户端传输
+  → 服务端确认对象大小、校验值、类型与必要的内容检查
+  → 绑定已验证的对象版本/不可变正式对象 → ready
+  → 下载时再次校验业务权限 → 返回短期下载授权
+</code></pre>
+<p>预签名 URL 通常按“谁持有谁能用”工作，不应公开记录在日志或聊天中。S3 的预签名 URL 在有效期内可重复使用；上传相同对象键可能覆盖原对象。因此短期不等于一次性授权。<a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-presigned-url.html">S3 预签名 URL</a></p>
+<p>若校验后原上传 URL 仍有效，要防止内容被再次覆盖：可以将验证通过的内容转存为不可变正式对象，或把业务记录绑定到具体对象版本。仅把状态设为 <code>ready</code>，不能保证内容从此不变。</p>
+<p>元信息至少记录：文件 ID、租户/所有者、存储区域与桶、对象键/版本、原始文件名、大小、校验算法与值、检测类型、业务状态、创建时间、保留规则和关联业务 ID。</p>
+<p>对象键由服务端生成，原始文件名只作为展示信息。路径前缀可以帮助组织租户文件，但不是授权机制；客户端提交的键、MIME 类型和“上传成功”通知都需要服务端验证。</p>
+<p>数据库与对象存储通常没有共同事务。采用 <code>pending → verifying → ready</code> 和 <code>delete_pending → deleted</code> 等状态，配合幂等确认、重试和定期对账，识别“对象存在但未登记”“登记可用但对象不存在”的情况。</p>
+<h3 id="topic-25-4" tabindex="-1">25.4 原始数据到清理的完整路径</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>做了什么</th>
+<th>产出及失败处理</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>接收原始数据</td>
+<td>保存原始文件及来源、时间、校验值</td>
+<td>可重放输入；未完成上传按保留策略清理</td>
+</tr>
+<tr>
+<td>结构与内容校验</td>
+<td>检查编码、表头、类型、大小、内容风险</td>
+<td>校验报告；错误输入隔离，不直接入正式表</td>
+</tr>
+<tr>
+<td>清洗与规范化</td>
+<td>单位/格式转换、去重、字段映射</td>
+<td>转换结果与规则版本；保留错误行及原因</td>
+</tr>
+<tr>
+<td>写入正式数据</td>
+<td>校验业务约束，按规则插入或更新</td>
+<td>批次号、成功/失败数量、目标数据版本</td>
+</tr>
+<tr>
+<td>生成派生数据</td>
+<td>更新搜索索引、缩略图、统计或报告</td>
+<td>记录输入版本、生成规则与任务结果</td>
+</tr>
+<tr>
+<td>归档</td>
+<td>迁移冷数据，保持必要的索引和恢复入口</td>
+<td>归档位置、恢复耗时与校验记录</td>
+</tr>
+<tr>
+<td>删除与清理</td>
+<td>解除访问并处理原始、正式和派生副本</td>
+<td>删除任务、执行结果、未完成原因与审计记录</td>
+</tr>
+</tbody></table></div>
+<p>每一步都要能够回答：输入是什么版本、使用什么规则、输出在哪里、哪些记录失败。这个关联关系称为数据血缘；不一定要引入专用平台，批次号和结构化记录就能起步。</p>
+<p>例如订单 CSV 导入：原文件保留校验值 → 校验币种和金额 → 按业务编号防重 → 正式表记录导入批次 → 发出索引更新任务 → 汇总导入报告。错误行下载也要检查归属，避免泄露其他用户的数据。</p>
+<h3 id="topic-25-5" tabindex="-1">25.5 搜索索引是派生视图</h3>
+<p>数据库擅长保存关系和权威业务状态；搜索系统适合全文匹配、分词、相关性排序和分面筛选。第 17 章给出引入条件，这里重点是同步和排错。</p>
+<pre><code class="language-text">业务数据库提交 → 可靠变更记录/事件 → 索引消费者
+  → 按文档 ID、实体版本转换与更新 → 进入可搜索状态
+搜索请求 → 搜索索引过滤与排序 → 返回结果
+关键详情/实际业务动作 → 权威数据源再次校验状态和权限
+</code></pre>
+<p>“数据库有记录但搜不到”可能发生在事件发布、消费、字段映射、分析规则或索引可见性任一阶段。索引写入成功也不应在没有产品契约支持时推断为搜索立即可见；记录数据库版本、消费位置和可见时间。</p>
+<p>同步应同时处理新增、修改和删除。文档 ID 使用稳定业务标识；旧事件不能覆盖新版本。租户与权限条件在搜索侧需要过滤，关键操作仍须服务端授权；不能因为搜索返回了 ID 就视为已授权。</p>
+<h3 id="topic-25-6" tabindex="-1">25.6 重建索引与切换过程</h3>
+<ol>
+<li>创建新版本索引，保留旧索引继续提供查询；固定映射、分词、规则版本。</li>
+<li>确定全量快照边界，同时保留该边界之后的变更记录；不能只导出一份数据后忽略期间新增与删除。</li>
+<li>分批构建新索引，再追赶增量；用版本条件防止较旧全量数据覆盖较新增量。</li>
+<li>比较数量、按业务键抽样、查询样例、租户隔离和删除结果；总数相同不能证明内容正确。</li>
+<li>让读别名切到新索引，观察结果和延迟；回退窗口内保留旧索引及使它可用的必要增量同步。</li>
+<li>确认旧索引不再使用且满足保留策略后，再执行明确范围的清理。</li>
+</ol>
+<p>Elasticsearch 的别名使应用不必直接绑定物理索引名，可以通过一次别名操作切换目标。变更时仍须核验整个响应和每项结果，并按需要设置失败条件，不能只看到 HTTP 成功就当所有动作成功。<a href="https://www.elastic.co/docs/manage-data/data-store/aliases">Elasticsearch 别名与切换</a></p>
+<h3 id="topic-25-7" tabindex="-1">25.7 Backfill：历史数据回填也是一次受控变更</h3>
+<p>回填可能用于新增标准化字段、重算统计或补建索引。与普通在线写入不同，它扫描历史范围并可能和实时修改竞争，需要明确输入截止点、规则版本和恢复点。</p>
+<ul>
+<li><strong>可恢复</strong>：按稳定业务键分批，记录批次游标与数量；中断后从已确认位置继续，避免 OFFSET 随数据变化漏行。</li>
+<li><strong>幂等</strong>：相同业务键和转换版本重复执行不产生重复结果；同一数据库内的完成标记与对应数据更新一起提交，跨系统结果另行核对。</li>
+<li><strong>防覆盖</strong>：读取版本后更新时校验版本，或写入独立版本字段/表；旧快照不得覆盖实时新数据。</li>
+<li><strong>可观测</strong>：记录扫描、成功、跳过、失败、冲突数量和速率，限制负载，给在线请求保留容量。</li>
+<li><strong>可回退</strong>：优先保留旧字段或旧数据版本，验证后切换读取；已经覆盖且未保留原值的数据，不能靠“回滚代码”恢复。</li>
+<li><strong>可修复</strong>：失败行进入明确清单，修复后定向重跑；不要无限重试整个历史范围。</li>
+</ul>
+<h3 id="topic-25-8" tabindex="-1">25.8 软删除、保留、审计与最终清理</h3>
+<p>软删除只是把业务记录标为不可见，例如 <code>deleted_at</code>；原始文件、索引、缓存和导出报告可能仍保留内容。它不等于物理删除，也不自动满足所有数据清理需求。</p>
+<p>删除流程可以是：确认目标与权限 → 业务入口拒绝访问 → 记录待删除任务 → 清理派生索引/对象 → 核对结果 → 保存必要执行凭证。已经签发的直链能否立即失效，还取决于有效期与存储权限控制，修改数据库状态不一定撤销它。并发上传、共享文件引用、正在运行的报表任务都需要纳入条件检查。</p>
+<p>保留策略应分别覆盖原文件、正式数据、派生数据、日志、备份和未完成分片。历史版本、对象存储版本控制和备份可能继续保留已删除内容，需在策略中写清范围与期限；恢复旧备份时也要防止已删除数据重新暴露。</p>
+<p>审计关注谁在何时基于什么理由对哪个对象做了什么，以及执行结果；不要为了审计复制整份敏感文件或长期保存下载凭据。软删除还会影响唯一约束、默认查询过滤、恢复冲突与统计口径。</p>
+<h3 id="topic-25-9" tabindex="-1">25.9 症状、证据与验证练习</h3>
+<div class="table-scroll" tabindex="0" aria-label="可横向滚动的数据表"><table>
+<thead>
+<tr>
+<th>症状</th>
+<th>先收集的证据</th>
+<th>优先检查方向</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>进度 100% 但文件不可用</td>
+<td>传输结果、确认接口、校验状态、对象元信息</td>
+<td>未完成分片合并、校验失败、元信息登记失败</td>
+</tr>
+<tr>
+<td>下载链接突然 403</td>
+<td>签发时间、凭据有效期、请求方法/头、权限</td>
+<td>授权已过期、签名不匹配、权限变化</td>
+</tr>
+<tr>
+<td>同名文件互相覆盖</td>
+<td>对象键、上传会话、版本 ID、校验值</td>
+<td>使用展示文件名作为键、复用仍有效的上传授权</td>
+</tr>
+<tr>
+<td>搜索缺记录或出现旧记录</td>
+<td>数据版本、事件、消费位置、索引版本、查询条件</td>
+<td>同步积压、映射失败、漏删、读错索引或过滤条件</td>
+</tr>
+<tr>
+<td>回填后新数据变旧</td>
+<td>输入快照、规则版本、行版本、批次日志</td>
+<td>旧批次覆盖实时更新、缺少版本条件</td>
+</tr>
+<tr>
+<td>删除后仍能访问内容</td>
+<td>业务状态、旧链接、缓存、对象版本、派生结果</td>
+<td>软删除范围不足、链接仍有效、清理任务失败</td>
+</tr>
+</tbody></table></div>
+<p>练习：在隔离环境中断分片上传并恢复、重复调用完成接口、模拟数据库登记失败、导入含错误行的数据、重建并切换测试索引、回填中途停止再续跑。验收时同时核对内容、权限、数量、版本和清理结果。</p>
+</section>
+<section class="chapter" id="section-26" aria-labelledby="chapter-heading-26"><p class="chapter-label">CHAPTER 26</p><h2 id="chapter-heading-26" tabindex="-1">26. 调试工具箱与故障演练</h2>
+<p>本章只提供教学命令与演练方案，不要求在生产执行。命令中的 <code>example.com</code>、端口 <code>3000/8080</code>、PID <code>12345</code>、容器 <code>demo-api</code> 都是示例；先确认自己的练习环境再替换。
+命令不会替你创建演练服务。涉及改配置、制造延迟、抓取快照的操作均限定在独立本地练习应用；先保存原设置，结束后恢复。</p>
+<h3 id="topic-26-1" tabindex="-1">26.1 浏览器：先确认实际发生的请求</h3>
+<ol>
+<li>打开 Network，按需要启用 Preserve log，重现一次操作，记录 URL、方法、状态、Initiator 和时间线。</li>
+<li>直接读 Response 原文并比较 <code>Content-Type</code>；界面提示“JSON 错误”时，实际内容可能是 HTML 或登录页。</li>
+<li>在 Headers / Cookies 中对照发送与接收信息；有 <code>Set-Cookie</code> 不代表浏览器接受并在下一次请求带上了它。</li>
+<li>查看 Timing，把排队、连接、等待首字节、下载分开；再用 Performance 判断脚本、布局和绘制耗时。</li>
+<li>Disable cache 通常只在 DevTools 打开时禁用浏览器 HTTP 缓存；它不会自动清除应用查询缓存、Service Worker 或 CDN。</li>
+</ol>
+<p>Copy as cURL / 导出的 HAR 可能含 Cookie、Token、查询参数和响应内容，分享前脱敏。Network 面板的各项含义可查 <a href="https://developer.chrome.com/docs/devtools/network/">Chrome DevTools 官方说明</a>。</p>
+<h3 id="topic-26-2" tabindex="-1">26.2 DNS、HTTP 与 TLS：用命令隔离浏览器影响</h3>
+<p>以下模板在 Linux/macOS 的常见 shell 中适用；Linux 的 <code>dig</code> 可能需要另装 DNS 工具。系统解析器、浏览器安全 DNS 与 <code>dig</code> 使用的路径可能不同。</p>
+<pre><code class="language-bash">dig example.com
+curl -sS -D - -o /dev/null --connect-timeout 3 --max-time 10 https://example.com/
+curl -sS -o /dev/null --connect-timeout 3 --max-time 10 \
+  -w &#39;dns=%{time_namelookup} connect=%{time_connect} tls=%{time_appconnect} first=%{time_starttransfer} total=%{time_total}\n&#39; \
+  https://example.com/
+curl -v --connect-timeout 3 --max-time 10 https://example.com/
+</code></pre>
+<p><code>dig</code> 用于核对返回记录；第二条获取响应头并丢弃响应体；第三条记录累计时间点；第四条观察连接、代理和证书校验过程。<code>-v</code> 会输出请求/响应细节，含凭据时不要直接分享。
+计时单位是秒。在单次新连接、无重定向的简单场景，可用相邻时间点之差粗略判断阶段；代理、连接复用和其他协议会改变解释。不要把累计值相加，也不要用 <code>-k</code> 绕过证书校验后宣称 TLS 已修复。<a href="https://curl.se/docs/manpage.html">curl 官方参数与计时定义</a></p>
+<h3 id="topic-26-3" tabindex="-1">26.3 进程、端口、FD 与磁盘：区分系统差异</h3>
+<p>下列只读命令用于独立检查，请逐条选择使用；PID 必须换成你已经确认的练习进程。</p>
+<pre><code class="language-bash"># Linux/macOS：进程存在性、父进程、CPU、RSS、运行时间
+ps -p 12345 -o pid,ppid,%cpu,%mem,rss,etime,command
+# Linux/macOS：3000 端口由谁监听；lsof 在某些 Linux 环境需另装
+lsof -nP -iTCP:3000 -sTCP:LISTEN
+lsof -nP -p 12345
+# Linux：监听套接字；查看他人进程信息可能受权限限制
+ss -lntp
+# Linux：目标进程实际资源限制；macOS 没有这个 /proc 路径
+cat /proc/12345/limits
+# Linux/macOS：当前目录所在文件系统容量
+df -h .
+# Linux：对支持 inode 统计的文件系统观察 inode 使用
+df -i .
+</code></pre>
+<p><code>ps</code> 的 RSS 通常以 KiB 展示，应核对本机手册；CPU 百分比的采样口径也依工具而异。<code>lsof</code> 看监听地址和实际 FD，<code>ss</code> 看端口与进程；“无输出”也可能是 PID 错误或权限不足。
+持续观察可在 Linux 用 <code>top -p 12345</code>，macOS 用 <code>top -pid 12345</code>，两者参数与列定义不同。交互查看后按 <code>q</code> 退出。
+<code>ulimit -n</code> 只反映当前 shell 的限制，不一定是已运行服务的实际限制；服务管理器和容器可以设置不同值。macOS 可结合活动监视器检查内存压力，不能照搬 Linux <code>/proc</code> 指标。</p>
+<h3 id="topic-26-4" tabindex="-1">26.4 容器：对照状态、限制与应用证据</h3>
+<p>假定练习容器名称为 <code>demo-api</code>；Docker CLI 在 Linux/macOS 可使用相同基本语法，macOS 的 Linux 容器指标来自其 Linux 运行环境。</p>
+<pre><code class="language-bash">docker logs --since 10m --tail 100 demo-api
+docker stats --no-stream demo-api
+docker inspect --format &#39;{{json .State}}&#39; demo-api
+docker inspect --format &#39;memory={{.HostConfig.Memory}} nanoCpus={{.HostConfig.NanoCpus}} quota={{.HostConfig.CpuQuota}} period={{.HostConfig.CpuPeriod}}&#39; demo-api
+</code></pre>
+<p>依次看最近错误、当前资源、退出/健康状态、实际限制。<code>logs</code> 依赖日志驱动及应用输出方式；没看到日志不证明没有执行。资源瞬时值也不能还原几分钟前的峰值。
+<code>memory</code> 的单位是字节；<code>nanoCpus</code> 的十亿对应一个 CPU 配额单位。<code>nanoCpus=0</code> 不足以说明没有限制，还需查看 quota/period、其他配额及上层平台。避免直接分享完整 <code>docker inspect</code>，其中可能含环境机密。</p>
+<h3 id="topic-26-5" tabindex="-1">26.5 数据库：先区分等待，再看执行计划</h3>
+<p>在独立 PostgreSQL 练习库中，可对已经创建的示例 <code>orders</code> 表使用下列查询；其他数据库使用各自的计划工具和语法。</p>
+<pre><code class="language-sql">EXPLAIN
+SELECT id, created_at FROM orders
+WHERE user_id = 42
+ORDER BY created_at DESC, id DESC LIMIT 20;
+</code></pre>
+<p>先记录接口获取连接的等待、SQL 执行耗时、调用次数和返回行数。<code>EXPLAIN</code> 给估计计划，<code>cost</code> 不是毫秒；小表顺序扫描可能合理。
+需要实际测量时，可在练习库使用 <code>EXPLAIN (ANALYZE, BUFFERS)</code>，核对估计/实际行数、loops、扫描与过滤量。它会真正执行语句；即使是 SELECT，也应检查是否调用有副作用的函数。<a href="https://www.postgresql.org/docs/current/using-explain.html">PostgreSQL 官方 EXPLAIN 指南</a>
+事务回滚不保证撤销所有外部副作用、序列消耗和运行负载。不要把给写 SQL 加 <code>BEGIN/ROLLBACK</code> 当作可在生产随意分析的许可。</p>
+<h3 id="topic-26-6" tabindex="-1">26.6 演练一：分清内存泄漏与正常缓存预热</h3>
+<p>**环境与可恢复操作：**本地练习应用仅用虚构数据；加一个仅在开发环境启用的开关，每处理一次请求就把一个小对象留在模块级 Map。限制总请求为 200 次、总数据约 5 MiB，保存开关关闭前的配置。</p>
+<ol>
+<li>**基线：**预热后记录 Map 大小、堆使用、RSS 和完成请求数；按同样次数执行两轮请求。</li>
+<li>**制造症状：**用每次不同的键保留对象，观察集合增长；每轮结束空闲一段时间，再记录内存。不要为追求明显现象持续无限加压。</li>
+<li>**取证：**在本地抓前后堆快照，找到 Map 到对象的保留路径；同时观察对象计数，避免只盯 RSS。</li>
+<li>**排除：**关闭故障开关，以相同流量复测；再改成限定条目数的缓存，对比“逐轮增长”和“达到上限后稳定”。</li>
+<li>**修复验证：**清理不再需要的引用并移除演练开关，重复相同负载；检查回收后基线和集合大小，不要求 RSS 立即回到初始值。</li>
+</ol>
+<p>应得结论：证明的是“哪些引用持续保留了无用数据”，不是“内存高就是泄漏”。结束后删除练习快照或放入受控本地位置。</p>
+<h3 id="topic-26-7" tabindex="-1">26.7 演练二：SQL 很快，为什么接口仍然慢</h3>
+<p>**环境与可恢复操作：**独立应用与练习数据库，连接池设为 2；在专用演示路径中，借到连接后先异步等待 1 秒，再执行 <code>SELECT 1</code>，最后在 <code>finally</code> 归还连接。仅同时发起 4 次请求，保留原池配置。</p>
+<ol>
+<li>**基线：**关闭人为等待，记录每次请求的获取连接等待、SQL 时间和总时间。</li>
+<li>**制造症状：**开启等待后发起 4 次请求；预期前两个占用连接，后两个先排队，总时延形成分批特征。</li>
+<li>**取证：**观察池中使用数、等待数；用相同请求 ID 对齐“开始借连接→借到→SQL 完成→释放”的时间。</li>
+<li>**排除：**SQL 实际很快且无锁等待；无数据库访问的轻量接口仍可快速响应，支持排除同等程度的事件循环阻塞。</li>
+<li>**修复验证：**移除持有连接期间的无关等待，用相同池大小复测；排队下降后恢复原配置。不要只把池放大到 4 来掩盖原因。</li>
+</ol>
+<p>应得结论：用户总等待、连接池等待、SQL 执行时间需要分开测量。应用 CPU 低并不代表系统没有容量问题。</p>
+<h3 id="topic-26-8" tabindex="-1">26.8 演练三：API 返回 HTML，引发 JSON 解析错误</h3>
+<p>**环境与可恢复操作：**本地练习 API 监听 <code>3000</code>，练习入口监听 <code>8080</code>，页面通过入口的 <code>/api/orders</code> 访问 API。保存入口配置，暂时让该路径错误落入 SPA 的 HTML 回退路由。</p>
+<ol>
+<li>**基线：**浏览器访问正常入口时返回 JSON，记录状态、<code>Content-Type</code> 和响应体形状。</li>
+<li>**制造症状：**启用错误路由后重试，页面出现 JSON 解析异常；HTTP 甚至可能仍是 200。</li>
+<li>**取证：**Network 查看实际响应开头；使用 <code>curl -i --max-time 5 http://localhost:8080/api/orders</code> 与 <code>curl -i --max-time 5 http://localhost:3000/api/orders</code> 对比。</li>
+<li>**排除：**若直连 API 返回预期 JSON、入口返回 HTML，且应用日志没有对应入口请求，优先核对入口路径匹配和重写；不先改数据库或 JSON 解析器。</li>
+<li>**修复验证：**恢复 <code>/api</code> 转发优先级；未知 API 返回 JSON 格式 404，真实页面子路由按产品规则返回页面；同时验证正常查询和不存在路径。</li>
+</ol>
+<p>应得结论：先识别响应由哪一层生成，才能确定责任范围。演练结束恢复入口配置，保留对比证据及一个防回归用例。</p>
+<h3 id="topic-26-9" tabindex="-1">26.9 每次演练都交付同一种证据</h3>
+<p>留下原配置、受控改动、复现次数、请求 ID、关键输出和修复后的同条件结果。能把某个假设证实或排除，比“执行了很多命令”更有价值。
+当结果不符合预期，先检查演练前提：请求是否命中同一进程、是否存在缓存、连接是否复用、采样窗口是否一致，再调整假设。</p>
+</section></article><footer class="footer">由同名 Markdown 原稿生成 · 文中链接指向进一步学习的官方资料<br>正文、目录、图示与搜索均可离线使用。</footer></main></div><button id="back-top" class="back-top" hidden aria-label="返回顶部">↑ 顶部</button><script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const escape = value => String(value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[ch]);
+  const sidebar=$('sidebar'), menu=$('menu'), backdrop=$('backdrop');
+  function setMenu(open){sidebar.classList.toggle('open',open);backdrop.classList.toggle('open',open);menu.setAttribute('aria-expanded',String(open));if(open) sidebar.querySelector('a').focus();}
+  menu.addEventListener('click',()=>setMenu(!sidebar.classList.contains('open')));
+  backdrop.addEventListener('click',()=>{setMenu(false);menu.focus();});
+  const themeButton=$('theme');
+  function setTheme(theme){document.documentElement.dataset.theme=theme;themeButton.textContent=theme==='dark'?'浅色':'深色';themeButton.setAttribute('aria-label',theme==='dark'?'切换为浅色主题':'切换为深色主题');try{localStorage.setItem('fullstack-handbook-theme',theme);}catch{}}
+  let saved;try{saved=localStorage.getItem('fullstack-handbook-theme');}catch{}
+  setTheme(saved==='dark'||saved==='light'?saved:(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));
+  themeButton.addEventListener('click',()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark'));
+  $('print').addEventListener('click',()=>window.print());
+  $('back-top').addEventListener('click',()=>window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'}));
+  const chapters=[...document.querySelectorAll('.chapter')];
+  const entries=[];
+  for(const chapter of chapters){let entry={id:chapter.id,title:chapter.querySelector('h2').textContent,text:''};for(const el of chapter.children){if(el.tagName==='H3'){entries.push(entry);entry={id:el.id,title:el.textContent,text:''};}else if(el.tagName!=='H2'&&!el.classList.contains('chapter-label')){entry.text+=' '+el.textContent;}}entries.push(entry);}
+  for(const entry of entries){entry.text=entry.text.replace(/\s+/g,' ').trim();entry.normalized=(entry.title+' '+entry.text).toLocaleLowerCase();}
+  const search=$('search'),panel=$('search-panel'),results=$('search-results');let debounce;
+  function clearSearch(){clearTimeout(debounce);search.value='';panel.hidden=true;results.replaceChildren();$('search-status').textContent='';}
+  function snippet(entry,term){let i=entry.text.toLocaleLowerCase().indexOf(term);if(i<0)i=0;const start=Math.max(0,i-48),text=entry.text.slice(start,start+175);return(start?'…':'')+text+(start+175<entry.text.length?'…':'');}
+  function highlight(text,term){const lower=text.toLocaleLowerCase(),i=lower.indexOf(term);if(i<0)return escape(text);return escape(text.slice(0,i))+'<mark>'+escape(text.slice(i,i+term.length))+'</mark>'+escape(text.slice(i+term.length));}
+  function runSearch(){const q=search.value.trim().toLocaleLowerCase();if(!q){clearSearch();return;}const terms=q.split(/\s+/).filter(Boolean);const found=entries.filter(e=>terms.every(t=>e.normalized.includes(t)));found.sort((a,b)=>Number(b.title.toLocaleLowerCase().includes(q))-Number(a.title.toLocaleLowerCase().includes(q)));panel.hidden=false;$('search-status').textContent=found.length?'找到 '+found.length+' 个相关小节'+(found.length>35?'，显示前 35 个':''):'没有找到相关小节';results.innerHTML=found.slice(0,35).map(e=>'<li><a href="#'+escape(e.id)+'"><strong>'+highlight(e.title,terms[0])+'</strong><p>'+highlight(snippet(e,terms[0]),terms[0])+'</p></a></li>').join('');if(!found.length)results.innerHTML='<li class="empty">试试“连接池”“登录”“缓存”“构建”或“状态”等关键词。</li>';}
+  search.addEventListener('input',()=>{clearTimeout(debounce);debounce=setTimeout(()=>{runSearch();if(!panel.hidden){const box=panel.getBoundingClientRect();if(box.top<75||box.top>innerHeight-150)panel.scrollIntoView({block:'start',behavior:'instant'});}},160);});
+  search.addEventListener('keydown',e=>{if(e.key==='Enter'){clearTimeout(debounce);runSearch();panel.scrollIntoView({block:'start'});results.querySelector('a')?.focus();}});
+  $('clear-search').addEventListener('click',()=>{clearSearch();search.focus();});
+  results.addEventListener('click',e=>{if(e.target.closest('a')){panel.hidden=true;setMenu(false);}});
+  document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();search.focus();search.select();}if(e.key==='Escape'){if(sidebar.classList.contains('open')){setMenu(false);menu.focus();}else{clearSearch();search.blur();}}});
+  document.addEventListener('click',e=>{const link=e.target.closest('a[href^="#"]');if(!link||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;const target=document.getElementById(link.hash.slice(1));setMenu(false);if(target){e.preventDefault();if(location.hash!==link.hash)history.pushState(null,'',link.hash);target.scrollIntoView({block:'start'});const focusTarget=target.querySelector('h2')||(target.tagName==='A'?target.nextElementSibling:target);if(focusTarget){focusTarget.tabIndex=-1;focusTarget.focus({preventScroll:true});}}});
+  document.querySelectorAll('.chapter a[href^="http"]').forEach(a=>{a.target='_blank';a.rel='noopener noreferrer';});
+  const navLinks=[...document.querySelectorAll('[data-chapter]')];
+  let ticking=false;
+  function updateProgress(){const total=document.documentElement.scrollHeight-innerHeight;$('progress').style.width=(total>0?Math.min(100,Math.max(0,scrollY/total*100)):100)+'%';let active=chapters[0];for(const chapter of chapters){if(chapter.getBoundingClientRect().top<=150)active=chapter;else break;}navLinks.forEach(a=>{const yes=a.hash==='#'+active.id;a.classList.toggle('active',yes);if(yes)a.setAttribute('aria-current','location');else a.removeAttribute('aria-current');});$('crumb').textContent=active.querySelector('h2').textContent;$('back-top').hidden=scrollY<600;ticking=false;}
+  addEventListener('scroll',()=>{if(!ticking){ticking=true;requestAnimationFrame(updateProgress);}},{passive:true});addEventListener('resize',updateProgress);updateProgress();
+  // Enable keyboard navigation within the open mobile contents drawer.
+  sidebar.addEventListener('keydown',e=>{if(e.key!=='Tab'||!sidebar.classList.contains('open')||!matchMedia('(max-width:800px)').matches)return;const items=[...sidebar.querySelectorAll('a[href],button')];const first=items[0],last=items.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}});
+})();
+</script></body></html>

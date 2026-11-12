@@ -1,0 +1,25 @@
+# 依赖
+node_modules/
+
+# 构建产物
+dist/
+build/
+.next/
+coverage/
+
+# 本地环境配置
+.env
+.env.*
+!.env.example
+
+# 日志
+logs/
+*.log
+
+# 私钥和证书文件
+*.pem
+*.key
+
+# 系统文件
+.DS_Store
+Thumbs.db
