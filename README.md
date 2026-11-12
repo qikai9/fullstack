@@ -1,2 +1,0 @@
-# fullstack
-全栈
